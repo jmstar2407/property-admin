@@ -28,17 +28,27 @@
         // Añadir controles de órbita
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-        // Añadir una luz ambiental y una luz direccional
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
+// Cambiar el color del fondo
+scene.background = new THREE.Color(0xffffff); // Fondo blanco
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(5, 5, 5).normalize();
-        scene.add(directionalLight);
+// Añadir una luz ambiental más intensa
+const ambientLight = new THREE.AmbientLight(0xffffff, 1); // Intensidad 1
+scene.add(ambientLight);
 
-        // Cargar el objeto GLB
-        const loader = new THREE.GLTFLoader();
-        loader.load('objecto/miobjecto.glb', function (gltf) {
+// Ajustar la intensidad y el color de la luz direccional
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6); // Intensidad 0.6
+directionalLight.position.set(5, 5, 5).normalize();
+scene.add(directionalLight);
+
+// Cargar el objeto GLB
+const loader = new THREE.GLTFLoader();
+loader.load('objecto/miobjecto.glb', function (gltf) {
+    // Recorrer el objeto GLTF y cambiar el material
+    gltf.scene.traverse((child) => {
+        if (child.isMesh) {
+            child.material = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Color rojo
+        }
+    });
     scene.add(gltf.scene);
     console.log('Objeto GLB cargado correctamente');
 }, undefined, function (error) {
