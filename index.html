@@ -7,9 +7,19 @@
     <style>
         body { margin: 0; }
         canvas { display: block; }
+        /* Estilo para el contenedor del canvas */
+        #canvas-container {
+            width: 800px; /* Ancho personalizado */
+            height: 600px; /* Alto personalizado */
+            margin: auto; /* Centrar el contenedor */
+            border: 2px solid black; /* Borde del contenedor */
+        }
     </style>
 </head>
 <body>
+    <!-- Contenedor para el canvas -->
+    <div id="canvas-container"></div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/controls/OrbitControls.js"></script>
@@ -21,12 +31,12 @@
         scene.background = new THREE.Color(0xeeeeee); // Fondo gris claro
         
         // Crear la cámara
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(75, 800 / 600, 0.1, 1000);
 
         // Crear el renderizador
         const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+        renderer.setSize(800, 600); // Establecer el tamaño del renderizador
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
 
         // Añadir controles de órbita
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -41,7 +51,7 @@
 
         // Cargar el objeto GLB
         const loader = new THREE.GLTFLoader();
-        loader.load('objecto/miobjecto2.glb', function (gltf) {
+        loader.load('objecto/miobjecto.glb', function (gltf) {
             scene.add(gltf.scene);
             console.log('Objeto GLB cargado correctamente');
         }, undefined, function (error) {
@@ -62,6 +72,17 @@
         }
 
         animate();
+
+        // Ajustar el tamaño del renderizador cuando se redimensiona la ventana
+        window.addEventListener('resize', function () {
+            const container = document.getElementById('canvas-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        });
     </script>
 </body>
 </html>
