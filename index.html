@@ -16,7 +16,10 @@
     <script>
         // Crear la escena
         const scene = new THREE.Scene();
-
+        
+        // Cambiar el color del fondo de la escena
+        scene.background = new THREE.Color(0xeeeeee); // Fondo gris claro
+        
         // Crear la cámara
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
@@ -28,32 +31,22 @@
         // Añadir controles de órbita
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-// Cambiar el color del fondo
-scene.background = new THREE.Color(0xffffff); // Fondo blanco
+        // Añadir una luz ambiental y una luz direccional
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
 
-// Añadir una luz ambiental más intensa
-const ambientLight = new THREE.AmbientLight(0xffffff, 1); // Intensidad 1
-scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 5, 5).normalize();
+        scene.add(directionalLight);
 
-// Ajustar la intensidad y el color de la luz direccional
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6); // Intensidad 0.6
-directionalLight.position.set(5, 5, 5).normalize();
-scene.add(directionalLight);
-
-// Cargar el objeto GLB
-const loader = new THREE.GLTFLoader();
-loader.load('objecto/miobjecto.glb', function (gltf) {
-    // Recorrer el objeto GLTF y cambiar el material
-    gltf.scene.traverse((child) => {
-        if (child.isMesh) {
-            child.material = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Color rojo
-        }
-    });
-    scene.add(gltf.scene);
-    console.log('Objeto GLB cargado correctamente');
-}, undefined, function (error) {
-    console.error('Error al cargar el objeto GLB:', error);
-});
+        // Cargar el objeto GLB
+        const loader = new THREE.GLTFLoader();
+        loader.load('objecto/miobjecto.glb', function (gltf) {
+            scene.add(gltf.scene);
+            console.log('Objeto GLB cargado correctamente');
+        }, undefined, function (error) {
+            console.error('Error al cargar el objeto GLB:', error);
+        });
 
         // Posicionar la cámara
         camera.position.z = 5;
