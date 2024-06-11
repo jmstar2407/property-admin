@@ -37,7 +37,8 @@
         scene.add(directionalLight);
 
         // Cargar el objeto GLB
-  loader.load('objecto/miobjecto.glb', function (gltf) {
+        const loader = new THREE.GLTFLoader();
+        loader.load('objecto/miobjecto.glb', function (gltf) {
     scene.add(gltf.scene);
     console.log('Objeto GLB cargado correctamente');
 }, undefined, function (error) {
