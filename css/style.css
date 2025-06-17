@@ -30,7 +30,7 @@
 
  .header {
      text-align: center;
-     color: #46505f;
+color: #c2c7cf;
      background: #202733;
      border-radius: 0px 0px 10px 10px;
      height: 60px;
@@ -85,6 +85,7 @@
      padding: 30px;
      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
      backdrop-filter: blur(10px);
+     margin-top: 10px;
  }
 
  .tab-content.active {
@@ -135,6 +136,7 @@
      font-size: 1.5rem;
      font-weight: 600;
      color: #1180cb;
+     text-align: center;
  }
 
  .calendar-grid {
@@ -847,15 +849,16 @@
 
  /* Nuevos estilos para el layout fijo */
 
- .fixed-footer {
-     display: inline-flex;
-     justify-content: center;
-     background: #202733;
-     padding: 6px 20px;
-     text-align: center;
-     color: #ffffff;
-     font-size: 10px;
- }
+.fixed-footer {
+    display: inline-flex
+;
+    justify-content: center;
+    background: #202733;
+    padding: 7px 20px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 10px;
+}
 
 
 
