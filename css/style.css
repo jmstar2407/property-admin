@@ -31,13 +31,13 @@
        text-align: center;
        margin-bottom: 15px;
        color: #46505f;
-       background: #15161a;
+       background: #202733;
        border-radius: 0px 0px 10px 10px;
+       height: 60px;
    }
 
    .header h1 {
-       font-size: 2.5rem;
-       margin-bottom: 10px;
+       font-size: 32px;
        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
    }
 
@@ -55,7 +55,9 @@
        border-radius: 15px;
        padding: 5px;
        backdrop-filter: blur(10px);
+       gap: 20px;
    }
+
 
    .nav-tab {
        padding: 15px 30px;
@@ -69,9 +71,12 @@
        font-weight: 500;
    }
 
+   .nav-tab:hover {
+       background: rgb(208 208 208 / 20%);
+   }
+
    .nav-tab.active {
        background: rgba(255, 255, 255, 0.2);
-       transform: translateY(-2px);
        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
    }
 
@@ -125,8 +130,7 @@
    }
 
    .calendar-nav:hover {
-       background: #5a6fd8;
-       transform: translateY(-2px);
+       background: #0c5e95;
    }
 
    .calendar-title {
@@ -826,10 +830,10 @@
            padding: 0px 10px;
        }
 
-       .nav-tabs {
+       /*.nav-tabs {
            flex-direction: column;
            gap: 5px;
-       }
+       }*/
 
        .calendar-grid {
            font-size: 14px;
@@ -853,11 +857,89 @@
 
 
    @media (max-width: 550px) {
+       .header {
+           margin-bottom: 5px;
+           height: 45px;
+       }
+
+       .header h1 {
+           font-size: 24px;
+       }
+
+       .nav-tabs {
+           border-radius: 10px;
+           gap: 10px;
+           margin-bottom: 5px;
+           padding: 3px;
+       }
+
+       .nav-tab {
+           padding: 7px 7px;
+           border-radius: 7px;
+           font-size: 12px;
+       }
+
+       #subtit {
+           font-size: 12px;
+       }
+
        .tab-content {
-           padding: 12px;
+           padding: 7px;
+           border-radius: 10px;
        }
 
        .calendar-container {
            margin-bottom: 5px;
        }
+
+       .calendar-header {
+           margin-bottom: 10px;
+       }
+
+       .calendar-nav {
+           padding: 8px 14px;
+           border-radius: 8px;
+           font-size: 12px;
+       }
+
+       .calendar-title {
+           font-size: 20px;
+           font-weight: 600;
+           color: #1180cb;
+       }
+
+       .view-toggle {
+           display: flex;
+           justify-content: space-between;
+           margin-bottom: 10px;
+       }
+
+       .view-btn {
+           padding: 4px 12px;
+           font-size: 12px;
+       }
+
+       .calendar-grid {
+           font-size: 12px;
+       }
+
+       .calendar-day {
+           min-height: 57px;
+           padding: 5px;
+       }
+
+       .calendar-day.today::after {
+           top: 50%;
+           left: 50%;
+           transform: translate(-50%, -50%);
+           border-radius: 7px;
+       }
+
+       .property-count {
+           bottom: 4px;
+           right: 4px;
+           width: 17px;
+           height: 17px;
+       }
+
    }
