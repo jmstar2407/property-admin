@@ -1,67 +1,2547 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Objeto 3D GLB con Three.js</title>
+    <title>Administrador de Propiedades</title>
+
+    <link rel="stylesheet" href="./css/style.css" />
+
+    <!-- intl-tel-input CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+    <!-- intl-tel-input JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
+
+    <!-- Firebase SDK -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.2/firebase-app-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.2/firebase-firestore-compat.min.js"></script>
+
+    <!-- PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Date utilities -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/2.30.0/index.min.js"></script>
+
     <style>
-        body { margin: 0; }
-        canvas { display: block; }
+
     </style>
 </head>
+
 <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/controls/OrbitControls.js"></script>
+
+
+    <div class="Master-Box">
+        <!-- header fixed -->
+        <div class="fixed-header">
+            <div class="header">
+                <h1>Bieneraiga2</h1>
+                <p id="subtit">Sistema de gestión y contabilidad</p>
+            </div>
+
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('calendar')">📅 Calendario</button>
+                <button class="nav-tab" onclick="showTab('properties')">🏘️ Propiedades</button>
+                <button class="nav-tab" onclick="showTab('accounting')">💰 Contabilidad</button>
+            </div>
+        </div>
+        <!-- header fixed FIN -->
+
+        <!-- Contenido -->
+        <div class="scrollable-content">
+            <!-- Calendar Tab -->
+            <div id="calendar-tab" class="tab-content active">
+                <div class="view-toggle">
+                    <button class="view-btn active" onclick="showView('calendar')">Calendario</button>
+                    <button class="view-btn" onclick="showView('list')">Lista de Pagos</button>
+                    <button class="view-btn" id="overdue-btn" onclick="showView('overdue')">
+                        Atrasos <span id="overdue-count"
+                            style="display:none; background:red;color:white;border-radius:50%;padding:2px 8px;margin-left:5px;">0</span>
+                    </button>
+                </div>
+
+
+                <div id="calendar-view" class="calendar-view">
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button class="calendar-nav" onclick="changeMonth(-1)">← Anterior</button>
+                            <h2 class="calendar-title" id="calendar-title"></h2>
+                            <button class="calendar-nav" onclick="changeMonth(1)">Siguiente →</button>
+                        </div>
+                        <div class="calendar-grid" id="calendar-grid"></div>
+                    </div>
+                </div>
+
+                <div id="list-view" class="list-view">
+                    <div class="calendar-header">
+                        <button class="calendar-nav" onclick="changeMonth(-1)">← Anterior</button>
+                        <h2 class="calendar-title" id="list-title"></h2>
+                        <button class="calendar-nav" onclick="changeMonth(1)">Siguiente →</button>
+                    </div>
+                    <div id="properties-list-view"></div>
+                </div>
+
+                <div id="overdue-view" class="list-view">
+                    <div id="overdue-list"></div>
+                </div>
+
+
+            </div>
+
+            <!-- Properties Tab -->
+            <div id="properties-tab" class="tab-content">
+                <button class="btn add-property-btn" onclick="showAddPropertyModal()">📝 Agregar Nueva
+                    Propiedad</button>
+
+                <div class="property-status-tabs">
+                    <button class="property-status-tab active" onclick="filterProperties('all')">Todas</button>
+                    <button class="property-status-tab" onclick="filterProperties('rented')">Rentadas</button>
+                    <button class="property-status-tab" onclick="filterProperties('available')">Disponibles</button>
+                    <button class="property-status-tab" onclick="filterProperties('maintenance')">En
+                        Mantenimiento</button>
+                </div>
+
+                <div id="properties-list">
+                    <div class="loading">Cargando propiedades...</div>
+                </div>
+            </div>
+
+            <!-- Accounting Tab -->
+            <div id="accounting-tab" class="tab-content">
+                <div class="month-selector">
+                    <button class="calendar-nav" onclick="changeAccountingMonth(-1)">← Anterior</button>
+                    <h3 id="accounting-month-title"></h3>
+                    <button class="calendar-nav" onclick="changeAccountingMonth(1)">Siguiente →</button>
+                </div>
+
+                <div class="accounting-summary" id="accounting-summary">
+                    <div class="loading">Calculando datos...</div>
+                </div>
+
+                <div class="accounting-actions">
+                    <button class="btn" onclick="showIncomeModal()">➕ Agregar Ingreso Extra</button>
+                    <button class="btn btn-danger" onclick="showExpenseModal()">➖ Agregar Gasto</button>
+                </div>
+
+                <div class="expenses-list" id="expenses-list"></div>
+            </div>
+        </div>
+        <!-- Contenido FIN -->
+
+        <!-- footer fixed -->
+        <div class="fixed-footer">
+            © 2025 | Developed by Jose Polanco
+        </div>
+        <!-- footer fixed FIN -->
+
+    </div>
+
+    <!-- Modals -->
+    <div id="day-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('day-modal')">&times;</span>
+            <h2 id="modal-day-title"></h2>
+            <div id="modal-properties-list"></div>
+        </div>
+    </div>
+
+    <div id="property-detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('property-detail-modal')">&times;</span>
+            <div id="property-detail-content"></div>
+        </div>
+    </div>
+
+    <div id="property-edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('property-edit-modal')">&times;</span>
+            <h2>✏️ Editar Propiedad</h2>
+            <form id="property-edit-form">
+                <input type="hidden" id="edit-property-id">
+                <!-- Sección Propietario -->
+                <div class="section-title">Propietario</div>
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="edit-owner-name">Nombre del Propietario</label>
+                        <input type="text" id="edit-owner-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-owner-phone">Teléfono del Propietario</label>
+                        <input type="tel" id="edit-owner-phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-owner-address">Dirección del Propietario</label>
+                        <input type="text" id="edit-owner-address" required>
+                    </div>
+                </div>
+
+                <!-- Sección Propiedad -->
+                <div class="section-title">Propiedad</div>
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="edit-property-type">Tipo de Propiedad</label>
+                        <select id="edit-property-type" required>
+                            <option value="casa">Casa</option>
+                            <option value="apartamento">Apartamento</option>
+                            <option value="local">Local Comercial</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-bedrooms">Cantidad de Habitaciones</label>
+                        <input type="number" id="edit-bedrooms" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-bathrooms">Cantidad de Baños</label>
+                        <input type="number" id="edit-bathrooms" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-parking-spaces">Cantidad de Parqueos</label>
+                        <input type="number" id="edit-parking-spaces" min="0" required>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="edit-property-address">Dirección de la Propiedad</label>
+                        <input type="text" id="edit-property-address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-rent-amount">Monto de la Renta ($)</label>
+                        <input type="number" id="edit-rent-amount" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-property-status">Estado</label>
+                        <select id="edit-property-status" required onchange="toggleTenantFields()">
+                            <option value="available">Disponible</option>
+                            <option value="rented">Rentado</option>
+                            <option value="maintenance">En Mantenimiento</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-property-notes">Notas sobre la propiedad</label>
+                        <textarea id="edit-property-notes" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <!-- Sección Inquilino (solo si está rentado) -->
+                <div id="tenant-section" class="form-section">
+                    <div class="section-title">Inquilino</div>
+                    <div class="form-group">
+                        <label for="edit-tenant-name">Nombre del Inquilino</label>
+                        <input type="text" id="edit-tenant-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-tenant-phone">Teléfono del Inquilino</label>
+                        <input type="tel" id="edit-tenant-phone">
+                    </div>
+                    <!-- Para el inquilino -->
+                    <div class="form-group">
+                        <label for="edit-tenant-id-type">Tipo de Identificación</label>
+                        <select id="edit-tenant-id-type">
+                            <option value="cedula">Cédula</option>
+                            <option value="pasaporte">Pasaporte</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-tenant-id">Número de Identificación</label>
+                        <input type="text" id="edit-tenant-id" placeholder="000-0000000-0 / 000000000">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-payment-day">Día de Cobro (1-31)</label>
+                        <input type="number" id="edit-payment-day" min="1" max="31">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-contract-date">Fecha de Inicio de Contrato</label>
+                        <input type="date" id="edit-contract-date">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-contract-duration">Duración del Contrato (Meses)</label>
+                        <input type="number" id="edit-contract-duration" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-tenant-notes">Notas sobre el inquilino</label>
+                        <textarea id="edit-tenant-notes" rows="2"></textarea>
+                    </div>
+
+                    <!-- Sección Garante -->
+                    <div class="section-title">Garante</div>
+                    <div class="form-group">
+                        <label for="edit-guarantor-name">Nombre del Garante</label>
+                        <input type="text" id="edit-guarantor-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-guarantor-phone">Teléfono del Garante</label>
+                        <input type="tel" id="edit-guarantor-phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-guarantor-address">Dirección del Garante</label>
+                        <input type="text" id="edit-guarantor-address">
+                    </div>
+                    <!-- Para el garante -->
+                    <div class="form-group">
+                        <label for="edit-guarantor-id-type">Tipo de Identificación</label>
+                        <select id="edit-guarantor-id-type">
+                            <option value="cedula">Cédula</option>
+                            <option value="pasaporte">Pasaporte</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-guarantor-id">Número de Identificación</label>
+                        <input type="text" id="edit-guarantor-id" placeholder="000-0000000-0 / 000000000">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-guarantor-notes">Notas sobre el garante</label>
+                        <textarea id="edit-guarantor-notes" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-contract-image">Imagen del Contrato</label>
+                    <input type="file" id="edit-contract-image" accept="image/*">
+                </div>
+                <div class="contract-image-container" id="edit-current-image-container">
+                    <p>Imagen del contrato:</p>
+                    <img id="edit-current-image" class="contract-image" src="">
+                </div>
+                <button type="submit" class="btn">💾 Guardar Cambios</button>
+                <button type="button" class="btn btn-danger"
+                    onclick="deleteProperty(document.getElementById('edit-property-id').value)">🗑️ Eliminar
+                    Propiedad</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Property Modal -->
+    <div id="add-property-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('add-property-modal')">&times;</span>
+            <h2>📝 Agregar Nueva Propiedad</h2>
+            <form id="property-form">
+                <!-- Sección Propietario -->
+                <div class="section-title">Propietario</div>
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="owner-name">Nombre del Propietario</label>
+                        <input type="text" id="owner-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="owner-phone">Teléfono del Propietario</label>
+                        <input type="tel" id="owner-phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="owner-address">Dirección del Propietario</label>
+                        <input type="text" id="owner-address" required>
+                    </div>
+                </div>
+
+                <!-- Sección Propiedad -->
+                <div class="section-title">Propiedad</div>
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="property-type">Tipo de Propiedad</label>
+                        <select id="property-type" required>
+                            <option value="casa">Casa</option>
+                            <option value="apartamento">Apartamento</option>
+                            <option value="local">Local Comercial</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bedrooms">Cantidad de Habitaciones</label>
+                        <input type="number" id="bedrooms" min="0" placeholder="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bathrooms">Cantidad de Baños</label>
+                        <input type="number" id="bathrooms" min="0" placeholder="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="parking-spaces">Cantidad de Parqueos</label>
+                        <input type="number" id="parking-spaces" min="0" placeholder="0" required>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="property-address">Dirección de la Propiedad</label>
+                        <input type="text" id="property-address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rent-amount">Monto de la Renta ($)</label>
+                        <input type="number" id="rent-amount" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="property-status">Estado</label>
+                        <select id="property-status" required onchange="toggleTenantFields('add')">
+
+                            <option value="available">Disponible</option>
+                            <option value="rented">Rentado</option>
+                            <option value="maintenance">En Mantenimiento</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="property-notes">Notas sobre la propiedad</label>
+                        <textarea id="property-notes" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <!-- Sección Inquilino (solo si está rentado) -->
+                <div id="tenant-section-add" class="form-section">
+                    <div class="section-title">Inquilino</div>
+                    <div class="form-group">
+                        <label for="tenant-name">Nombre del Inquilino</label>
+                        <input type="text" id="tenant-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="tenant-phone">Teléfono del Inquilino</label>
+                        <input type="tel" id="tenant-phone">
+                    </div>
+                    <!-- Para el inquilino -->
+                    <div class="form-group">
+                        <label for="tenant-id-type">Tipo de Identificación</label>
+                        <select id="tenant-id-type">
+                            <option value="cedula">Cédula</option>
+                            <option value="pasaporte">Pasaporte</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tenant-id">Número de Identificación</label>
+                        <input type="text" id="tenant-id" placeholder="000-0000000-0 / 000000000">
+                    </div>
+                    <div class="form-group">
+                        <label for="payment-day">Día de Cobro (1-31)</label>
+                        <input type="number" id="payment-day" min="1" max="31">
+                    </div>
+                    <div class="form-group">
+                        <label for="contract-date">Fecha de Inicio de Contrato</label>
+                        <input type="date" id="contract-date">
+                    </div>
+                    <div class="form-group">
+                        <label for="contract-duration">Duración del Contrato (Meses)</label>
+                        <input type="number" id="contract-duration" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="tenant-notes">Notas sobre el inquilino</label>
+                        <textarea id="tenant-notes" rows="2"></textarea>
+                    </div>
+
+                    <!-- Sección Garante -->
+                    <div class="section-title">Garante</div>
+                    <div class="form-group">
+                        <label for="guarantor-name">Nombre del Garante</label>
+                        <input type="text" id="guarantor-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="guarantor-phone">Teléfono del Garante</label>
+                        <input type="tel" id="guarantor-phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="guarantor-address">Dirección del Garante</label>
+                        <input type="text" id="guarantor-address">
+                    </div>
+                    <!-- Para el garante -->
+                    <div class="form-group">
+                        <label for="guarantor-id-type">Tipo de Identificación</label>
+                        <select id="guarantor-id-type">
+                            <option value="cedula">Cédula</option>
+                            <option value="pasaporte">Pasaporte</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="guarantor-id">Número de Identificación</label>
+                        <input type="text" id="guarantor-id" placeholder="000-0000000-0 / 000000000">
+                    </div>
+                    <div class="form-group">
+                        <label for="guarantor-notes">Notas sobre el garante</label>
+                        <textarea id="guarantor-notes" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="contract-image">Imagen del Contrato</label>
+                    <input type="file" id="contract-image" accept="image/*">
+                </div>
+
+                <button type="submit" class="btn">✅ Agregar Propiedad</button>
+                <button type="button" class="btn btn-secondary"
+                    onclick="closeModal('add-property-modal')">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Payment History Modal -->
+    <div id="payment-history-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('payment-history-modal')">&times;</span>
+            <h2>📜 Historial de Pagos</h2>
+            <div id="payment-history-content"></div>
+        </div>
+    </div>
+
+    <!-- Payment Success Modal -->
+    <div id="payment-success-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('payment-success-modal')">&times;</span>
+            <h2>✅ Pago Registrado Exitosamente</h2>
+            <div id="payment-success-content"></div>
+            <button class="btn" onclick="downloadInvoice(document.getElementById('payment-success-id').value)">📄
+                Descargar Factura</button>
+            <button class="btn btn-secondary" onclick="closeModal('payment-success-modal')">Cerrar</button>
+            <input type="hidden" id="payment-success-id">
+        </div>
+    </div>
+
+    <!-- Income Modal -->
+    <div id="income-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('income-modal')">&times;</span>
+            <h2>➕ Agregar Ingreso Extra</h2>
+            <form id="income-form">
+                <div class="form-group">
+                    <label for="income-description">Descripción del Ingreso Extra</label>
+                    <input type="text" id="income-description" required>
+                </div>
+                <div class="form-group">
+                    <label for="income-amount">Monto ($)</label>
+                    <input type="number" id="income-amount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="income-date">Fecha</label>
+                    <input type="date" id="income-date" required>
+                </div>
+                <button type="submit" class="btn btn-success">💵 Registrar Ingreso</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal('income-modal')">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Expense Modal -->
+    <div id="expense-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('expense-modal')">&times;</span>
+            <h2>➖ Agregar Gasto</h2>
+            <form id="expense-form">
+                <div class="form-group">
+                    <label for="expense-description">Descripción del Gasto</label>
+                    <input type="text" id="expense-description" required>
+                </div>
+                <div class="form-group">
+                    <label for="expense-amount">Monto ($)</label>
+                    <input type="number" id="expense-amount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="expense-date">Fecha</label>
+                    <input type="date" id="expense-date" required>
+                </div>
+                <button type="submit" class="btn btn-danger">💰 Registrar Gasto</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal('expense-modal')">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+
+
+
+    <!-- Edit Payment Modal -->
+    <div id="edit-payment-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('edit-payment-modal')">&times;</span>
+            <h2>✏️ Editar Factura de Pago</h2>
+            <form id="edit-payment-form">
+                <input type="hidden" id="edit-payment-id">
+                <div class="form-group">
+                    <label for="edit-payment-type">Tipo de Pago</label>
+                    <select id="edit-payment-type" required>
+                        <option value="complete">Pago Completo</option>
+                        <option value="partial">Pago Parcial</option>
+                        <option value="late">Pago con Mora</option>
+                        <option value="custom">Pago Personalizado</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-payment-amount">Monto Pagado ($)</label>
+                    <input type="number" id="edit-payment-amount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-payment-method">Método de Pago</label>
+                    <select id="edit-payment-method" required>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Transferencia">Transferencia</option>
+                        <option value="Deposito">Depósito Bancario</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-payment-date">Fecha de Pago</label>
+                    <input type="date" id="edit-payment-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-payment-notes">Notas</label>
+                    <textarea id="edit-payment-notes" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn">💾 Guardar Cambios</button>
+                <button type="button" class="btn btn-danger" onclick="deletePayment()">🗑️ Eliminar Factura</button>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
     <script>
-        // Crear la escena
-        const scene = new THREE.Scene();
-        
-        // Cambiar el color del fondo de la escena
-        scene.background = new THREE.Color(0xeeeeee); // Fondo gris claro
-        
-        // Crear la cámara
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyChPTn15TxZzKluRLzDRFwqExplejeW1p4",
+            authDomain: "propiedades-admin.firebaseapp.com",
+            projectId: "propiedades-admin",
+            storageBucket: "propiedades-admin.appspot.com",
+            messagingSenderId: "652700448283",
+            appId: "1:652700448283:web:9262d6f09ee277684d6abe"
+        };
 
-        // Crear el renderizador
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        // Añadir controles de órbita
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        // Global variables
+        let currentDate = new Date();
+        let currentAccountingDate = new Date();
+        let properties = [];
+        let payments = [];
+        let expenses = [];
+        let incomes = [];
+        let currentPropertyForPayment = null;
+        let currentView = 'calendar';
+        let currentPropertyFilter = 'all';
 
-        // Añadir una luz ambiental y una luz direccional
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(5, 5, 5).normalize();
-        scene.add(directionalLight);
 
-        // Cargar el objeto GLB
-        const loader = new THREE.GLTFLoader();
-        loader.load('objecto/miobjecto2.glb', function (gltf) {
-            scene.add(gltf.scene);
-            console.log('Objeto GLB cargado correctamente');
-        }, undefined, function (error) {
-            console.error('Error al cargar el objeto GLB:', error);
-        });
+        // Inicializar inputs de teléfono
+        function initializePhoneInputs() {
+            const phoneInputs = document.querySelectorAll('input[type="tel"]');
 
-        // Posicionar la cámara
-        camera.position.z = 5;
+            phoneInputs.forEach(input => {
+                const iti = window.intlTelInput(input, {
+                    initialCountry: "do", // República Dominicana por defecto
+                    separateDialCode: true,
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+                });
 
-        // Función de animación
-        function animate() {
-            requestAnimationFrame(animate);
+                // Formatear mientras se escribe
+                input.addEventListener('input', function () {
+                    const value = this.value.replace(/\D/g, '');
+                    if (value.length > 3 && value.length <= 6) {
+                        this.value = `${value.slice(0, 3)}-${value.slice(3)}`;
+                    } else if (value.length > 6) {
+                        this.value = `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(6, 10)}`;
+                    }
+                });
 
-            // Actualizar los controles
-            controls.update();
-
-            renderer.render(scene, camera);
+                // Guardar referencia al plugin para usarlo después
+                input.iti = iti;
+            });
         }
 
-        animate();
+
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function () {
+            initializePhoneInputs();
+            loadProperties();
+            loadPayments();
+            loadExpenses();
+            loadIncomes();
+            generateCalendar();
+            updateAccountingView();
+
+            // Add form listeners
+            document.getElementById('property-form').addEventListener('submit', addProperty);
+            document.getElementById('income-form').addEventListener('submit', addIncome);
+            document.getElementById('expense-form').addEventListener('submit', addExpense);
+            document.getElementById('property-edit-form').addEventListener('submit', updateProperty);
+
+            // Inicialmente ocultar campos de inquilino si no está rentado
+            toggleTenantFields();
+            toggleTenantFields('add');
+        });
+
+        // Mostrar modal para agregar propiedad
+        function showAddPropertyModal() {
+            document.getElementById('property-form').reset();
+            document.getElementById('contract-date').value = new Date().toISOString().split('T')[0];
+
+            // Reinicializar los inputs de teléfono
+            document.getElementById('owner-phone').iti.setNumber('');
+            document.getElementById('tenant-phone').iti.setNumber('');
+            document.getElementById('guarantor-phone').iti.setNumber('');
+
+            openModal('add-property-modal');
+        }
+
+        // Toggle tenant fields based on property status
+        function toggleTenantFields(formType = 'edit') {
+            const status = formType === 'add'
+                ? document.getElementById('property-status').value
+                : document.getElementById('edit-property-status').value;
+
+            const tenantSection = formType === 'add'
+                ? document.getElementById('tenant-section-add')
+                : document.getElementById('tenant-section');
+
+            if (status === 'rented') {
+                tenantSection.style.display = 'block';
+                // Hacer requeridos los campos si es rentado
+                const requiredFields = tenantSection.querySelectorAll('input, textarea');
+                requiredFields.forEach(field => {
+                    field.required = true;
+                });
+            } else {
+                tenantSection.style.display = 'none';
+                // Quitar requerido si no es rentado
+                const requiredFields = tenantSection.querySelectorAll('input, textarea');
+                requiredFields.forEach(field => {
+                    field.required = false;
+                });
+            }
+        }
+
+        // Filtrar propiedades por estado
+        function filterProperties(status) {
+            currentPropertyFilter = status;
+            displayProperties();
+
+            // Actualizar pestañas activas
+            document.querySelectorAll('.property-status-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Tab navigation
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                0
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+
+            // Refresh data if needed
+            if (tabName === 'calendar') {
+                generateCalendar();
+                updateListView();
+            } else if (tabName === 'properties') {
+                displayProperties();
+            } else if (tabName === 'accounting') {
+                updateAccountingView();
+            }
+        }
+
+        // View toggle
+        function showView(view) {
+            currentView = view;
+
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            document.getElementById('calendar-view').style.display = 'none';
+            document.getElementById('list-view').style.display = 'none';
+            document.getElementById('overdue-view').style.display = 'none';
+
+            if (view === 'calendar') {
+                document.getElementById('calendar-view').style.display = 'block';
+            } else if (view === 'list') {
+                document.getElementById('list-view').style.display = 'block';
+                updateListView();
+            } else if (view === 'overdue') {
+                document.getElementById('overdue-view').style.display = 'block';
+                updateOverdueView();
+            }
+        }
+
+
+        // Load data from Firebase
+        async function loadProperties() {
+            try {
+                const snapshot = await db.collection('properties').get();
+                properties = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                    createdAt: doc.data().createdAt?.toDate(),
+                    contractStart: doc.data().contractStart?.toDate()
+                }));
+                displayProperties();
+                generateCalendar();
+                updateListView();
+                updateOverdueView();
+            } catch (error) {
+                console.error('Error loading properties:', error);
+                // Use mock data for demo
+                properties = [
+                    {
+                        id: '1',
+                        ownerName: 'Carlos López',
+                        ownerPhone: '555-1234',
+                        ownerAddress: 'Calle Principal 123',
+                        propertyType: 'casa',
+                        address: 'Avenida Central 456',
+                        rentAmount: 15000,
+                        status: 'rented',
+                        notes: 'Propiedad en buen estado',
+                        tenantName: 'Juan Pérez',
+                        tenantPhone: '555-5678',
+                        tenantId: '123456789',
+                        paymentDay: 15,
+                        contractStart: new Date(),
+                        contractDuration: 12,
+                        tenantNotes: 'Inquilino responsable',
+                        guarantorName: 'María García',
+                        guarantorPhone: '555-9012',
+                        guarantorAddress: 'Calle Secundaria 789',
+                        guarantorId: '987654321',
+                        guarantorNotes: 'Garante confiable',
+                        imageContrato: ''
+                    }
+                ];
+                displayProperties();
+                generateCalendar();
+                updateListView();
+            }
+        }
+
+        async function loadPayments() {
+            try {
+                const snapshot = await db.collection('payments').get();
+                payments = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                    paymentDate: doc.data().paymentDate?.toDate(),
+                    dueDate: doc.data().dueDate?.toDate(),
+                    mesPagado: doc.data().mesPagado || new Date(doc.data().dueDate?.toDate().getFullYear(), doc.data().dueDate?.toDate().getMonth() - 1, 1).toLocaleDateString('es-ES', { month: 'long' }).replace(/^\w/, c => c.toUpperCase())
+                }));
+                generateCalendar();
+                updateListView();
+                updateOverdueView();
+            } catch (error) {
+                console.error('Error loading payments:', error);
+                payments = [];
+            }
+        }
+
+        async function loadExpenses() {
+            try {
+                const snapshot = await db.collection('expenses').get();
+                expenses = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                    date: doc.data().date?.toDate()
+                }));
+                updateAccountingView();
+            } catch (error) {
+                console.error('Error loading expenses:', error);
+                expenses = [];
+            }
+        }
+
+        async function loadIncomes() {
+            try {
+                const snapshot = await db.collection('incomes').get();
+                incomes = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                    date: doc.data().date?.toDate()
+                }));
+                updateAccountingView();
+            } catch (error) {
+                console.error('Error loading incomes:', error);
+                incomes = [];
+            }
+        }
+
+        // Add new property
+        async function addProperty(e) {
+            e.preventDefault();
+
+            const contractImage = document.getElementById('contract-image').files[0];
+            let imageBase64 = '';
+
+            if (contractImage) {
+                imageBase64 = await convertImageToBase64(contractImage);
+            }
+
+            // Obtener números de teléfono formateados
+            const ownerPhone = document.getElementById('owner-phone').iti.getNumber();
+            const tenantPhone = document.getElementById('tenant-phone')?.iti?.getNumber() || '';
+            const guarantorPhone = document.getElementById('guarantor-phone')?.iti?.getNumber() || '';
+
+            const newProperty = {
+                ownerName: document.getElementById('owner-name').value,
+                ownerPhone: ownerPhone,
+                ownerAddress: document.getElementById('owner-address').value,
+                propertyType: document.getElementById('property-type').value,
+                bedrooms: parseInt(document.getElementById('bedrooms').value),
+                bathrooms: parseInt(document.getElementById('bathrooms').value),
+                parkingSpaces: parseInt(document.getElementById('parking-spaces').value),
+                address: document.getElementById('property-address').value,
+                rentAmount: parseFloat(document.getElementById('rent-amount').value),
+                status: document.getElementById('property-status').value,
+                notes: document.getElementById('property-notes').value,
+                imageContrato: imageBase64,
+                createdAt: new Date()
+            };
+
+            // Solo agregar datos de inquilino si está rentado
+            if (newProperty.status === 'rented') {
+                newProperty.tenantName = document.getElementById('tenant-name').value;
+                newProperty.tenantPhone = tenantPhone;
+                newProperty.tenantIdType = document.getElementById('tenant-id-type').value;
+                newProperty.tenantId = document.getElementById('tenant-id').value;
+                newProperty.paymentDay = parseInt(document.getElementById('payment-day').value);
+                newProperty.contractStart = new Date(document.getElementById('contract-date').value);
+                newProperty.contractDuration = parseInt(document.getElementById('contract-duration').value);
+                newProperty.tenantNotes = document.getElementById('tenant-notes').value;
+                newProperty.guarantorName = document.getElementById('guarantor-name').value;
+                newProperty.guarantorPhone = guarantorPhone;
+                newProperty.guarantorAddress = document.getElementById('guarantor-address').value;
+                newProperty.guarantorIdType = document.getElementById('guarantor-id-type').value;
+                newProperty.guarantorId = document.getElementById('guarantor-id').value;
+                newProperty.guarantorNotes = document.getElementById('guarantor-notes').value;
+            }
+
+            try {
+                const docRef = await db.collection('properties').add(newProperty);
+                newProperty.id = docRef.id;
+                properties.push(newProperty);
+
+                document.getElementById('property-form').reset();
+                closeModal('add-property-modal');
+                displayProperties();
+                generateCalendar();
+                updateListView();
+
+                alert('✅ Propiedad agregada exitosamente');
+            } catch (error) {
+                console.error('Error adding property:', error);
+                // Demo mode - add to local array
+                newProperty.id = Date.now().toString();
+                properties.push(newProperty);
+                document.getElementById('property-form').reset();
+                closeModal('add-property-modal');
+                displayProperties();
+                generateCalendar();
+                updateListView();
+                alert('✅ Propiedad agregada (modo demo)');
+            }
+        }
+
+        // Convert image to Base64
+        function convertImageToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // Display properties list with filtering
+        function displayProperties() {
+            const container = document.getElementById('properties-list');
+
+            // Filtrar propiedades según el estado seleccionado
+            let filteredProperties = properties;
+            if (currentPropertyFilter !== 'all') {
+                filteredProperties = properties.filter(p => p.status === currentPropertyFilter);
+            }
+
+            // Ordenar por dirección
+            filteredProperties.sort((a, b) => a.address.localeCompare(b.address));
+
+            if (filteredProperties.length === 0) {
+                container.innerHTML = '<div class="no-data">📋 No hay propiedades registradas</div>';
+                return;
+            }
+
+            const html = filteredProperties.map(property => {
+                // Calcular días restantes del contrato si está rentado
+                let contractInfo = '';
+                if (property.status === 'rented' && property.contractStart && property.contractDuration) {
+                    const endDate = new Date(property.contractStart);
+                    endDate.setMonth(endDate.getMonth() + property.contractDuration);
+                    const today = new Date();
+                    const diffTime = endDate - today;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    if (diffDays > 0) {
+                        contractInfo = `<p class="contract-days remaining">⏳ ${diffDays} días restantes de contrato</p>`;
+                    } else {
+                        contractInfo = `<p class="contract-days expired">⚠️ Contrato vencido el ${endDate.toLocaleDateString('es-ES')}</p>`;
+                    }
+                }
+
+                // Determinar clase de estado
+                let statusClass = '';
+                let statusText = '';
+                switch (property.status) {
+                    case 'rented':
+                        statusClass = 'rented';
+                        statusText = 'Rentado';
+                        break;
+                    case 'available':
+                        statusClass = 'available';
+                        statusText = 'Disponible';
+                        break;
+                    case 'maintenance':
+                        statusClass = 'maintenance';
+                        statusText = 'En Mantenimiento';
+                        break;
+                }
+
+                return `
+    <div class="property-card">
+        <div class="property-header">
+            <div class="property-title">📍 Dirección: ${property.address}</div>
+            <span class="property-status-badge ${statusClass}">${statusText}</span>
+        </div>
+        <div class="property-details">
+            <p><strong>🏠 Tipo:</strong> ${property.propertyType}</p>
+            <p><strong>🛏️ Habit.:</strong> ${property.bedrooms || 0}<strong> | 🚿 Baños:</strong> ${property.bathrooms || 0} | <strong>🚗 Garaj.:</strong> ${property.parkingSpaces || 0}</p>
+            <p><strong>💰 Renta (Mes):</strong> <span style="color: #4a82cb;font-weight: bold;">RD$ ${property.rentAmount.toLocaleString()}</span></p>
+            <p><strong>👤 Propietario:</strong> ${property.ownerName}</p>
+            ${property.status === 'rented' ? `<p><strong>👥 Inquilino:</strong> ${property.tenantName}</p>` : ''}
+
+            ${property.notes ? `<p><strong>📝 Notas:</strong> ${property.notes}</p>` : ''}
+            ${contractInfo}
+        </div>
+        <div class="property-actions">
+            <button class="btn" onclick="showPropertyDetailModal('${property.id}')">✏️ Editar</button>
+            <button class="btn btn-secondary" onclick="openModal('payment-history-modal'); showPaymentHistory('${property.id}')">📜 Historial</button>
+        </div>
+    </div>
+`;
+            }).join('');
+
+            container.innerHTML = html;
+        }
+
+        // Show payment history for a property
+        function showPaymentHistory(propertyId) {
+            const property = properties.find(p => p.id === propertyId);
+            if (!property) return;
+
+            const propertyPayments = payments.filter(p => p.propertyId === property.id)
+                .sort((a, b) => b.paymentDate - a.paymentDate);
+
+            const modal = document.getElementById('payment-history-modal');
+            const content = document.getElementById('payment-history-content');
+
+            let html = `
+        <h3>${property.address}</h3>
+        <p><strong>Propietario:</strong> ${property.ownerName}</p>
+    `;
+
+            if (propertyPayments.length > 0) {
+                html += `
+            <div class="payment-history">
+                ${propertyPayments.map(p => `
+<div class="payment-item">
+    <div>
+        <strong>${p.tenantName || 'N/A'}</strong> | <strong>Renta:</strong> RD$${p.rentAmount.toLocaleString()}
+        <p><strong>Recibido:</strong>  RD$${p.amount} / ${p.paymentMethod}</p>
+        <p><strong>Mes pagado: </strong>${p.mesPagado} de ${p.year}</p>
+    </div>
+    <div class="btn-factura-content">
+        <button class="btn" onclick="showEditPaymentModal('${p.id}')">✏️</button>
+        <button class="btn btn-danger" onclick="deletePaymentFromHistory('${p.id}', '${propertyId}')" style="display: none;">🗑️</button>
+        <button class="btn" onclick="downloadInvoice('${p.id}')">📄</button>
+    </div>
+</div>
+                `).join('')}
+            </div>
+        `;
+            } else {
+                html += '<p>No hay pagos registrados para esta propiedad.</p>';
+            }
+
+            content.innerHTML = html;
+            modal.style.display = 'block';
+        }
+
+        async function deletePaymentFromHistory(paymentId, propertyId) {
+            if (!confirm('¿Estás seguro de que quieres eliminar esta factura?')) {
+                return;
+            }
+
+            try {
+                await db.collection('payments').doc(paymentId).delete();
+                payments = payments.filter(p => p.id !== paymentId);
+
+                // Actualizar el historial sin cerrar el modal
+                showPaymentHistory(propertyId);
+
+                // Actualizar otras vistas
+                updateListView();
+                updateOverdueView();
+                generateCalendar();
+                updateAccountingView();
+
+                alert('✅ Factura eliminada exitosamente');
+            } catch (error) {
+                console.error('Error deleting payment:', error);
+                // Demo mode
+                payments = payments.filter(p => p.id !== paymentId);
+
+                // Actualizar el historial en modo demo
+                showPaymentHistory(propertyId);
+
+                updateListView();
+                updateOverdueView();
+                generateCalendar();
+                updateAccountingView();
+
+                alert('✅ Factura eliminada (modo demo)');
+            }
+        }
+
+        // Show property detail modal for editing
+        function showPropertyDetailModal(propertyId) {
+            const property = properties.find(p => p.id === propertyId);
+            if (!property) return;
+
+            // Llenar formulario con datos de la propiedad
+            document.getElementById('edit-property-id').value = property.id;
+
+            // Datos del propietario
+            document.getElementById('edit-owner-name').value = property.ownerName || '';
+            document.getElementById('edit-owner-phone').value = property.ownerPhone || '';
+            if (property.ownerPhone) {
+                document.getElementById('edit-owner-phone').iti.setNumber(property.ownerPhone);
+            }
+            document.getElementById('edit-owner-address').value = property.ownerAddress || '';
+
+            // Datos de la propiedad
+            document.getElementById('edit-property-type').value = property.propertyType || 'casa';
+            document.getElementById('edit-bedrooms').value = property.bedrooms || 0;
+            document.getElementById('edit-bathrooms').value = property.bathrooms || 0;
+            document.getElementById('edit-parking-spaces').value = property.parkingSpaces || 0;
+            document.getElementById('edit-property-address').value = property.address || '';
+            document.getElementById('edit-rent-amount').value = property.rentAmount || '';
+            document.getElementById('edit-property-status').value = property.status || 'available';
+            document.getElementById('edit-property-notes').value = property.notes || '';
+
+            // Datos del inquilino (si está rentado)
+            document.getElementById('edit-tenant-name').value = property.tenantName || '';
+            document.getElementById('edit-tenant-phone').value = property.tenantPhone || '';
+            if (property.tenantPhone) {
+                document.getElementById('edit-tenant-phone').iti.setNumber(property.tenantPhone);
+            }
+            document.getElementById('edit-tenant-id-type').value = property.tenantIdType || 'cedula';
+            document.getElementById('edit-tenant-id').value = property.tenantId || '';
+            document.getElementById('edit-payment-day').value = property.paymentDay || '';
+            document.getElementById('edit-contract-duration').value = property.contractDuration || '';
+            document.getElementById('edit-tenant-notes').value = property.tenantNotes || '';
+
+            // Datos del garante
+            document.getElementById('edit-guarantor-name').value = property.guarantorName || '';
+            document.getElementById('edit-guarantor-phone').value = property.guarantorPhone || '';
+            if (property.guarantorPhone) {
+                document.getElementById('edit-guarantor-phone').iti.setNumber(property.guarantorPhone);
+            }
+            document.getElementById('edit-guarantor-address').value = property.guarantorAddress || '';
+            document.getElementById('edit-guarantor-id-type').value = property.guarantorIdType || 'cedula';
+            document.getElementById('edit-guarantor-id').value = property.guarantorId || '';
+            document.getElementById('edit-guarantor-notes').value = property.guarantorNotes || '';
+
+            // Fecha de contrato
+            if (property.contractStart) {
+                const formattedDate = property.contractStart.toISOString().split('T')[0];
+                document.getElementById('edit-contract-date').value = formattedDate;
+            } else {
+                document.getElementById('edit-contract-date').value = '';
+            }
+
+            // Mostrar imagen actual si existe
+            const imageContainer = document.getElementById('edit-current-image-container');
+            const imageElement = document.getElementById('edit-current-image');
+
+            if (property.imageContrato) {
+                imageElement.src = property.imageContrato;
+                imageContainer.style.display = 'block';
+            } else {
+                imageContainer.style.display = 'none';
+            }
+
+            // Asegurarse de que los campos de inquilino se muestren correctamente
+            toggleTenantFields();
+
+            openModal('property-edit-modal');
+        }
+
+        // Update property
+        async function updateProperty(e) {
+            e.preventDefault();
+
+            const propertyId = document.getElementById('edit-property-id').value;
+            const propertyIndex = properties.findIndex(p => p.id === propertyId);
+            if (propertyIndex === -1) return;
+
+            const contractImage = document.getElementById('edit-contract-image').files[0];
+            let imageBase64 = properties[propertyIndex].imageContrato;
+
+            if (contractImage) {
+                imageBase64 = await convertImageToBase64(contractImage);
+            }
+
+            // Obtener números de teléfono formateados
+            const ownerPhone = document.getElementById('edit-owner-phone').iti.getNumber();
+            const tenantPhone = document.getElementById('edit-tenant-phone')?.iti?.getNumber() || '';
+            const guarantorPhone = document.getElementById('edit-guarantor-phone')?.iti?.getNumber() || '';
+
+            const updatedProperty = {
+                ownerName: document.getElementById('edit-owner-name').value,
+                ownerPhone: ownerPhone,
+                ownerAddress: document.getElementById('edit-owner-address').value,
+                propertyType: document.getElementById('edit-property-type').value,
+                bedrooms: parseInt(document.getElementById('edit-bedrooms').value),
+                bathrooms: parseInt(document.getElementById('edit-bathrooms').value),
+                parkingSpaces: parseInt(document.getElementById('edit-parking-spaces').value),
+                address: document.getElementById('edit-property-address').value,
+                rentAmount: parseFloat(document.getElementById('edit-rent-amount').value),
+                status: document.getElementById('edit-property-status').value,
+                notes: document.getElementById('edit-property-notes').value,
+                imageContrato: imageBase64
+            };
+
+            // Solo actualizar datos de inquilino si está rentado
+            if (updatedProperty.status === 'rented') {
+                updatedProperty.tenantName = document.getElementById('edit-tenant-name').value;
+                updatedProperty.tenantPhone = tenantPhone;
+                updatedProperty.tenantId = document.getElementById('edit-tenant-id').value;
+                updatedProperty.paymentDay = parseInt(document.getElementById('edit-payment-day').value);
+                updatedProperty.contractStart = new Date(document.getElementById('edit-contract-date').value);
+                updatedProperty.contractDuration = parseInt(document.getElementById('edit-contract-duration').value);
+                updatedProperty.tenantNotes = document.getElementById('edit-tenant-notes').value;
+                updatedProperty.guarantorName = document.getElementById('edit-guarantor-name').value;
+                updatedProperty.guarantorPhone = guarantorPhone;
+                updatedProperty.guarantorAddress = document.getElementById('edit-guarantor-address').value;
+                updatedProperty.guarantorId = document.getElementById('edit-guarantor-id').value;
+                updatedProperty.guarantorNotes = document.getElementById('edit-guarantor-notes').value;
+            } else {
+                // Limpiar datos de inquilino si ya no está rentado
+                updatedProperty.tenantName = '';
+                updatedProperty.tenantPhone = '';
+                updatedProperty.tenantId = '';
+                updatedProperty.paymentDay = null;
+                updatedProperty.contractStart = null;
+                updatedProperty.contractDuration = null;
+                updatedProperty.tenantNotes = '';
+                updatedProperty.guarantorName = '';
+                updatedProperty.guarantorPhone = '';
+                updatedProperty.guarantorAddress = '';
+                updatedProperty.guarantorId = '';
+                updatedProperty.guarantorNotes = '';
+            }
+
+            try {
+                await db.collection('properties').doc(propertyId).update(updatedProperty);
+                properties[propertyIndex] = { ...properties[propertyIndex], ...updatedProperty };
+
+                closeModal('property-edit-modal');
+                displayProperties();
+                generateCalendar();
+                updateListView();
+
+                alert('✅ Propiedad actualizada exitosamente');
+            } catch (error) {
+                console.error('Error updating property:', error);
+                // Demo mode
+                properties[propertyIndex] = { ...properties[propertyIndex], ...updatedProperty };
+                closeModal('property-edit-modal');
+                displayProperties();
+                generateCalendar();
+                updateListView();
+                alert('✅ Propiedad actualizada (modo demo)');
+            }
+        }
+
+        // Delete property
+        async function deleteProperty(propertyId) {
+            if (!confirm('¿Estás seguro de que quieres eliminar esta propiedad?')) {
+                return;
+            }
+
+            try {
+                await db.collection('properties').doc(propertyId).delete();
+                properties = properties.filter(p => p.id !== propertyId);
+                closeModal('property-edit-modal');
+                displayProperties();
+                generateCalendar();
+                updateListView();
+                alert('✅ Propiedad eliminada');
+            } catch (error) {
+                console.error('Error deleting property:', error);
+                // Demo mode
+                properties = properties.filter(p => p.id !== propertyId);
+                closeModal('property-edit-modal');
+                displayProperties();
+                generateCalendar();
+                updateListView();
+                alert('✅ Propiedad eliminada (modo demo)');
+            }
+        }
+
+        // Calendar functions
+        function generateCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            document.getElementById('calendar-title').textContent =
+                currentDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+
+            document.getElementById('list-title').textContent =
+                currentDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+
+            // Day headers
+            const dayHeaders = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+            dayHeaders.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-day-header';
+                header.textContent = day;
+                grid.appendChild(header);
+            });
+
+            // Calendar days
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            for (let i = 0; i < 42; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i);
+                date.setHours(0, 0, 0, 0);
+
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = date.getDate();
+
+                if (date.getMonth() !== month) {
+                    dayElement.classList.add('other-month');
+                }
+
+                if (date.getTime() === today.getTime()) {
+                    dayElement.classList.add('today');
+                }
+
+                const dayProperties = getPropertiesForDay(date);
+                if (dayProperties.length > 0) {
+                    dayElement.classList.add('has-properties');
+                    let statusClass = '';
+                    dayProperties.forEach(({ property, date: dueDate }) => {
+                        if (isPropertyPaid(property, dueDate)) {
+                            statusClass = 'paid';
+                        } else {
+                            const daysOverdue = calculateOverdueDays(property, dueDate);
+                            if (daysOverdue > 5) {
+                                statusClass = 'overdue';
+                            } else if (daysOverdue > 0) {
+                                statusClass = 'grace-period';
+                            } else {
+                                statusClass = 'pending';
+                            }
+                        }
+                    });
+
+                    dayElement.classList.add(statusClass);
+
+                    const countElement = document.createElement('div');
+                    countElement.className = 'property-count';
+                    countElement.textContent = dayProperties.length;
+                    dayElement.appendChild(countElement);
+                }
+
+                dayElement.addEventListener('click', () => showDayModal(date, dayProperties));
+                grid.appendChild(dayElement);
+            }
+
+            // 🔧 AQUÍ agregas la llamada:
+            updateOverdueView();
+
+        } // Fin de generateCalendar
+
+
+        // Update list view
+        function updateListView() {
+            const container = document.getElementById('properties-list-view');
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            const paymentDays = {};
+
+            properties.forEach(property => {
+                if (property.status !== 'rented' || !property.contractStart) return;
+
+                const contractDate = new Date(property.contractStart);
+                contractDate.setHours(0, 0, 0, 0);
+                const dueDate = new Date(year, month, property.paymentDay);
+                dueDate.setHours(0, 0, 0, 0);
+
+                // Solo excluir si es exactamente el mismo día del inicio del contrato
+                if (dueDate.getTime() === contractDate.getTime()) {
+                    return;
+                }
+
+                // Incluir si la fecha de pago es posterior o igual al inicio del contrato
+                if (dueDate >= contractDate) {
+                    const isPaid = isPropertyPaid(property, dueDate);
+                    const daysOverdue = calculateOverdueDays(property, dueDate);
+
+                    let statusClass = '';
+                    let statusText = '';
+
+                    if (isPaid) {
+                        statusClass = 'paid';
+                        statusText = 'Pagado';
+                    } else if (daysOverdue > 5) {
+                        statusClass = 'overdue';
+                        statusText = `${daysOverdue} días de atraso`;
+                    } else if (daysOverdue > 0) {
+                        statusClass = 'grace-period';
+                        statusText = `${daysOverdue} días de gracia`;
+                    } else {
+                        statusClass = 'pending';
+                        statusText = 'Pendiente';
+                    }
+
+                    if (!paymentDays[dueDate.getDate()]) {
+                        paymentDays[dueDate.getDate()] = [];
+                    }
+
+                    paymentDays[dueDate.getDate()].push({
+                        property,
+                        dueDate,
+                        statusClass,
+                        statusText,
+                        isFirstMonth: dueDate.getMonth() === contractDate.getMonth() &&
+                            dueDate.getFullYear() === contractDate.getFullYear()
+                    });
+                }
+            });
+
+            // Sort days
+            const sortedDays = Object.keys(paymentDays).sort((a, b) => a - b);
+
+            if (sortedDays.length === 0) {
+                container.innerHTML = '<div class="no-data">📋 No hay pagos pendientes este mes</div>';
+                return;
+            }
+
+            // Generate HTML
+            let html = '';
+
+            sortedDays.forEach(day => {
+                const dayInt = parseInt(day);
+                const dueDate = new Date(year, month, dayInt);
+                const paidMonth = new Date(dueDate);
+                paidMonth.setMonth(paidMonth.getMonth() - 1);
+
+                html += `
+            <h3>📅 ${dueDate.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric' })} (Pago para ${paidMonth.toLocaleDateString('es-ES', { month: 'long' })})</h3>
+        `;
+
+                paymentDays[day].forEach(item => {
+                    html += `
+                <div class="property-list-item ${item.statusClass}" onclick="showPropertyDetail('${item.property.id}', '${item.dueDate.toISOString()}')">
+                    <div>
+                        <strong>${item.property.tenantName}</strong>
+                        <p>${item.property.address}</p>
+                    </div>
+                    <div>
+                        <span>$${item.property.rentAmount.toLocaleString()}</span>
+                        <span class="status-badge ${item.statusClass}">${item.statusText}</span>
+                    </div>
+                </div>
+            `;
+                });
+            });
+
+            container.innerHTML = html;
+        }
+
+
+
+
+
+        function updateOverdueView() {
+            const container = document.getElementById('overdue-list');
+            let overdueItems = [];
+
+            properties.forEach(property => {
+                if (property.status !== 'rented' || !property.contractStart || !property.paymentDay) return;
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const contractStart = new Date(property.contractStart);
+                contractStart.setHours(0, 0, 0, 0);
+
+                // 1. Verificar pagos del mes actual
+                const currentMonthDueDate = new Date(today.getFullYear(), today.getMonth(), property.paymentDay);
+                currentMonthDueDate.setHours(0, 0, 0, 0);
+
+                if (currentMonthDueDate < today && !isPropertyPaid(property, currentMonthDueDate)) {
+                    const daysOverdue = Math.floor((today - currentMonthDueDate) / (1000 * 60 * 60 * 24));
+                    overdueItems.push({
+                        property,
+                        dueDate: currentMonthDueDate,
+                        daysOverdue,
+                        isCurrentMonth: true
+                    });
+                }
+
+                // 2. Verificar meses anteriores no pagados
+                let checkDate = new Date(contractStart);
+                while (checkDate < today) {
+                    const dueDate = new Date(checkDate.getFullYear(), checkDate.getMonth(), property.paymentDay);
+                    dueDate.setHours(0, 0, 0, 0);
+
+                    // Solo agregar si es una fecha válida y no está pagada
+                    if (dueDate >= contractStart && dueDate < today && !isPropertyPaid(property, dueDate)) {
+                        const daysOverdue = Math.floor((today - dueDate) / (1000 * 60 * 60 * 24));
+
+                        // Evitar duplicados del mes actual que ya verificamos
+                        if (!(dueDate.getMonth() === currentMonthDueDate.getMonth() &&
+                            dueDate.getFullYear() === currentMonthDueDate.getFullYear())) {
+                            overdueItems.push({
+                                property,
+                                dueDate,
+                                daysOverdue,
+                                isCurrentMonth: false
+                            });
+                        }
+                    }
+
+                    // Avanzar al siguiente mes
+                    checkDate.setMonth(checkDate.getMonth() + 1);
+                }
+            });
+
+            // Actualizar contador
+            const overdueCountElement = document.getElementById('overdue-count');
+            overdueCountElement.textContent = overdueItems.length;
+            overdueCountElement.style.display = overdueItems.length > 0 ? 'inline-block' : 'none';
+
+            if (overdueItems.length === 0) {
+                container.innerHTML = '<div class="no-data">🎉 No hay atrasos actualmente.</div>';
+                return;
+            }
+
+            // Ordenar por días de atraso (mayor primero)
+            overdueItems.sort((a, b) => b.daysOverdue - a.daysOverdue);
+
+            // Generar HTML
+            let html = overdueItems.map(item => {
+                const monthName = item.dueDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+                return `
+        <div class="property-list-item overdue" 
+             onclick="showPropertyDetail('${item.property.id}', '${item.dueDate.toISOString()}')">
+            <div>
+                <strong>${item.property.tenantName}</strong>
+                <p>${item.property.address}</p>
+                Mes de <strong>${monthName}</strong> pendiente de pago.
+            </div>
+            <div>
+                <span>RD$${item.property.rentAmount.toLocaleString()}</span>
+                <span class="status-badge overdue">${item.daysOverdue} Días de Atraso</span>
+            </div>
+        </div>
+        `;
+            }).join('');
+
+            container.innerHTML = html;
+        }
+
+
+
+
+        function getPropertiesForDay(date) {
+            return properties.filter(property => {
+                if (property.status !== 'rented' || !property.contractStart) return false;
+
+                const currentDate = new Date(date);
+                currentDate.setHours(0, 0, 0, 0);
+
+                const contractDate = new Date(property.contractStart);
+                contractDate.setHours(0, 0, 0, 0);
+
+                // Verificar que sea el día de pago y que la fecha sea posterior o igual al inicio del contrato
+                if (property.paymentDay === currentDate.getDate() && currentDate >= contractDate) {
+                    // Solo excluir si es exactamente el mismo día del inicio del contrato
+                    if (currentDate.getTime() === contractDate.getTime()) {
+                        return false;
+                    }
+                    return true;
+                }
+                return false;
+            }).map(property => ({ property, date: new Date(date) }));
+        }
+
+        function changeMonth(direction) {
+            currentDate.setMonth(currentDate.getMonth() + direction);
+            generateCalendar();
+            updateListView();
+        }
+
+        // Modal functions
+        function showDayModal(date, dayProperties) {
+            if (dayProperties.length === 0) return;
+
+            const modal = document.getElementById('day-modal');
+            const title = document.getElementById('modal-day-title');
+            const list = document.getElementById('modal-properties-list');
+
+            title.textContent = `📅 ${date.toLocaleDateString('es-ES', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })}`;
+
+            const html = dayProperties.map(({ property, date: dueDate }) => {
+                const isPaid = isPropertyPaid(property, dueDate);
+                const daysOverdue = calculateOverdueDays(property, dueDate);
+
+                let statusClass = '';
+                let statusText = '';
+
+                if (isPaid) {
+                    statusClass = 'paid';
+                    statusText = 'Pagado';
+                } else if (daysOverdue > 5) {
+                    statusClass = 'overdue';
+                    statusText = `${daysOverdue} días de atraso`;
+                } else if (daysOverdue > 0) {
+                    statusClass = 'grace-period';
+                    statusText = `${daysOverdue} días de gracia`;
+                } else {
+                    statusClass = 'pending';
+                    statusText = 'Pendiente';
+                }
+
+                return `
+            <div class="property-card ${statusClass}" 
+                 data-property-id="${property.id}" 
+                 data-due-date="${dueDate.toISOString()}"
+                 onclick="openModal('property-detail-modal'); showPropertyDetail('${property.id}', '${dueDate.toISOString()}')">
+                <div class="property-header">
+                    <div class="property-title">${property.tenantName}</div>
+                    <span class="status-badge ${statusClass}">${statusText}</span>
+                </div>
+                <div class="property-details">
+                    <p><strong>📍</strong> ${property.address}</p>
+                    <p><strong>💰</strong> $${property.rentAmount.toLocaleString()}</p>
+                    ${daysOverdue > 0 ? `<p class="overdue-days"><strong>⚠️</strong> ${daysOverdue} días de atraso</p>` : ''}
+                </div>
+            </div>
+        `;
+            }).join('');
+
+            list.innerHTML = html;
+
+            // Asegurarse de que los clicks en las tarjetas tengan la función actualizada
+            document.querySelectorAll('.property-card').forEach(card => {
+                card.onclick = function () {
+                    const propertyId = this.getAttribute('data-property-id');
+                    const dueDate = this.getAttribute('data-due-date');
+                    openModal('property-detail-modal');
+                    showPropertyDetail(propertyId, dueDate);
+                };
+            });
+
+            openModal('day-modal');
+        }
+
+        function showPropertyDetail(propertyId, dateStr) {
+            const property = properties.find(p => p.id === propertyId);
+            const date = new Date(dateStr);
+            const isPaid = isPropertyPaid(property, date);
+            const overdueDays = calculateOverdueDays(property, date);
+            const payment = getPaymentForProperty(property, date);
+
+            // Determinar si es el primer mes (excluyendo el mismo día de inicio)
+            const contractDate = new Date(property.contractStart);
+            const isFirstMonth = date.getMonth() === contractDate.getMonth() &&
+                date.getFullYear() === contractDate.getFullYear() &&
+                date.getDate() !== contractDate.getDate();
+
+            // Calcular días proporcionales para primer mes
+            const daysToPay = isFirstMonth ?
+                Math.ceil((date - contractDate) / (1000 * 60 * 60 * 24)) :
+                30;
+
+            // Definir paidMonth aquí
+            const paidMonth = new Date(date.getFullYear(), date.getMonth() - 1, 1);
+
+            const modal = document.getElementById('property-detail-modal');
+            const content = document.getElementById('property-detail-content');
+
+            let html = `
+        <h2>🏠 ${property.tenantName}</h2>
+        <div class="property-details">
+            <p><strong>📍 Dirección:</strong> ${property.address}</p>
+            <p><strong>💰 Renta Mensual:</strong> $${property.rentAmount.toLocaleString()}</p>
+            <p><strong>📅 Fecha de pago:</strong> ${date.toLocaleDateString('es-ES')}</p>
+            ${isFirstMonth ?
+                    `<p><strong>📅 Periodo a pagar:</strong> ${daysToPay} días desde ${contractDate.toLocaleDateString('es-ES')}</p>` :
+                    `<p><strong>📅 Mes que se paga:</strong> ${paidMonth.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}</p>`
+                }
+            ${overdueDays > 0 ? `<p class="overdue-days"><strong>⚠️ Días de atraso:</strong> ${overdueDays}</p>` : ''}
+        </div>
+    `;
+
+            if (isPaid && payment) {
+                let paymentDescription = '';
+                if (payment.paymentType === 'partial' &&
+                    payment.paymentDate.getMonth() === new Date(payment.dueDate).getMonth() &&
+                    payment.paymentDate.getFullYear() === new Date(payment.dueDate).getFullYear()) {
+                    // Pago parcial del primer mes
+                    const daysPaid = payment.notes.match(/\d+/)?.[0] || 'X';
+                    paymentDescription = `Pago por ${daysPaid} días del primer mes`;
+                } else {
+                    // Pago normal
+                    paymentDescription = `Pago completo de ${paidMonth.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}`;
+                }
+
+                html += `
+            <div class="property-card paid">
+                <h3>✅ Pago Registrado</h3>
+                <p><strong>${paymentDescription}</strong></p>
+                <p><strong>💳 Método:</strong> ${payment.paymentMethod}</p>
+                <p><strong>📅 Fecha de pago:</strong> ${payment.paymentDate.toLocaleDateString('es-ES')}</p>
+                <p><strong>⏰ Días de atraso:</strong> ${payment.overdueDays || 0}</p>
+                ${payment.notes ? `<p><strong>📝 Notas:</strong> ${payment.notes}</p>` : ''}
+                <button class="btn" onclick="downloadInvoice('${payment.id}')">📄 Descargar Factura</button>
+            </div>
+        `;
+            } else {
+                html += `
+            <div class="form-container" style="margin-top: 20px;">
+                <h3>💳 Registrar Pago</h3>
+                ${isFirstMonth ?
+                        `<p style="color: #e67e22; font-weight: bold;">
+                    ⚠️ Este es el primer mes del contrato. Debe cobrar solo los días proporcionales
+                </p>` :
+                        ''
+                    }
+                <form id="payment-form">
+                    <input type="hidden" id="payment-property-id" value="${property.id}">
+                    <input type="hidden" id="payment-due-date" value="${dateStr}">
+                    
+                    <div class="form-group">
+                        <label for="payment-type">Tipo de Pago</label>
+                        <select id="payment-type" required onchange="updatePaymentAmount(${property.rentAmount}, ${isFirstMonth})">
+                            ${isFirstMonth ?
+                        '<option value="partial" selected>Pago Proporcional (primer mes)</option>' :
+                        '<option value="complete">Pago Completo</option>'
+                    }
+                            ${isFirstMonth ? '' : '<option value="partial">Pago Parcial</option>'}
+                            ${isFirstMonth ? '' : '<option value="late">Pago con Mora</option>'}
+                            <option value="custom">Pago Personalizado</option>
+                        </select>
+                    </div>
+                    
+                    <div id="partial-days-container" ${isFirstMonth ? '' : 'style="display: none;"'}>
+                        <div class="form-group">
+                            <label for="partial-days">
+                                ${isFirstMonth ?
+                        'Días a pagar (desde inicio de contrato)' :
+                        'Días a pagar'
+                    }
+                            </label>
+                            <input type="number" id="partial-days" min="1" max="30" 
+                                   value="${daysToPay}" ${isFirstMonth ? 'readonly' : ''}>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payment-amount">Monto a Pagar ($)</label>
+                        <input type="number" id="payment-amount" step="0.01" 
+                               value="${(property.rentAmount / 30 * daysToPay).toFixed(2)}" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payment-method">Método de Pago</label>
+                        <select id="payment-method" required>
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Transferencia">Transferencia</option>
+                            <option value="Deposito">Depósito Bancario</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payment-notes">Notas (opcional)</label>
+                        <textarea id="payment-notes" rows="2" placeholder="Ej: Referencia bancaria, etc."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">✅ Registrar Pago</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('property-detail-modal')">Cancelar</button>
+                </form>
+            </div>
+        `;
+            }
+
+            content.innerHTML = html;
+
+            // Add form listener if payment form exists
+            const paymentForm = document.getElementById('payment-form');
+            if (paymentForm) {
+                // Remover cualquier listener anterior para evitar duplicados
+                paymentForm.removeEventListener('submit', processPayment);
+                paymentForm.addEventListener('submit', processPayment);
+            }
+
+            // Asegurarse de que el modal se abra correctamente
+            openModal('property-detail-modal');
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('closing');
+
+            // Esperar a que termine la animación antes de ocultar
+            setTimeout(() => {
+                modal.classList.remove('show', 'closing');
+                modal.style.display = 'none';
+            }, 300); // Debe coincidir con la duración de la transición (0.3s)
+        }
+
+        // Y cuando abras un modal, usa:
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = 'block';
+            // Forzar reflow para que la animación funcione
+            void modal.offsetWidth;
+            modal.classList.add('show');
+        }
+
+
+
+        // Actualiza la función updatePaymentAmount:
+        function updatePaymentAmount(rentAmount) {
+            const paymentType = document.getElementById('payment-type').value;
+            const amountInput = document.getElementById('payment-amount');
+            const daysContainer = document.getElementById('partial-days-container');
+
+            if (paymentType === 'complete') {
+                daysContainer.style.display = 'none';
+                amountInput.value = rentAmount;
+                amountInput.readOnly = true;
+            } else if (paymentType === 'partial') {
+                daysContainer.style.display = 'block';
+                const daysInput = document.getElementById('partial-days');
+                const dailyRate = rentAmount / 30;
+                amountInput.value = (dailyRate * daysInput.value).toFixed(2);
+                amountInput.readOnly = true;
+
+                daysInput.addEventListener('input', () => {
+                    amountInput.value = (dailyRate * daysInput.value).toFixed(2);
+                });
+            } else if (paymentType === 'late') {
+                daysContainer.style.display = 'none';
+                const lateFee = rentAmount * 0.05;
+                amountInput.value = (rentAmount + lateFee).toFixed(2);
+                amountInput.readOnly = true;
+            } else if (paymentType === 'custom') {
+                daysContainer.style.display = 'none';
+                amountInput.value = '';
+                amountInput.readOnly = false;
+                amountInput.focus();
+            }
+        }
+
+
+
+        // Payment functions
+        async function processPayment(e) {
+            e.preventDefault();
+
+            const propertyId = document.getElementById('payment-property-id').value;
+            const dateStr = document.getElementById('payment-due-date').value;
+
+            if (!propertyId || !dateStr) return;
+
+            const property = properties.find(p => p.id === propertyId);
+            const date = new Date(dateStr);
+            const paymentMethod = document.getElementById('payment-method').value;
+            const notes = document.getElementById('payment-notes').value;
+            const overdueDays = calculateOverdueDays(property, date);
+            const paymentType = document.getElementById('payment-type').value;
+            let amount = parseFloat(document.getElementById('payment-amount').value);
+
+            // En la función processPayment, actualiza la parte de paymentNotes:
+            let paymentNotes = notes;
+            if (paymentType === 'partial') {
+                const partialDays = document.getElementById('partial-days').value;
+                paymentNotes = `Pago parcial por ${partialDays} días. ${notes}`;
+            } else if (paymentType === 'late') {
+                paymentNotes = `Pago con mora del 5%. ${notes}`;
+            } else if (paymentType === 'custom') {
+                paymentNotes = `Pago personalizado. ${notes}`;
+            }
+
+            const payment = {
+                propertyId: property.id,
+                tenantName: property.tenantName,
+                address: property.address,
+                amount: amount, // Monto recibido en este pago
+                rentAmount: property.rentAmount, // Monto original de la renta
+                paymentMethod: paymentMethod,
+                paymentDate: new Date(),
+                dueDate: date,
+                overdueDays: Math.max(0, overdueDays),
+                month: date.getMonth(),
+                year: date.getFullYear(),
+                notes: paymentNotes,
+                paymentType: paymentType,
+                mesPagado: new Date(date.getFullYear(), date.getMonth() - 1, 1).toLocaleDateString('es-ES', { month: 'long' }).replace(/^\w/, c => c.toUpperCase())
+            };
+
+            try {
+                const docRef = await db.collection('payments').add(payment);
+                payment.id = docRef.id;
+                payments.push(payment);
+
+                // Actualizar la vista del modal de día si está abierto
+                const dayModal = document.getElementById('day-modal');
+                if (dayModal.classList.contains('show')) {
+                    const date = new Date(dateStr);
+                    const dayProperties = getPropertiesForDay(date);
+                    showDayModal(date, dayProperties);
+                }
+
+                // Actualizar la vista de lista si está abierta
+                if (currentView === 'list') {
+                    updateListView();
+                }
+
+                // Actualizar la vista de atrasos si está abierta
+                if (currentView === 'overdue') {
+                    updateOverdueView();
+                }
+
+                // Mostrar modal de éxito
+                document.getElementById('payment-success-id').value = payment.id;
+                document.getElementById('payment-success-content').innerHTML = `
+            <p><strong>Inquilino:</strong> ${payment.tenantName}</p>
+            <p><strong>Tipo de Pago:</strong> ${paymentType === 'complete' ? 'Completo' : paymentType === 'partial' ? 'Parcial' : 'Con Mora'}</p>
+            <p><strong>Monto:</strong> $${payment.amount.toLocaleString()}</p>
+            <p><strong>Método:</strong> ${payment.paymentMethod}</p>
+            <p><strong>Fecha de pago:</strong> ${payment.paymentDate.toLocaleDateString('es-ES')}</p>
+        `;
+
+                closeModal('property-detail-modal');
+                openModal('payment-success-modal');
+
+                generateCalendar();
+                updateListView();
+                updateAccountingView();
+            } catch (error) {
+                console.error('Error processing payment:', error);
+                // Demo mode
+                payment.id = Date.now().toString();
+                payments.push(payment);
+
+                // Show success modal with download option
+                document.getElementById('payment-success-id').value = payment.id;
+                document.getElementById('payment-success-content').innerHTML = `
+            <p><strong>Inquilino:</strong> ${payment.tenantName}</p>
+            <p><strong>Tipo de Pago:</strong> ${paymentType === 'complete' ? 'Completo' : paymentType === 'partial' ? 'Parcial' : 'Con Mora'}</p>
+            <p><strong>Monto:</strong> $${payment.amount.toLocaleString()}</p>
+            <p><strong>Método:</strong> ${payment.paymentMethod}</p>
+            <p><strong>Fecha de pago:</strong> ${payment.paymentDate.toLocaleDateString('es-ES')}</p>
+        `;
+
+                closeModal('property-detail-modal');
+                openModal('payment-success-modal');
+
+                generateCalendar();
+                updateListView();
+                updateAccountingView();
+            }
+        }
+
+        // Utility functions
+        function isPropertyPaid(property, date) {
+            return payments.some(payment =>
+                payment.propertyId === property.id &&
+                payment.dueDate &&
+                payment.dueDate.getMonth() === date.getMonth() &&
+                payment.dueDate.getFullYear() === date.getFullYear()
+            );
+        }
+
+        function getPaymentForProperty(property, date) {
+            return payments.find(payment =>
+                payment.propertyId === property.id &&
+                payment.dueDate &&
+                payment.dueDate.getMonth() === date.getMonth() &&
+                payment.dueDate.getFullYear() === date.getFullYear()
+            );
+        }
+
+        function calculateOverdueDays(property, dueDate) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const due = new Date(dueDate);
+            due.setHours(0, 0, 0, 0);
+
+            // Only calculate overdue if today is after due date
+            if (today < due) return 0;
+
+            const diffTime = today - due;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return Math.max(0, diffDays);
+        }
+
+        // Invoice generation
+        function generateInvoice(payment) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Header
+            doc.setFontSize(20);
+            doc.setTextColor(102, 126, 234);
+            doc.text('FACTURA DE RENTA', 20, 30);
+
+            // Invoice details
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`ID de Factura: ${payment.id}`, 20, 50);
+            doc.text(`Fecha de emisión: ${new Date().toLocaleDateString('es-ES')}`, 20, 60);
+
+            // Tenant information
+            doc.setFontSize(14);
+            doc.text('DATOS DEL INQUILINO:', 20, 80);
+            doc.setFontSize(12);
+            doc.text(`Nombre: ${payment.tenantName}`, 20, 95);
+            doc.text(`Dirección: ${payment.address}`, 20, 105);
+
+            // Payment details
+            doc.setFontSize(14);
+            doc.text('DETALLES DEL PAGO:', 20, 125);
+            doc.setFontSize(12);
+
+            // Nueva línea para mostrar el mes y año pagado en formato "Julio de 2025"
+            doc.text(`Mes pagado: ${payment.mesPagado} de ${payment.year}`, 20, 140);
+
+            doc.text(`Tipo de Pago: ${payment.paymentType === 'complete' ? 'Completo' :
+                payment.paymentType === 'partial' ? 'Parcial' :
+                    payment.paymentType === 'late' ? 'Con Mora' : 'Personalizado'}`, 20, 150);
+            doc.text(`Renta: $${payment.rentAmount.toLocaleString()}`, 20, 160);
+            doc.text(`Monto recibido: $${payment.amount.toLocaleString()}`, 20, 170);
+
+            doc.text(`Método de pago: ${payment.paymentMethod}`, 20, 180);
+            doc.text(`Fecha de pago: ${payment.paymentDate.toLocaleDateString('es-ES')}`, 20, 190);
+            doc.text(`Días de atraso: ${payment.overdueDays}`, 20, 200);
+            if (payment.notes) {
+                doc.text(`Notas: ${payment.notes}`, 20, 210);
+            }
+
+            // Save PDF
+            const fileName = `factura_${payment.tenantName.replace(/\s+/g, '_')}_${payment.mesPagado.replace(/\s+/g, '_')}_${payment.year}.pdf`;
+            doc.save(fileName);
+        }
+
+        function downloadInvoice(paymentId) {
+            const payment = payments.find(p => p.id === paymentId);
+            if (payment) {
+                generateInvoice(payment);
+            }
+        }
+
+        // Accounting functions
+        function changeAccountingMonth(direction) {
+            currentAccountingDate.setMonth(currentAccountingDate.getMonth() + direction);
+            updateAccountingView();
+        }
+
+        function updateAccountingView() {
+            const month = currentAccountingDate.getMonth();
+            const year = currentAccountingDate.getFullYear();
+
+            document.getElementById('accounting-month-title').textContent =
+                currentAccountingDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+
+            // Calculate totals
+            const monthPayments = payments.filter(p =>
+                p.paymentDate &&
+                p.paymentDate.getMonth() === month &&
+                p.paymentDate.getFullYear() === year
+            );
+
+            const totalCollected = monthPayments.reduce((sum, p) => sum + p.amount, 0);
+            const commission = totalCollected * 0.10;
+
+            const monthExpenses = expenses.filter(e =>
+                e.date &&
+                e.date.getMonth() === month &&
+                e.date.getFullYear() === year
+            );
+
+            const monthIncomes = incomes.filter(i =>
+                i.date &&
+                i.date.getMonth() === month &&
+                i.date.getFullYear() === year
+            );
+
+            const totalExpenses = monthExpenses.reduce((sum, e) => sum + e.amount, 0);
+            const totalIncomes = monthIncomes.reduce((sum, i) => sum + i.amount, 0);
+            const netProfit = commission + totalIncomes - totalExpenses;
+
+            // Update summary cards
+            const summaryContainer = document.getElementById('accounting-summary');
+            summaryContainer.innerHTML = `
+
+                <div class="summary-card">
+                    <h3>Total Cobrado</h3>
+                    <div class="amount">${totalCollected.toLocaleString()}</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Comisión (10%)</h3>
+                    <div class="amount">${commission.toLocaleString()}</div>
+                </div>
+
+
+                <div class="summary-card" style="background: #ffffff00;box-shadow: 0 10px 25px rgb(102 126 234 / 0%);padding: 0px;display: inline-flex;gap: 4px;flex-direction: column;">
+                    <div style="background: green;border-radius: 15px;box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);">
+                    <h3>Ingresos Extra</h3>
+                    <div class="amount">${totalIncomes.toLocaleString()}</div>
+</div>
+<div style="background: #800000;border-radius: 15px;box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);">
+                    <h3>Gastos del Mes</h3>
+                    <div class="amount">${totalExpenses.toLocaleString()}</div>
+                    </div>
+                </div>
+
+
+                <div class="summary-card">
+                    <h3>Ganancia Neta</h3>
+                    <div class="amount">${netProfit.toLocaleString()}</div>
+                </div>
+            `;
+
+            // Update transactions list
+            displayTransactions(monthExpenses, monthIncomes);
+        }
+
+        function displayTransactions(expenses, incomes) {
+            const container = document.getElementById('expenses-list');
+
+            if (expenses.length === 0 && incomes.length === 0) {
+                container.innerHTML = '<div class="no-data">📊 No hay transacciones registradas para este mes</div>';
+                return;
+            }
+
+            // Combine and sort all transactions by date
+            const allTransactions = [
+                ...expenses.map(e => ({ ...e, type: 'expense' })),
+                ...incomes.map(i => ({ ...i, type: 'income' }))
+            ].sort((a, b) => b.date - a.date);
+
+            const html = `
+        <h3>📊 Transacciones del Mes</h3>
+        ${allTransactions.map(transaction => `
+            <div class="expense-item ${transaction.type}">
+                <div>
+                    <strong>${transaction.description}</strong>
+                    <br><small>${transaction.date.toLocaleDateString('es-ES')}</small>
+                </div>
+                <div>
+                    <strong style="color: ${transaction.type === 'income' ? '#16a34a' : '#b91c1c'}">
+                        ${transaction.type === 'income' ? '+' : '-'}${transaction.amount.toLocaleString()}
+                    </strong>
+                    <button class="btn btn-${transaction.type === 'income' ? 'success' : 'danger'}" 
+                            onclick="showEditTransactionModal('${transaction.id}', '${transaction.type}')" 
+                            style="margin-left: 10px; padding: 5px 10px; font-size: 12px;">
+                        ✏️
+                    </button>
+                    <button class="btn btn-${transaction.type === 'income' ? 'success' : 'danger'}" 
+                            onclick="deleteTransaction('${transaction.id}', '${transaction.type}')" 
+                            style="margin-left: 5px; padding: 5px 10px; font-size: 12px;">
+                        🗑️
+                    </button>
+                </div>
+            </div>
+        `).join('')}
+    `;
+
+            container.innerHTML = html;
+        }
+
+        function showIncomeModal() {
+            document.getElementById('income-form').reset();
+            document.getElementById('income-date').value = new Date().toISOString().split('T')[0];
+
+            // Eliminar cualquier campo oculto de edición existente
+            const hiddenInput = document.querySelector('#income-form input[name="edit-transaction-id"]');
+            if (hiddenInput) {
+                hiddenInput.remove();
+            }
+
+            openModal('income-modal');
+
+        }
+
+        function showExpenseModal() {
+            document.getElementById('expense-form').reset();
+            document.getElementById('expense-date').value = new Date().toISOString().split('T')[0];
+
+            // Eliminar cualquier campo oculto de edición existente
+            const hiddenInput = document.querySelector('#expense-form input[name="edit-transaction-id"]');
+            if (hiddenInput) {
+                hiddenInput.remove();
+            }
+
+            openModal('expense-modal');
+
+        }
+
+        async function addIncome(e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const transactionId = form.querySelector('input[name="edit-transaction-id"]')?.value;
+
+            const incomeData = {
+                description: document.getElementById('income-description').value,
+                amount: parseFloat(document.getElementById('income-amount').value),
+                date: new Date(document.getElementById('income-date').value), // Solo date
+                // Eliminados: month y year
+            };
+
+            try {
+                if (transactionId) {
+                    // Editar ingreso existente
+                    await db.collection('incomes').doc(transactionId).update(incomeData);
+                    const index = incomes.findIndex(i => i.id === transactionId);
+                    if (index !== -1) {
+                        incomes[index] = { ...incomes[index], ...incomeData };
+                    }
+                    alert('✅ Ingreso actualizado exitosamente');
+                } else {
+                    // Agregar nuevo ingreso
+                    const docRef = await db.collection('incomes').add(incomeData);
+                    incomeData.id = docRef.id;
+                    incomes.push(incomeData);
+                    alert('✅ Ingreso extra agregado exitosamente');
+                }
+
+                closeModal('income-modal');
+                updateAccountingView();
+            } catch (error) {
+                console.error('Error processing income:', error);
+                // Demo mode
+                if (transactionId) {
+                    const index = incomes.findIndex(i => i.id === transactionId);
+                    if (index !== -1) {
+                        incomes[index] = { ...incomes[index], ...incomeData };
+                    }
+                    alert('✅ Ingreso actualizado (modo demo)');
+                } else {
+                    incomeData.id = Date.now().toString();
+                    incomes.push(incomeData);
+                    alert('✅ Ingreso extra agregado (modo demo)');
+                }
+                closeModal('income-modal');
+                updateAccountingView();
+            }
+        }
+
+        async function addExpense(e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const transactionId = form.querySelector('input[name="edit-transaction-id"]')?.value;
+
+            const expenseData = {
+                description: document.getElementById('expense-description').value,
+                amount: parseFloat(document.getElementById('expense-amount').value),
+                date: new Date(document.getElementById('expense-date').value), // Solo date
+                // Eliminados: month y year
+            };
+
+            try {
+                if (transactionId) {
+                    // Editar gasto existente
+                    await db.collection('expenses').doc(transactionId).update(expenseData);
+                    const index = expenses.findIndex(e => e.id === transactionId);
+                    if (index !== -1) {
+                        expenses[index] = { ...expenses[index], ...expenseData };
+                    }
+                    alert('✅ Gasto actualizado exitosamente');
+                } else {
+                    // Agregar nuevo gasto
+                    const docRef = await db.collection('expenses').add(expenseData);
+                    expenseData.id = docRef.id;
+                    expenses.push(expenseData);
+                    alert('✅ Gasto agregado exitosamente');
+                }
+
+                closeModal('expense-modal');
+                updateAccountingView();
+            } catch (error) {
+                console.error('Error processing expense:', error);
+                // Demo mode
+                if (transactionId) {
+                    const index = expenses.findIndex(e => e.id === transactionId);
+                    if (index !== -1) {
+                        expenses[index] = { ...expenses[index], ...expenseData };
+                    }
+                    alert('✅ Gasto actualizado (modo demo)');
+                } else {
+                    expenseData.id = Date.now().toString();
+                    expenses.push(expenseData);
+                    alert('✅ Gasto agregado (modo demo)');
+                }
+                closeModal('expense-modal');
+                updateAccountingView();
+            }
+        }
+
+
+        function showEditTransactionModal(id, type) {
+            const transaction = type === 'income'
+                ? incomes.find(i => i.id === id)
+                : expenses.find(e => e.id === id);
+
+            if (!transaction) return;
+
+            const modalId = type === 'income' ? 'income-modal' : 'expense-modal';
+            const formId = type === 'income' ? 'income-form' : 'expense-form';
+
+            // Llenar el formulario con los datos existentes
+            document.getElementById(`${type}-description`).value = transaction.description;
+            document.getElementById(`${type}-amount`).value = transaction.amount;
+            document.getElementById(`${type}-date`).value = transaction.date.toISOString().split('T')[0];
+
+            // Agregar un campo oculto para el ID de la transacción
+            const form = document.getElementById(formId);
+            let hiddenInput = form.querySelector('input[name="edit-transaction-id"]');
+            if (!hiddenInput) {
+                hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'edit-transaction-id';
+                form.appendChild(hiddenInput);
+            }
+            hiddenInput.value = id;
+
+            // Mostrar el modal
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+
+
+
+
+        // Mostrar modal para editar pago
+        function showEditPaymentModal(paymentId) {
+            const payment = payments.find(p => p.id === paymentId);
+            if (!payment) return;
+
+            document.getElementById('edit-payment-id').value = payment.id;
+            document.getElementById('edit-payment-type').value = payment.paymentType || 'complete';
+            document.getElementById('edit-payment-amount').value = payment.amount;
+            document.getElementById('edit-payment-method').value = payment.paymentMethod;
+            document.getElementById('edit-payment-date').value = payment.paymentDate.toISOString().split('T')[0];
+            document.getElementById('edit-payment-notes').value = payment.notes || '';
+
+            openModal('edit-payment-modal');
+
+        }
+
+        // Actualizar pago
+        document.getElementById('edit-payment-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const paymentId = document.getElementById('edit-payment-id').value;
+            const paymentIndex = payments.findIndex(p => p.id === paymentId);
+            if (paymentIndex === -1) return;
+
+            const updatedPayment = {
+                paymentType: document.getElementById('edit-payment-type').value,
+                amount: parseFloat(document.getElementById('edit-payment-amount').value),
+                paymentMethod: document.getElementById('edit-payment-method').value,
+                paymentDate: new Date(document.getElementById('edit-payment-date').value),
+                notes: document.getElementById('edit-payment-notes').value,
+                // Mantener el mesPagado existente
+                mesPagado: payments[paymentIndex].mesPagado,
+                year: payments[paymentIndex].year
+            };
+
+            try {
+                await db.collection('payments').doc(paymentId).update(updatedPayment);
+                payments[paymentIndex] = { ...payments[paymentIndex], ...updatedPayment };
+
+                // Cerrar modal con animación
+                closeModal('edit-payment-modal');
+
+                // Actualizar vistas
+                updateListView();
+                updateOverdueView();
+                generateCalendar();
+
+                // Verificar y actualizar el historial de pagos si está visible
+                const paymentHistoryModal = document.getElementById('payment-history-modal');
+                if (paymentHistoryModal.classList.contains('show')) {
+                    showPaymentHistory(payments[paymentIndex].propertyId);
+                    // Mantener el modal abierto después de actualizar
+                    openModal('payment-history-modal');
+                }
+
+                showAlert('success', 'Factura actualizada exitosamente');
+            } catch (error) {
+                console.error('Error updating payment:', error);
+                // Modo demo
+                payments[paymentIndex] = { ...payments[paymentIndex], ...updatedPayment };
+                closeModal('edit-payment-modal');
+                updateListView();
+                updateOverdueView();
+                generateCalendar();
+                showAlert('info', 'Factura actualizada (modo demo)');
+            }
+        });
+
+        // Función auxiliar para mostrar alertas (opcional)
+        function showAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert-${type}`;
+            alertDiv.textContent = message;
+            document.body.appendChild(alertDiv);
+
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000);
+        }
+
+        // Eliminar pago
+        async function deletePayment() {
+            const paymentId = document.getElementById('edit-payment-id').value;
+            if (!confirm('¿Estás seguro de que quieres eliminar esta factura?')) {
+                return;
+            }
+
+            try {
+                await db.collection('payments').doc(paymentId).delete();
+                const deletedPayment = payments.find(p => p.id === paymentId); // Obtener el pago antes de eliminarlo
+                payments = payments.filter(p => p.id !== paymentId);
+
+                // Cerrar el modal de edición
+                closeModal('edit-payment-modal');
+
+                // Si el modal de historial está abierto, actualizarlo
+                const paymentHistoryModal = document.getElementById('payment-history-modal');
+                if (paymentHistoryModal.classList.contains('show') && deletedPayment) {
+                    showPaymentHistory(deletedPayment.propertyId);
+                }
+
+                // Actualizar otras vistas
+                updateListView();
+                updateOverdueView();
+                generateCalendar();
+                updateAccountingView();
+
+                alert('✅ Factura eliminada exitosamente');
+            } catch (error) {
+                console.error('Error deleting payment:', error);
+                // Demo mode
+                const deletedPayment = payments.find(p => p.id === paymentId);
+                payments = payments.filter(p => p.id !== paymentId);
+                closeModal('edit-payment-modal');
+
+                // Actualizar el historial en modo demo
+                const paymentHistoryModal = document.getElementById('payment-history-modal');
+                if (paymentHistoryModal.classList.contains('show') && deletedPayment) {
+                    showPaymentHistory(deletedPayment.propertyId);
+                }
+
+                updateListView();
+                updateOverdueView();
+                generateCalendar();
+                updateAccountingView();
+
+                alert('✅ Factura eliminada (modo demo)');
+            }
+        }
+
+
+
+        async function deleteTransaction(id, type) {
+            if (!confirm('¿Estás seguro de que quieres eliminar esta transacción?')) {
+                return;
+            }
+
+            try {
+                if (type === 'income') {
+                    await db.collection('incomes').doc(id).delete();
+                    incomes = incomes.filter(i => i.id !== id);
+                } else {
+                    await db.collection('expenses').doc(id).delete();
+                    expenses = expenses.filter(e => e.id !== id);
+                }
+                updateAccountingView();
+                alert('✅ Transacción eliminada');
+            } catch (error) {
+                console.error('Error deleting transaction:', error);
+                // Demo mode
+                if (type === 'income') {
+                    incomes = incomes.filter(i => i.id !== id);
+                } else {
+                    expenses = expenses.filter(e => e.id !== id);
+                }
+                updateAccountingView();
+                alert('✅ Transacción eliminada (modo demo)');
+            }
+        }
+
+        // Close modals when clicking outside
+        /*window.onclick = function (event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let modal of modals) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        }*/
+
+        // Notification system (mock)
+        setInterval(() => {
+            const today = new Date();
+            const todayProperties = getPropertiesForDay(today);
+
+            todayProperties.forEach(({ property }) => {
+                if (!isPropertyPaid(property, today)) {
+                    console.log(`🔔 Recordatorio: Cobrar renta de ${property.tenantName} - ${property.rentAmount}`);
+                }
+            });
+        }, 60000); // Check every minute
     </script>
 </body>
+
 </html>
+
+<!-- 1s -->
