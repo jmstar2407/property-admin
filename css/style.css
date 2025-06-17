@@ -5,11 +5,11 @@
  }
 
  body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #000000;
-  overflow: hidden;
+     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+     background: linear-gradient(135deg, #212c41 0%, #181d27 100%);
+     min-height: 100vh;
+     color: #333;
+     background: #000000;
  }
 
  button,
@@ -848,9 +848,7 @@
 
  /* Nuevos estilos para el layout fijo */
 
-.fixed-footer {
-    position: relative;
-    height: 25px;
+ .fixed-footer {
     display: inline-flex
 ;
     justify-content: center;
@@ -859,8 +857,7 @@
     text-align: center;
     color: #ffffff;
     font-size: 10px;
-    flex-shrink: 0; /* Evita que el footer se encoja */
-}
+ }
 
 
 
@@ -1013,10 +1010,10 @@
 
 
 .fixed-header {
-    height: 101px;
-    background: #71505075;
+    background: rgba(255, 0, 0, 0);
+    height: 112px;
+    background: #ff000000;
 }
-
 
 
  .Master-Box {
@@ -1028,37 +1025,14 @@
      left: 0;
      top: 0;
      width: 100%;
-     min-height: 100vh; /* Usa min-height en lugar de height */
+     height: 100%;
      overflow: hidden;
-     box-sizing: border-box;
      background-color: rgba(0, 0, 0, 0.5);
  }
 
-.scrollable-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 0;
-  -webkit-overflow-scrolling: touch; /* Suaviza el scroll en iOS */
-}
-
-
-
-  /* Estilos para el footer en móviles */
-  @media (max-width: 768px) {
-    .Master-Box {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh; /* Usa toda la altura de la pantalla */
-    }
-    
-    .scrollable-content {
-      flex: 1; /* Ocupa todo el espacio disponible */
-      padding-bottom: 60px; /* Espacio para el footer */
-    }
-    
-    .fixed-footer {
-      position: relative; /* Cambia a relativo en móviles */
-      width: 100%;
-      margin-top: auto; /* Empuja el footer hacia abajo */
-    }
-  }
+ .scrollable-content {
+     background: rgba(255, 255, 255, 0);
+     overflow: auto;
+     flex: 1;
+     padding: 0px 10px;
+ }
