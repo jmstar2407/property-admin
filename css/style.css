@@ -1,951 +1,1035 @@
-   * {
-       margin: 0;
-       padding: 0;
-       box-sizing: border-box;
-   }
-
-   body {
-       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-       background: linear-gradient(135deg, #212c41 0%, #181d27 100%);
-       min-height: 100vh;
-       color: #333;
-       background: #000000;
-   }
-
-   button,
-   a,
-   input,
-   textarea,
-   select {
-       -webkit-tap-highlight-color: transparent;
-   }
-
-   .container {
-       max-width: 1200px;
-       margin: 0 auto;
-       padding: 20px;
-       padding: 0px 20px;
-   }
-
-   .header {
-       text-align: center;
-       margin-bottom: 15px;
-       color: #46505f;
-       background: #202733;
-       border-radius: 0px 0px 10px 10px;
-       height: 60px;
-   }
-
-   .header h1 {
-       font-size: 32px;
-       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-   }
-
-   #subtit {
-       color: #107dc7;
-       bottom: 9px;
-       position: relative;
-   }
-
-   .nav-tabs {
-       display: flex;
-       justify-content: center;
-       margin-bottom: 15px;
-       background: rgb(45 49 67);
-       border-radius: 15px;
-       padding: 5px;
-       backdrop-filter: blur(10px);
-       gap: 20px;
-   }
-
-
-   .nav-tab {
-       padding: 15px 30px;
-       background: none;
-       border: none;
-       color: white;
-       cursor: pointer;
-       border-radius: 10px;
-       transition: all 0.3s ease;
-       font-size: 16px;
-       font-weight: 500;
-   }
-
-   .nav-tab:hover {
-       background: rgb(208 208 208 / 20%);
-   }
-
-   .nav-tab.active {
-       background: rgba(255, 255, 255, 0.2);
-       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-   }
-
-   .tab-content {
-       display: none;
-       background: #202733;
-       border-radius: 20px;
-       padding: 30px;
-       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-       backdrop-filter: blur(10px);
-   }
-
-   .tab-content.active {
-       display: block;
-       animation: slideIn 0.3s ease-out;
-   }
-
-   @keyframes slideIn {
-       from {
-           opacity: 0;
-           transform: translateY(20px);
-       }
-
-       to {
-           opacity: 1;
-           transform: translateY(0);
-       }
-   }
-
-   /* Calendar Styles */
-   .calendar-container {
-       margin-bottom: 30px;
-   }
-
-   .calendar-header {
-       display: flex;
-       justify-content: space-between;
-       align-items: center;
-       margin-bottom: 20px;
-   }
-
-   .calendar-nav {
-       background: #007fd5;
-       color: white;
-       border: none;
-       padding: 10px 15px;
-       border-radius: 10px;
-       cursor: pointer;
-       transition: all 0.3s ease;
-       font-size: 15px;
-   }
-
-   .calendar-nav:hover {
-       background: #0c5e95;
-   }
-
-   .calendar-title {
-       font-size: 1.5rem;
-       font-weight: 600;
-       color: #1180cb;
-   }
-
-   .calendar-grid {
-       display: grid;
-       grid-template-columns: repeat(7, 1fr);
-       gap: 1px;
-       background: #475367;
-       border-radius: 15px;
-       overflow: hidden;
-       padding: 3px;
-       box-shadow: 6px 5px 20px 0px rgb(0 0 0 / 24%);
-   }
-
-   .calendar-day-header {
-       background: #819cd3;
-       color: #d3edff;
-       padding: 15px;
-       text-align: center;
-       font-weight: 600;
-       border-radius: 8px;
-       box-shadow: inset 0px 0px 0px 1px rgb(71 83 103);
-   }
-
-   .calendar-day {
-       background: #313847;
-       padding: 15px;
-       min-height: 80px;
-       position: relative;
-       cursor: pointer;
-       transition: all 0.3s ease;
-       border: 0px solid transparent;
-       border-radius: 7px;
-       margin: 1px;
-       color: #c4d2f2;
-   }
-
-   .calendar-day:hover {
-       background: #2d3547;
-       box-shadow: inset 0px 0px 0px 2px rgb(22 26 33);
-   }
-
-   .calendar-day.other-month {
-       color: #394861;
-       background: #1e222b;
-   }
-
-
-
-   .calendar-day.has-properties.pending {
-       background: linear-gradient(135deg, #fde047 0%, #f59e0b 100%);
-       border-color: #f59e0b;
-   }
-
-   .calendar-day.has-properties.grace-period {
-       background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
-       border-color: #ea580c;
-   }
-
-   .calendar-day.has-properties.overdue {
-       background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-       border-color: #b91c1c;
-   }
-
-   .calendar-day.has-properties.paid {
-       background: linear-gradient(135deg, #4ade80 0%, #16a34a 100%);
-       border-color: #16a34a;
-   }
-
-
-   .calendar-day.today {
-       background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
-       color: white;
-       font-weight: bold;
-   }
-
-   .calendar-day.today::after {
-       content: "Hoy";
-       position: absolute;
-       top: 5px;
-       left: 5px;
-       font-size: 10px;
-       background: rgba(255, 255, 255, 0.3);
-       padding: 2px 5px;
-       border-radius: 10px;
-   }
-
-   .property-count {
-       position: absolute;
-       bottom: 5px;
-       right: 5px;
-       background: #667eea;
-       color: white;
-       border-radius: 50%;
-       width: 20px;
-       height: 20px;
-       display: flex;
-       align-items: center;
-       justify-content: center;
-       font-size: 12px;
-       font-weight: bold;
-   }
-
-   /* View Toggle */
-   .view-toggle {
-       display: flex;
-       justify-content: center;
-       margin-bottom: 20px;
-       background: rgb(49 56 71);
-       border-radius: 10px;
-       padding: 5px;
-   }
-
-   .view-btn {
-       padding: 10px 20px;
-       background: none;
-       border: none;
-       color: #ffffff;
-       cursor: pointer;
-       border-radius: 8px;
-       transition: all 0.3s ease;
-       font-size: 14px;
-   }
-
-   .view-btn.active {
-       background: rgb(82 96 116);
-   }
-
-   /* List View */
-   .list-view {
-       display: none;
-   }
-
-   .list-view.active {
-       display: block;
-   }
-
-   .property-list-item {
-       background: white;
-       padding: 15px;
-       border-radius: 10px;
-       margin-bottom: 10px;
-       display: flex;
-       justify-content: space-between;
-       align-items: center;
-       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-   }
-
-   .property-list-item.pending {
-       border-left: 5px solid #f59e0b;
-   }
-
-   .property-list-item.grace-period {
-       border-left: 5px solid #ea580c;
-   }
-
-   .property-list-item.overdue {
-       border-left: 5px solid #b91c1c;
-   }
-
-   .property-list-item.paid {
-       border-left: 5px solid #16a34a;
-   }
-
-   /* Form Styles */
-   .form-container {
-       background: #f8f9fa;
-       padding: 25px;
-       border-radius: 15px;
-       margin-bottom: 30px;
-   }
-
-   .form-group {
-       margin-bottom: 20px;
-   }
-
-   .form-group label {
-       display: block;
-       margin-bottom: 8px;
-       font-weight: 600;
-       color: #4a5568;
-   }
-
-   .form-group input,
-   .form-group select,
-   .form-group textarea {
-       width: 100%;
-       padding: 12px;
-       border: 2px solid #e2e8f0;
-       border-radius: 10px;
-       font-size: 16px;
-       transition: all 0.3s ease;
-   }
-
-   .form-group input:focus,
-   .form-group select:focus,
-   .form-group textarea:focus {
-       outline: none;
-       border-color: #667eea;
-       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-   }
-
-   .btn {
-       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-       color: white;
-       border: none;
-       padding: 12px 25px;
-       border-radius: 10px;
-       cursor: pointer;
-       font-size: 16px;
-       font-weight: 600;
-       transition: all 0.3s ease;
-   }
-
-   .btn:hover {
-       transform: translateY(-2px);
-       box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-   }
-
-   .btn-success {
-       background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
-   }
-
-   .btn-danger {
-       background: linear-gradient(135deg, #ff7675 0%, #fd79a8 100%);
-   }
-
-   .btn-warning {
-       background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
-   }
-
-   .btn-secondary {
-       background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
-   }
-
-   /* Modal Styles */
-   .modal {
-       display: none;
-       position: fixed;
-       z-index: 1000;
-       left: 0;
-       top: 0;
-       width: 100%;
-       height: 100%;
-       background: rgba(0, 0, 0, 0);
-       backdrop-filter: blur(0);
-       opacity: 0;
-       transition: all 0.3s ease-out;
-   }
-
-   .modal.show {
-       display: block;
-       background: rgba(0, 0, 0, 0.5);
-       backdrop-filter: blur(5px);
-       opacity: 1;
-   }
-
-   .modal-content {
-       background: white;
-       margin: 5% auto;
-       padding: 30px;
-       border-radius: 20px;
-       width: 90%;
-       max-width: 600px;
-       max-height: 80vh;
-       overflow-y: auto;
-       transform: scale(0.8) translateY(-50px);
-       opacity: 0;
-       transition: all 0.3s ease-out;
-   }
-
-   .modal.show .modal-content {
-       transform: scale(1) translateY(0);
-       opacity: 1;
-   }
-
-   /* Animación de salida cuando se cierra */
-   .modal.closing {
-       background: rgba(0, 0, 0, 0);
-       backdrop-filter: blur(0);
-       opacity: 0;
-   }
-
-   .modal.closing .modal-content {
-       transform: scale(1) translateY(102vh);
-       opacity: 1;
-   }
-
-   .close {
-       color: #aaa;
-       float: right;
-       font-size: 28px;
-       font-weight: bold;
-       cursor: pointer;
-       transition: color 0.3s ease;
-   }
-
-   .close:hover {
-       color: #667eea;
-   }
-
-   .property-card {
-       background: #eeefef;
-       padding: 20px;
-       border-radius: 15px;
-       margin-bottom: 15px;
-       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-       border-left: 5px solid #667eea;
-       transition: all 0.3s ease;
-   }
-
-   .property-card:hover {
-       transform: translateY(-3px);
-       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-   }
-
-   .property-card.overdue {
-       border-left-color: #ff7675;
-       background: #fff5f5;
-   }
-
-   .property-card.paid {
-       border-left-color: #00b894;
-       background: #f0fff4;
-   }
-
-   .property-card.pending {
-       border-left-color: #fdcb6e;
-       background: #fffaf0;
-   }
-
-   .property-card.grace-period {
-       border-left-color: #fd9644;
-       background: #fff5e6;
-   }
-
-   .property-header {
-       display: flex;
-       justify-content: space-between;
-       align-items: center;
-       margin-bottom: 10px;
-   }
-
-   .property-title {
-       font-size: 1.2rem;
-       font-weight: 600;
-       color: #2d3748;
-   }
-
-   .status-badge {
-       padding: 5px 12px;
-       border-radius: 20px;
-       font-size: 12px;
-       font-weight: 600;
-       text-transform: uppercase;
-   }
-
-   .status-badge.paid {
-       background: #c6f6d5;
-       color: #22543d;
-   }
-
-   .status-badge.pending {
-       background: #fed7d7;
-       color: #742a2a;
-   }
-
-   .status-badge.overdue {
-       background: #fbb6ce;
-       color: #97266d;
-   }
-
-   .status-badge.grace-period {
-       background: #feebc8;
-       color: #7b341e;
-   }
-
-   .property-details {
-       color: #4a5568;
-       margin-bottom: 15px;
-   }
-
-   .overdue-days {
-       color: #e53e3e;
-       font-weight: 600;
-   }
-
-   /* Contract Image */
-   .contract-image-container {
-       margin: 15px 0;
-       text-align: center;
-   }
-
-   .contract-image {
-       max-width: 100%;
-       max-height: 200px;
-       border-radius: 10px;
-       border: 2px solid #e2e8f0;
-   }
-
-   .image-upload-btn {
-       display: inline-block;
-       padding: 10px 15px;
-       background: #667eea;
-       color: white;
-       border-radius: 8px;
-       cursor: pointer;
-       margin-top: 10px;
-   }
-
-   .image-upload-btn:hover {
-       background: #5a6fd8;
-   }
-
-   /* Payment History */
-   .payment-history {
-       width: 100%;
-       margin-top: 10px;
-       border-top: 1px solid #e2e8f0;
-       padding: 10px 0px;
-       display: inline-flex;
-       gap: 4px;
-       flex-direction: column;
-   }
-
-   .payment-item {
-       padding: 10px;
-       display: flex;
-       justify-content: space-between;
-       background: #d1d1d1;
-       border-radius: 7px;
-       box-shadow: inset 0px 0px 0px 1px rgb(159 159 159);
-   }
-
-   .payment-item:last-child {
-       border-bottom: none;
-   }
-
-   .btn-factura-content {
-       display: inline-flex;
-       align-items: center;
-   }
-
-   /* Accounting Styles */
-   .accounting-summary {
-       display: grid;
-       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-       gap: 20px;
-       margin-bottom: 30px;
-   }
-
-   .summary-card {
-       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-       color: white;
-       padding: 25px;
-       border-radius: 15px;
-       text-align: center;
-       box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-       display: inline-flex;
-       flex-direction: column;
-       justify-content: center;
-   }
-
-   .summary-card h3 {
-       font-size: 0.9rem;
-       margin-bottom: 0px;
-       opacity: 0.9;
-   }
-
-   .summary-card .amount {
-       font-size: 30px;
-       font-weight: bold;
-   }
-
-   .month-selector {
-       display: flex;
-       justify-content: center;
-       align-items: center;
-       margin-bottom: 30px;
-       gap: 20px;
-   }
-
-   .expenses-list {
-       background: #f8f9fa;
-       padding: 20px;
-       border-radius: 15px;
-       margin-top: 20px;
-   }
-
-   .expense-item {
-       display: flex;
-       justify-content: space-between;
-       align-items: center;
-       padding: 10px 0;
-       border-bottom: 1px solid #e2e8f0;
-   }
-
-   .expense-item:last-child {
-       border-bottom: none;
-   }
-
-   .loading {
-       text-align: center;
-       padding: 40px;
-       color: #667eea;
-       font-size: 1.1rem;
-   }
-
-   .no-data {
-       text-align: center;
-       padding: 40px;
-       color: #a0aec0;
-       font-size: 1.1rem;
-   }
-
-   .property-actions {
-       display: flex;
-       gap: 10px;
-       margin-top: 10px;
-   }
-
-
-
-   /* Estilos adicionales para el nuevo formulario */
-   .property-status-tabs {
-       display: flex;
-       margin-bottom: 20px;
-       background: rgba(255, 255, 255, 0.1);
-       border-radius: 15px;
-       padding: 5px;
-   }
-
-   .property-status-tab {
-       padding: 10px 20px;
-       background: none;
-       border: none;
-       color: #545aa3;
-       cursor: pointer;
-       border-radius: 10px;
-       transition: all 0.3s ease;
-       font-size: 14px;
-       font-weight: 500;
-   }
-
-   .property-status-tab.active {
-       background: rgb(195 195 195 / 69%);
-   }
-
-   .property-status-badge {
-       padding: 5px 10px;
-       border-radius: 20px;
-       font-size: 12px;
-       font-weight: 600;
-       text-transform: uppercase;
-   }
-
-   .property-status-badge.rented {
-       background: #c6f6d5;
-       color: #22543d;
-   }
-
-   .property-status-badge.available {
-       background: #dbeafe;
-       color: #1e40af;
-   }
-
-   .property-status-badge.maintenance {
-       background: #fee2e2;
-       color: #991b1b;
-   }
-
-   .section-title {
-       font-size: 1.2rem;
-       margin: 20px 0 10px;
-       color: #4a5568;
-       border-bottom: 2px solid #e2e8f0;
-       padding-bottom: 5px;
-   }
-
-   .form-section {
-       background: #f8f9fa;
-       padding: 15px;
-       border-radius: 10px;
-       margin-bottom: 15px;
-   }
-
-   .contract-days {
-       font-weight: bold;
-       margin-top: 5px;
-   }
-
-   .contract-days.remaining {
-       color: #16a34a;
-   }
-
-   .contract-days.expired {
-       color: #b91c1c;
-   }
-
-   .add-property-btn {
-       margin-bottom: 20px;
-   }
-
-
-
-   /* Estilos para intl-tel-input */
-   .iti {
-       width: 100%;
-   }
-
-   .iti__flag-container {
-       padding: 0 5px;
-   }
-
-   .iti__selected-flag {
-       padding: 0 5px;
-   }
-
-   .iti__country-list {
-       width: 300px;
-   }
-
-
-   .contract-image-container {
-       margin: 15px 0;
-       text-align: center;
-   }
-
-   .contract-image {
-       max-width: 100%;
-       max-height: 200px;
-       border: 1px solid #ddd;
-       border-radius: 4px;
-       margin-top: 10px;
-   }
-
-   .image-actions {
-       display: flex;
-       gap: 10px;
-       justify-content: center;
-       margin-top: 10px;
-   }
-
-   .btn-view {
-       background-color: #4a82cb;
-       color: white;
-   }
-
-   .btn-download {
-       background-color: #16a34a;
-       color: white;
-   }
-
-   /* Modal para imagen a pantalla completa */
-   #image-modal {
-       display: none;
-       position: fixed;
-       z-index: 1000;
-       left: 0;
-       top: 0;
-       width: 100%;
-       height: 100%;
-       background-color: rgba(0, 0, 0, 0.9);
-   }
-
-   #image-modal-content {
-       display: block;
-       margin: auto;
-       max-width: 90%;
-       max-height: 90%;
-       position: absolute;
-       top: 50%;
-       left: 50%;
-       transform: translate(-50%, -50%);
-   }
-
-   #close-image-modal {
-       position: absolute;
-       top: 15px;
-       right: 35px;
-       color: white;
-       font-size: 40px;
-       font-weight: bold;
-       cursor: pointer;
-   }
-
-
-
-   /* Responsive */
-   @media (max-width: 768px) {
-       .container {
-           padding: 0px 10px;
-       }
-
-       /*.nav-tabs {
+ * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #212c41 0%, #181d27 100%);
+            min-height: 100vh;
+            color: #333;
+            background: #000000;
+        }
+
+        button,
+        a,
+        input,
+        textarea,
+        select {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            padding: 0px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #46505f;
+            background: #202733;
+            border-radius: 0px 0px 10px 10px;
+            height: 60px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        #subtit {
+            color: #107dc7;
+            position: relative;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+            background: rgb(45 49 67);
+            border-radius: 15px;
+            padding: 5px;
+            backdrop-filter: blur(10px);
+            gap: 20px;
+        }
+
+
+        .nav-tab {
+            padding: 15px 30px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .nav-tab:hover {
+            background: rgb(208 208 208 / 20%);
+        }
+
+        .nav-tab.active {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-content {
+            display: none;
+            background: #202733;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Calendar Styles */
+        .calendar-container {
+            margin-bottom: 30px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-nav {
+            background: #007fd5;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 15px;
+        }
+
+        .calendar-nav:hover {
+            background: #0c5e95;
+        }
+
+        .calendar-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1180cb;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #475367;
+            border-radius: 15px;
+            overflow: hidden;
+            padding: 3px;
+            box-shadow: 6px 5px 20px 0px rgb(0 0 0 / 24%);
+        }
+
+        .calendar-day-header {
+            background: #819cd3;
+            color: #d3edff;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            border-radius: 8px;
+            box-shadow: inset 0px 0px 0px 1px rgb(71 83 103);
+        }
+
+        .calendar-day {
+            background: #313847;
+            padding: 15px;
+            min-height: 80px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 0px solid transparent;
+            border-radius: 7px;
+            margin: 1px;
+            color: #c4d2f2;
+        }
+
+        .calendar-day:hover {
+            background: #2d3547;
+            box-shadow: inset 0px 0px 0px 2px rgb(22 26 33);
+        }
+
+        .calendar-day.other-month {
+            color: #394861;
+            background: #1e222b;
+        }
+
+
+
+        .calendar-day.has-properties.pending {
+            background: linear-gradient(135deg, #fde047 0%, #f59e0b 100%);
+            border-color: #f59e0b;
+            color: black;
+        }
+
+        .calendar-day.other-month.has-properties.pending {
+            filter: brightness(0.5);
+        }
+
+        .calendar-day.has-properties.grace-period {
+            background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
+            border-color: #ea580c;
+        }
+
+        .calendar-day.other-month.has-properties.grace-period {
+            filter: brightness(0.5);
+        }
+
+        .calendar-day.has-properties.overdue {
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            border-color: #b91c1c;
+        }
+
+        .calendar-day.other-month.has-properties.overdue {
+            filter: brightness(0.5);
+        }
+
+        .calendar-day.has-properties.paid {
+            background: linear-gradient(135deg, #4ade80 0%, #16a34a 100%);
+            border-color: #16a34a;
+        }
+
+        .calendar-day.other-month.has-properties.paid {
+            filter: brightness(0.5);
+        }
+
+
+        .calendar-day.today {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+            color: white;
+            font-weight: bold;
+        }
+
+        .calendar-day.today::after {
+            content: "Hoy";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 2px 5px;
+            border-radius: 10px;
+        }
+
+        .property-count {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* View Toggle */
+        .view-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            background: rgb(49 56 71);
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .view-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .view-btn.active {
+            background: rgb(82 96 116);
+        }
+
+        /* List View */
+        .list-view {
+            display: none;
+        }
+
+        .list-view.active {
+            display: block;
+        }
+
+        .property-list-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .property-list-item.pending {
+            border-left: 5px solid #f59e0b;
+        }
+
+        .property-list-item.grace-period {
+            border-left: 5px solid #ea580c;
+        }
+
+        .property-list-item.overdue {
+            border-left: 5px solid #b91c1c;
+        }
+
+        .property-list-item.paid {
+            border-left: 5px solid #16a34a;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff7675 0%, #fd79a8 100%);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0);
+            backdrop-filter: blur(0);
+            opacity: 0;
+            transition: all 0.3s ease-out;
+        }
+
+        .modal.show {
+            display: block;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.8) translateY(-50px);
+            opacity: 0;
+            transition: all 0.3s ease-out;
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        /* Animación de salida cuando se cierra */
+        .modal.closing {
+            background: rgba(0, 0, 0, 0);
+            backdrop-filter: blur(0);
+            opacity: 0;
+        }
+
+        .modal.closing .modal-content {
+            transform: scale(1) translateY(102vh);
+            opacity: 1;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #667eea;
+        }
+
+        .property-card {
+            background: #eeefef;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .property-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .property-card.overdue {
+            border-left-color: #ff7675;
+            background: #fff5f5;
+        }
+
+        .property-card.paid {
+            border-left-color: #00b894;
+            background: #f0fff4;
+        }
+
+        .property-card.pending {
+            border-left-color: #fdcb6e;
+            background: #fffaf0;
+        }
+
+        .property-card.grace-period {
+            border-left-color: #fd9644;
+            background: #fff5e6;
+        }
+
+        .property-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .property-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.paid {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-badge.pending {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .status-badge.overdue {
+            background: #fbb6ce;
+            color: #97266d;
+        }
+
+        .status-badge.grace-period {
+            background: #feebc8;
+            color: #7b341e;
+        }
+
+        .property-details {
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+
+        .overdue-days {
+            color: #e53e3e;
+            font-weight: 600;
+        }
+
+        /* Contract Image */
+        .contract-image-container {
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .contract-image {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .image-upload-btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #667eea;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .image-upload-btn:hover {
+            background: #5a6fd8;
+        }
+
+        /* Payment History */
+        .payment-history {
+            width: 100%;
+            margin-top: 10px;
+            border-top: 1px solid #e2e8f0;
+            padding: 10px 0px;
+            display: inline-flex;
+            gap: 4px;
+            flex-direction: column;
+        }
+
+        .payment-item {
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            background: #d1d1d1;
+            border-radius: 7px;
+            box-shadow: inset 0px 0px 0px 1px rgb(159 159 159);
+        }
+
+        .payment-item:last-child {
+            border-bottom: none;
+        }
+
+        .btn-factura-content {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* Accounting Styles */
+        .accounting-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .summary-card h3 {
+            font-size: 0.9rem;
+            margin-bottom: 0px;
+            opacity: 0.9;
+        }
+
+        .summary-card .amount {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .month-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .expenses-list {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .expense-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .expense-item:last-child {
+            border-bottom: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #a0aec0;
+            font-size: 1.1rem;
+        }
+
+        .property-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+
+
+        /* Estilos adicionales para el nuevo formulario */
+        .property-status-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 5px;
+        }
+
+        .property-status-tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            color: #545aa3;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .property-status-tab.active {
+            background: rgb(195 195 195 / 69%);
+        }
+
+        .property-status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .property-status-badge.rented {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .property-status-badge.available {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .property-status-badge.maintenance {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            margin: 20px 0 10px;
+            color: #4a5568;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 5px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .contract-days {
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .contract-days.remaining {
+            color: #16a34a;
+        }
+
+        .contract-days.expired {
+            color: #b91c1c;
+        }
+
+        .add-property-btn {
+            margin-bottom: 20px;
+        }
+
+
+
+        /* Estilos para intl-tel-input */
+        .iti {
+            width: 100%;
+        }
+
+        .iti__flag-container {
+            padding: 0 5px;
+        }
+
+        .iti__selected-flag {
+            padding: 0 5px;
+        }
+
+        .iti__country-list {
+            width: 300px;
+        }
+
+
+        .contract-image-container {
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .contract-image {
+            max-width: 100%;
+            max-height: 200px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .image-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .btn-view {
+            background-color: #4a82cb;
+            color: white;
+        }
+
+        .btn-download {
+            background-color: #16a34a;
+            color: white;
+        }
+
+        /* Modal para imagen a pantalla completa */
+        #image-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        #image-modal-content {
+            display: block;
+            margin: auto;
+            max-width: 90%;
+            max-height: 90%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #close-image-modal {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+
+
+
+
+
+
+
+
+          /* Nuevos estilos para el layout fijo */
+.fixed-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    padding: 0px 10px;
+}
+        
+.fixed-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: #202733;
+    padding: 6px 20px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 10px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+}
+        
+        .scrollable-content {
+            /*margin-top: 120px; /* Ajusta según altura de tu header */
+            margin-bottom: 60px; /* Ajusta según altura de tu footer */
+            overflow-y: auto;
+            height: calc(100vh - 180px); /* 100vh - (header + footer) */
+            padding: 0 20px;
+        }
+        
+        /* Ajustar el container principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+
+
+
+
+
+
+
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0px 10px;
+            }
+
+            /*.nav-tabs {
            flex-direction: column;
            gap: 5px;
        }*/
 
-       .calendar-grid {
-           font-size: 14px;
-       }
+            .calendar-grid {
+                font-size: 14px;
+            }
 
-       .calendar-day {
-           min-height: 60px;
-           padding: 10px;
-       }
+            .calendar-day {
+                min-height: 60px;
+                padding: 10px;
+            }
 
-       .modal-content {
-           width: 95%;
-           margin: 10% auto;
-           padding: 20px;
-       }
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 20px;
+            }
 
-       .tab-content {
-           padding: 20px;
-       }
-   }
+            .tab-content {
+                padding: 20px;
+            }
+        }
 
 
-   @media (max-width: 550px) {
-       .header {
-           margin-bottom: 10px;
-           height: 45px;
-       }
+        @media (max-width: 550px) {
+            .header {
+                margin-bottom: 10px;
+                height: auto;
+                display: inline-flex;
+                flex-direction: column;
+                width: 100%;
+                justify-content: space-between;
+                gap: 0px;
+            }
 
-       .header h1 {
-           font-size: 24px;
-       }
+            .header h1 {
+                font-size: 20px;
+            }
 
-       .nav-tabs {
-           border-radius: 10px;
-           gap: 10px;
-           margin-bottom: 10px;
-           padding: 3px;
-       }
+            .nav-tabs {
+                border-radius: 10px;
+                gap: 10px;
+                margin-bottom: 10px;
+                padding: 3px;
+            }
 
-       .nav-tab {
-           padding: 10px 5px;
-           border-radius: 7px;
-           font-size: 14px;
-       }
+            .nav-tab {
+                padding: 10px 5px;
+                border-radius: 7px;
+                font-size: 14px;
+            }
 
-       #subtit {
-           font-size: 12px;
-           bottom: 4px;
-       }
+            #subtit {
+                font-size: 12px;
+            }
 
-       .tab-content {
-           padding: 7px;
-           border-radius: 10px;
-           height: calc(100vh - 110px);
-       }
+            .tab-content {
+                padding: 7px;
+                border-radius: 10px;
+            }
 
-       .calendar-container {
-           margin-bottom: 5px;
-       }
+            .calendar-container {
+                margin-bottom: 5px;
+            }
 
-       .calendar-header {
-           margin-bottom: 10px;
-       }
+            .calendar-header {
+                margin-bottom: 10px;
+            }
 
-       .calendar-nav {
-           padding: 8px 14px;
-           border-radius: 8px;
-           font-size: 12px;
-       }
+            .calendar-nav {
+                padding: 8px 14px;
+                border-radius: 8px;
+                font-size: 12px;
+            }
 
-       .calendar-title {
-           font-size: 20px;
-           font-weight: 600;
-           color: #1180cb;
-       }
+            .calendar-title {
+                font-size: 20px;
+                font-weight: 600;
+                color: #1180cb;
+            }
 
-       .view-toggle {
-           display: flex;
-           justify-content: space-between;
-           margin-bottom: 10px;
-       }
+            .view-toggle {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
 
-       .view-btn {
-           padding: 4px 12px;
-           font-size: 12px;
-       }
+            .view-btn {
+                padding: 4px 12px;
+                font-size: 12px;
+            }
 
-       .calendar-grid {
-           font-size: 12px;
-       }
+            .calendar-grid {
+                font-size: 12px;
+            }
 
-       .calendar-day {
-           min-height: 57px;
-           padding: 5px;
-       }
+            .calendar-day {
+                min-height: 57px;
+                padding: 5px;
+            }
 
-       .calendar-day-header {
-           padding: 10px 3px;
-       }
+            .calendar-day-header {
+                padding: 10px 3px;
+            }
 
-       .calendar-day.today::after {
-           top: 50%;
-           left: 50%;
-           transform: translate(-50%, -50%);
-           border-radius: 7px;
-       }
+            .calendar-day.today::after {
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                border-radius: 7px;
+            }
 
-       .property-count {
-           bottom: 4px;
-           right: 4px;
-           width: 17px;
-           height: 17px;
-       }
+            .property-count {
+                bottom: 4px;
+                right: 4px;
+                width: 17px;
+                height: 17px;
+            }
 
-   }
+
+            .scrollable-content {
+    position: relative;
+    /* margin-top: 120px; */
+    top: 108px;
+    margin-bottom: 60px;
+    overflow-y: auto;
+    height: calc(100vh - 180px);
+    padding: 0 10px;
+}
+
+        }

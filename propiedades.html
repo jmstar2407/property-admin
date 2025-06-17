@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrador de Propiedades</title>
 
-    <link rel="stylesheet" href="./css/style.css"/>
+    <link rel="stylesheet" href="./css/style.css" />
 
     <!-- intl-tel-input CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
@@ -25,13 +25,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/2.30.0/index.min.js"></script>
 
     <style>
+
     </style>
 </head>
 
 <body>
-    <div class="container">
+    <!-- header fixed -->
+    <div class="fixed-header">
         <div class="header">
-            <h1>Admin. de Propiedades</h1>
+            <h1>Bieneraiga</h1>
             <p id="subtit">Sistema de gestión y contabilidad</p>
         </div>
 
@@ -40,7 +42,11 @@
             <button class="nav-tab" onclick="showTab('properties')">🏘️ Propiedades</button>
             <button class="nav-tab" onclick="showTab('accounting')">💰 Contabilidad</button>
         </div>
+    </div>
+    <!-- header fixed FIN -->
 
+    <!-- Contenido -->
+    <div class="scrollable-content">
         <!-- Calendar Tab -->
         <div id="calendar-tab" class="tab-content active">
             <div class="view-toggle">
@@ -116,6 +122,13 @@
             <div class="expenses-list" id="expenses-list"></div>
         </div>
     </div>
+    <!-- Contenido FIN -->
+
+    <!-- footer fixed -->
+    <div class="fixed-footer">
+       © 2025 | Developed by Jose Polanco
+    </div>
+    <!-- footer fixed FIN -->
 
     <!-- Modals -->
     <div id="day-modal" class="modal">
@@ -216,18 +229,18 @@
                         <label for="edit-tenant-phone">Teléfono del Inquilino</label>
                         <input type="tel" id="edit-tenant-phone">
                     </div>
-<!-- Para el inquilino -->
-<div class="form-group">
-    <label for="edit-tenant-id-type">Tipo de Identificación</label>
-    <select id="edit-tenant-id-type">
-        <option value="cedula">Cédula</option>
-        <option value="pasaporte">Pasaporte</option>
-    </select>
-</div>
-<div class="form-group">
-    <label for="edit-tenant-id">Número de Identificación</label>
-    <input type="text" id="edit-tenant-id" placeholder="000-0000000-0 / 000000000">
-</div>
+                    <!-- Para el inquilino -->
+                    <div class="form-group">
+                        <label for="edit-tenant-id-type">Tipo de Identificación</label>
+                        <select id="edit-tenant-id-type">
+                            <option value="cedula">Cédula</option>
+                            <option value="pasaporte">Pasaporte</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-tenant-id">Número de Identificación</label>
+                        <input type="text" id="edit-tenant-id" placeholder="000-0000000-0 / 000000000">
+                    </div>
                     <div class="form-group">
                         <label for="edit-payment-day">Día de Cobro (1-31)</label>
                         <input type="number" id="edit-payment-day" min="1" max="31">
@@ -259,18 +272,18 @@
                         <label for="edit-guarantor-address">Dirección del Garante</label>
                         <input type="text" id="edit-guarantor-address">
                     </div>
-<!-- Para el garante -->
-<div class="form-group">
-    <label for="edit-guarantor-id-type">Tipo de Identificación</label>
-    <select id="edit-guarantor-id-type">
-        <option value="cedula">Cédula</option>
-        <option value="pasaporte">Pasaporte</option>
-    </select>
-</div>
-<div class="form-group">
-    <label for="edit-guarantor-id">Número de Identificación</label>
-    <input type="text" id="edit-guarantor-id" placeholder="000-0000000-0 / 000000000">
-</div>
+                    <!-- Para el garante -->
+                    <div class="form-group">
+                        <label for="edit-guarantor-id-type">Tipo de Identificación</label>
+                        <select id="edit-guarantor-id-type">
+                            <option value="cedula">Cédula</option>
+                            <option value="pasaporte">Pasaporte</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-guarantor-id">Número de Identificación</label>
+                        <input type="text" id="edit-guarantor-id" placeholder="000-0000000-0 / 000000000">
+                    </div>
                     <div class="form-group">
                         <label for="edit-guarantor-notes">Notas sobre el garante</label>
                         <textarea id="edit-guarantor-notes" rows="2"></textarea>
@@ -377,18 +390,18 @@
                         <label for="tenant-phone">Teléfono del Inquilino</label>
                         <input type="tel" id="tenant-phone">
                     </div>
-<!-- Para el inquilino -->
-<div class="form-group">
-    <label for="tenant-id-type">Tipo de Identificación</label>
-    <select id="tenant-id-type">
-        <option value="cedula">Cédula</option>
-        <option value="pasaporte">Pasaporte</option>
-    </select>
-</div>
-<div class="form-group">
-    <label for="tenant-id">Número de Identificación</label>
-    <input type="text" id="tenant-id" placeholder="000-0000000-0 / 000000000">
-</div>
+                    <!-- Para el inquilino -->
+                    <div class="form-group">
+                        <label for="tenant-id-type">Tipo de Identificación</label>
+                        <select id="tenant-id-type">
+                            <option value="cedula">Cédula</option>
+                            <option value="pasaporte">Pasaporte</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tenant-id">Número de Identificación</label>
+                        <input type="text" id="tenant-id" placeholder="000-0000000-0 / 000000000">
+                    </div>
                     <div class="form-group">
                         <label for="payment-day">Día de Cobro (1-31)</label>
                         <input type="number" id="payment-day" min="1" max="31">
@@ -420,18 +433,18 @@
                         <label for="guarantor-address">Dirección del Garante</label>
                         <input type="text" id="guarantor-address">
                     </div>
-<!-- Para el garante -->
-<div class="form-group">
-    <label for="guarantor-id-type">Tipo de Identificación</label>
-    <select id="guarantor-id-type">
-        <option value="cedula">Cédula</option>
-        <option value="pasaporte">Pasaporte</option>
-    </select>
-</div>
-<div class="form-group">
-    <label for="guarantor-id">Número de Identificación</label>
-    <input type="text" id="guarantor-id" placeholder="000-0000000-0 / 000000000">
-</div>
+                    <!-- Para el garante -->
+                    <div class="form-group">
+                        <label for="guarantor-id-type">Tipo de Identificación</label>
+                        <select id="guarantor-id-type">
+                            <option value="cedula">Cédula</option>
+                            <option value="pasaporte">Pasaporte</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="guarantor-id">Número de Identificación</label>
+                        <input type="text" id="guarantor-id" placeholder="000-0000000-0 / 000000000">
+                    </div>
                     <div class="form-group">
                         <label for="guarantor-notes">Notas sobre el garante</label>
                         <textarea id="guarantor-notes" rows="2"></textarea>
@@ -884,7 +897,7 @@
                 newProperty.tenantName = document.getElementById('tenant-name').value;
                 newProperty.tenantPhone = tenantPhone;
                 newProperty.tenantIdType = document.getElementById('tenant-id-type').value;
-newProperty.tenantId = document.getElementById('tenant-id').value;
+                newProperty.tenantId = document.getElementById('tenant-id').value;
                 newProperty.paymentDay = parseInt(document.getElementById('payment-day').value);
                 newProperty.contractStart = new Date(document.getElementById('contract-date').value);
                 newProperty.contractDuration = parseInt(document.getElementById('contract-duration').value);
@@ -893,7 +906,7 @@ newProperty.tenantId = document.getElementById('tenant-id').value;
                 newProperty.guarantorPhone = guarantorPhone;
                 newProperty.guarantorAddress = document.getElementById('guarantor-address').value;
                 newProperty.guarantorIdType = document.getElementById('guarantor-id-type').value;
-newProperty.guarantorId = document.getElementById('guarantor-id').value;
+                newProperty.guarantorId = document.getElementById('guarantor-id').value;
                 newProperty.guarantorNotes = document.getElementById('guarantor-notes').value;
             }
 
@@ -1125,7 +1138,7 @@ newProperty.guarantorId = document.getElementById('guarantor-id').value;
                 document.getElementById('edit-tenant-phone').iti.setNumber(property.tenantPhone);
             }
             document.getElementById('edit-tenant-id-type').value = property.tenantIdType || 'cedula';
-document.getElementById('edit-tenant-id').value = property.tenantId || '';
+            document.getElementById('edit-tenant-id').value = property.tenantId || '';
             document.getElementById('edit-payment-day').value = property.paymentDay || '';
             document.getElementById('edit-contract-duration').value = property.contractDuration || '';
             document.getElementById('edit-tenant-notes').value = property.tenantNotes || '';
@@ -1138,7 +1151,7 @@ document.getElementById('edit-tenant-id').value = property.tenantId || '';
             }
             document.getElementById('edit-guarantor-address').value = property.guarantorAddress || '';
             document.getElementById('edit-guarantor-id-type').value = property.guarantorIdType || 'cedula';
-document.getElementById('edit-guarantor-id').value = property.guarantorId || '';
+            document.getElementById('edit-guarantor-id').value = property.guarantorId || '';
             document.getElementById('edit-guarantor-notes').value = property.guarantorNotes || '';
 
             // Fecha de contrato
@@ -2419,54 +2432,54 @@ document.getElementById('edit-guarantor-id').value = property.guarantorId || '';
         }
 
         // Eliminar pago
-      async function deletePayment() {
-    const paymentId = document.getElementById('edit-payment-id').value;
-    if (!confirm('¿Estás seguro de que quieres eliminar esta factura?')) {
-        return;
-    }
+        async function deletePayment() {
+            const paymentId = document.getElementById('edit-payment-id').value;
+            if (!confirm('¿Estás seguro de que quieres eliminar esta factura?')) {
+                return;
+            }
 
-    try {
-        await db.collection('payments').doc(paymentId).delete();
-        const deletedPayment = payments.find(p => p.id === paymentId); // Obtener el pago antes de eliminarlo
-        payments = payments.filter(p => p.id !== paymentId);
+            try {
+                await db.collection('payments').doc(paymentId).delete();
+                const deletedPayment = payments.find(p => p.id === paymentId); // Obtener el pago antes de eliminarlo
+                payments = payments.filter(p => p.id !== paymentId);
 
-        // Cerrar el modal de edición
-        closeModal('edit-payment-modal');
+                // Cerrar el modal de edición
+                closeModal('edit-payment-modal');
 
-        // Si el modal de historial está abierto, actualizarlo
-        const paymentHistoryModal = document.getElementById('payment-history-modal');
-        if (paymentHistoryModal.classList.contains('show') && deletedPayment) {
-            showPaymentHistory(deletedPayment.propertyId);
+                // Si el modal de historial está abierto, actualizarlo
+                const paymentHistoryModal = document.getElementById('payment-history-modal');
+                if (paymentHistoryModal.classList.contains('show') && deletedPayment) {
+                    showPaymentHistory(deletedPayment.propertyId);
+                }
+
+                // Actualizar otras vistas
+                updateListView();
+                updateOverdueView();
+                generateCalendar();
+                updateAccountingView();
+
+                alert('✅ Factura eliminada exitosamente');
+            } catch (error) {
+                console.error('Error deleting payment:', error);
+                // Demo mode
+                const deletedPayment = payments.find(p => p.id === paymentId);
+                payments = payments.filter(p => p.id !== paymentId);
+                closeModal('edit-payment-modal');
+
+                // Actualizar el historial en modo demo
+                const paymentHistoryModal = document.getElementById('payment-history-modal');
+                if (paymentHistoryModal.classList.contains('show') && deletedPayment) {
+                    showPaymentHistory(deletedPayment.propertyId);
+                }
+
+                updateListView();
+                updateOverdueView();
+                generateCalendar();
+                updateAccountingView();
+
+                alert('✅ Factura eliminada (modo demo)');
+            }
         }
-
-        // Actualizar otras vistas
-        updateListView();
-        updateOverdueView();
-        generateCalendar();
-        updateAccountingView();
-
-        alert('✅ Factura eliminada exitosamente');
-    } catch (error) {
-        console.error('Error deleting payment:', error);
-        // Demo mode
-        const deletedPayment = payments.find(p => p.id === paymentId);
-        payments = payments.filter(p => p.id !== paymentId);
-        closeModal('edit-payment-modal');
-
-        // Actualizar el historial en modo demo
-        const paymentHistoryModal = document.getElementById('payment-history-modal');
-        if (paymentHistoryModal.classList.contains('show') && deletedPayment) {
-            showPaymentHistory(deletedPayment.propertyId);
-        }
-
-        updateListView();
-        updateOverdueView();
-        generateCalendar();
-        updateAccountingView();
-
-        alert('✅ Factura eliminada (modo demo)');
-    }
-}
 
 
 
