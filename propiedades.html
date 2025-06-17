@@ -30,105 +30,112 @@
 </head>
 
 <body>
-    <!-- header fixed -->
-    <div class="fixed-header">
-        <div class="header">
-            <h1>Bieneraiga</h1>
-            <p id="subtit">Sistema de gestión y contabilidad</p>
-        </div>
 
-        <div class="nav-tabs">
-            <button class="nav-tab active" onclick="showTab('calendar')">📅 Calendario</button>
-            <button class="nav-tab" onclick="showTab('properties')">🏘️ Propiedades</button>
-            <button class="nav-tab" onclick="showTab('accounting')">💰 Contabilidad</button>
-        </div>
-    </div>
-    <!-- header fixed FIN -->
 
-    <!-- Contenido -->
-    <div class="scrollable-content">
-        <!-- Calendar Tab -->
-        <div id="calendar-tab" class="tab-content active">
-            <div class="view-toggle">
-                <button class="view-btn active" onclick="showView('calendar')">Calendario</button>
-                <button class="view-btn" onclick="showView('list')">Lista de Pagos</button>
-                <button class="view-btn" id="overdue-btn" onclick="showView('overdue')">
-                    Atrasos <span id="overdue-count"
-                        style="display:none; background:red;color:white;border-radius:50%;padding:2px 8px;margin-left:5px;">0</span>
-                </button>
+    <div class="Master-Box">
+        <!-- header fixed -->
+        <div class="fixed-header">
+            <div class="header">
+                <h1>Bieneraiga</h1>
+                <p id="subtit">Sistema de gestión y contabilidad</p>
             </div>
 
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('calendar')">📅 Calendario</button>
+                <button class="nav-tab" onclick="showTab('properties')">🏘️ Propiedades</button>
+                <button class="nav-tab" onclick="showTab('accounting')">💰 Contabilidad</button>
+            </div>
+        </div>
+        <!-- header fixed FIN -->
 
-            <div id="calendar-view" class="calendar-view">
-                <div class="calendar-container">
+        <!-- Contenido -->
+        <div class="scrollable-content">
+            <!-- Calendar Tab -->
+            <div id="calendar-tab" class="tab-content active">
+                <div class="view-toggle">
+                    <button class="view-btn active" onclick="showView('calendar')">Calendario</button>
+                    <button class="view-btn" onclick="showView('list')">Lista de Pagos</button>
+                    <button class="view-btn" id="overdue-btn" onclick="showView('overdue')">
+                        Atrasos <span id="overdue-count"
+                            style="display:none; background:red;color:white;border-radius:50%;padding:2px 8px;margin-left:5px;">0</span>
+                    </button>
+                </div>
+
+
+                <div id="calendar-view" class="calendar-view">
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button class="calendar-nav" onclick="changeMonth(-1)">← Anterior</button>
+                            <h2 class="calendar-title" id="calendar-title"></h2>
+                            <button class="calendar-nav" onclick="changeMonth(1)">Siguiente →</button>
+                        </div>
+                        <div class="calendar-grid" id="calendar-grid"></div>
+                    </div>
+                </div>
+
+                <div id="list-view" class="list-view">
                     <div class="calendar-header">
                         <button class="calendar-nav" onclick="changeMonth(-1)">← Anterior</button>
-                        <h2 class="calendar-title" id="calendar-title"></h2>
+                        <h2 class="calendar-title" id="list-title"></h2>
                         <button class="calendar-nav" onclick="changeMonth(1)">Siguiente →</button>
                     </div>
-                    <div class="calendar-grid" id="calendar-grid"></div>
+                    <div id="properties-list-view"></div>
+                </div>
+
+                <div id="overdue-view" class="list-view">
+                    <div id="overdue-list"></div>
+                </div>
+
+
+            </div>
+
+            <!-- Properties Tab -->
+            <div id="properties-tab" class="tab-content">
+                <button class="btn add-property-btn" onclick="showAddPropertyModal()">📝 Agregar Nueva
+                    Propiedad</button>
+
+                <div class="property-status-tabs">
+                    <button class="property-status-tab active" onclick="filterProperties('all')">Todas</button>
+                    <button class="property-status-tab" onclick="filterProperties('rented')">Rentadas</button>
+                    <button class="property-status-tab" onclick="filterProperties('available')">Disponibles</button>
+                    <button class="property-status-tab" onclick="filterProperties('maintenance')">En
+                        Mantenimiento</button>
+                </div>
+
+                <div id="properties-list">
+                    <div class="loading">Cargando propiedades...</div>
                 </div>
             </div>
 
-            <div id="list-view" class="list-view">
-                <div class="calendar-header">
-                    <button class="calendar-nav" onclick="changeMonth(-1)">← Anterior</button>
-                    <h2 class="calendar-title" id="list-title"></h2>
-                    <button class="calendar-nav" onclick="changeMonth(1)">Siguiente →</button>
+            <!-- Accounting Tab -->
+            <div id="accounting-tab" class="tab-content">
+                <div class="month-selector">
+                    <button class="calendar-nav" onclick="changeAccountingMonth(-1)">← Anterior</button>
+                    <h3 id="accounting-month-title"></h3>
+                    <button class="calendar-nav" onclick="changeAccountingMonth(1)">Siguiente →</button>
                 </div>
-                <div id="properties-list-view"></div>
-            </div>
 
-            <div id="overdue-view" class="list-view">
-                <div id="overdue-list"></div>
-            </div>
+                <div class="accounting-summary" id="accounting-summary">
+                    <div class="loading">Calculando datos...</div>
+                </div>
 
+                <div class="accounting-actions">
+                    <button class="btn" onclick="showIncomeModal()">➕ Agregar Ingreso Extra</button>
+                    <button class="btn btn-danger" onclick="showExpenseModal()">➖ Agregar Gasto</button>
+                </div>
 
-        </div>
-
-        <!-- Properties Tab -->
-        <div id="properties-tab" class="tab-content">
-            <button class="btn add-property-btn" onclick="showAddPropertyModal()">📝 Agregar Nueva Propiedad</button>
-
-            <div class="property-status-tabs">
-                <button class="property-status-tab active" onclick="filterProperties('all')">Todas</button>
-                <button class="property-status-tab" onclick="filterProperties('rented')">Rentadas</button>
-                <button class="property-status-tab" onclick="filterProperties('available')">Disponibles</button>
-                <button class="property-status-tab" onclick="filterProperties('maintenance')">En Mantenimiento</button>
-            </div>
-
-            <div id="properties-list">
-                <div class="loading">Cargando propiedades...</div>
+                <div class="expenses-list" id="expenses-list"></div>
             </div>
         </div>
+        <!-- Contenido FIN -->
 
-        <!-- Accounting Tab -->
-        <div id="accounting-tab" class="tab-content">
-            <div class="month-selector">
-                <button class="calendar-nav" onclick="changeAccountingMonth(-1)">← Anterior</button>
-                <h3 id="accounting-month-title"></h3>
-                <button class="calendar-nav" onclick="changeAccountingMonth(1)">Siguiente →</button>
-            </div>
-
-            <div class="accounting-summary" id="accounting-summary">
-                <div class="loading">Calculando datos...</div>
-            </div>
-
-            <div class="accounting-actions">
-                <button class="btn" onclick="showIncomeModal()">➕ Agregar Ingreso Extra</button>
-                <button class="btn btn-danger" onclick="showExpenseModal()">➖ Agregar Gasto</button>
-            </div>
-
-            <div class="expenses-list" id="expenses-list"></div>
+        <!-- footer fixed -->
+        <div class="fixed-footer">
+            © 2025 | Developed by Jose Polanco
         </div>
+        <!-- footer fixed FIN -->
+
     </div>
-    <!-- Contenido FIN -->
-
-    <!-- footer fixed -->
-    <div class="fixed-footer">
-       © 2025 | Developed by Jose Polanco
-    </div>
-    <!-- footer fixed FIN -->
 
     <!-- Modals -->
     <div id="day-modal" class="modal">
@@ -2536,5 +2543,3 @@
 </body>
 
 </html>
-
-<!-- 1s -->
