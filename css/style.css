@@ -183,6 +183,12 @@ color: #c2c7cf;
      background: #1e222b;
  }
 
+#list-font-mes {
+    color: #ffffff;
+    margin-block-end: 11px;
+    font-weight: 400;
+    font-size: 17px;
+}
 
 
  .calendar-day.has-properties.pending {
@@ -291,7 +297,8 @@ color: #c2c7cf;
  }
 
  .property-list-item {
-     background: white;
+background: #475367;
+    color: white;
      padding: 15px;
      border-radius: 10px;
      margin-bottom: 10px;
@@ -299,6 +306,12 @@ color: #c2c7cf;
      justify-content: space-between;
      align-items: center;
      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+     cursor: pointer;
+     transition: all 0.3s ease;
+ }
+
+ .property-list-item:hover{
+    background: #313a49;
  }
 
  .property-list-item.pending {
@@ -309,12 +322,19 @@ color: #c2c7cf;
      border-left: 5px solid #ea580c;
  }
 
- .property-list-item.overdue {
-     border-left: 5px solid #b91c1c;
- }
+.property-list-item.overdue {
+    box-shadow: inset 0px 0px 0px 1px rgb(155 14 14);
+}
 
  .property-list-item.paid {
      border-left: 5px solid #16a34a;
+ }
+
+ #monto-dias{
+    display: inline-flex
+;
+    flex-direction: column;
+    align-items: center;
  }
 
  /* Form Styles */
@@ -520,10 +540,11 @@ color: #c2c7cf;
      color: #742a2a;
  }
 
- .status-badge.overdue {
-     background: #fbb6ce;
-     color: #97266d;
- }
+.status-badge.overdue {
+    background: #ff000024;
+    color: #ffdede;
+    box-shadow: inset 0px 0px 0px 1px rgb(255 0 0);
+}
 
  .status-badge.grace-period {
      background: #feebc8;

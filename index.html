@@ -1462,7 +1462,7 @@
                 paidMonth.setMonth(paidMonth.getMonth() - 1);
 
                 html += `
-            <h3>📅 ${dueDate.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric' })} (Pago para ${paidMonth.toLocaleDateString('es-ES', { month: 'long' })})</h3>
+            <h3 id="list-font-mes">📅 ${dueDate.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric' })} (Pago para ${paidMonth.toLocaleDateString('es-ES', { month: 'long' })})</h3>
         `;
 
                 paymentDays[day].forEach(item => {
@@ -1472,7 +1472,7 @@
                         <strong>${item.property.tenantName}</strong>
                         <p>${item.property.address}</p>
                     </div>
-                    <div>
+                    <div id="monto-dias">
                         <span>$${item.property.rentAmount.toLocaleString()}</span>
                         <span class="status-badge ${item.statusClass}">${item.statusText}</span>
                     </div>
