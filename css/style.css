@@ -1040,3 +1040,25 @@
   padding: 0;
   -webkit-overflow-scrolling: touch; /* Suaviza el scroll en iOS */
 }
+
+
+
+  /* Estilos para el footer en móviles */
+  @media (max-width: 768px) {
+    .Master-Box {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh; /* Usa toda la altura de la pantalla */
+    }
+    
+    .scrollable-content {
+      flex: 1; /* Ocupa todo el espacio disponible */
+      padding-bottom: 60px; /* Espacio para el footer */
+    }
+    
+    .fixed-footer {
+      position: relative; /* Cambia a relativo en móviles */
+      width: 100%;
+      margin-top: auto; /* Empuja el footer hacia abajo */
+    }
+  }
