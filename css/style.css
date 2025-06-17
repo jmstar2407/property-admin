@@ -848,7 +848,9 @@
 
  /* Nuevos estilos para el layout fijo */
 
- .fixed-footer {
+.fixed-footer {
+    position: relative;
+    height: 25px;
     display: inline-flex
 ;
     justify-content: center;
@@ -857,7 +859,7 @@
     text-align: center;
     color: #ffffff;
     font-size: 10px;
- }
+}
 
 
 
@@ -1031,11 +1033,9 @@
      background-color: rgba(0, 0, 0, 0.5);
  }
 
- .scrollable-content {
-     background: rgba(255, 255, 255, 0);
-     overflow: auto;
-     flex: 1;
-     padding: 0px 10px;
-     height: calc(100vh - 112px - 38px); /* Resta altura del header y footer */
+.scrollable-content {
+  flex: 1;
   overflow-y: auto;
- }
+  padding: 0;
+  -webkit-overflow-scrolling: touch; /* Suaviza el scroll en iOS */
+}
