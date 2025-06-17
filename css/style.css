@@ -859,6 +859,7 @@
     text-align: center;
     color: #ffffff;
     font-size: 10px;
+    flex-shrink: 0; /* Evita que el footer se encoja */
 }
 
 
@@ -1027,7 +1028,7 @@
      left: 0;
      top: 0;
      width: 100%;
-     height: 100vh;
+     min-height: 100vh; /* Usa min-height en lugar de height */
      overflow: hidden;
      box-sizing: border-box;
      background-color: rgba(0, 0, 0, 0.5);
