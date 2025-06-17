@@ -858,7 +858,7 @@
 
    @media (max-width: 550px) {
        .header {
-           margin-bottom: 5px;
+           margin-bottom: 10px;
            height: 45px;
        }
 
@@ -869,24 +869,25 @@
        .nav-tabs {
            border-radius: 10px;
            gap: 10px;
-           margin-bottom: 5px;
+           margin-bottom: 10px;
            padding: 3px;
        }
 
-    .nav-tab {
-        padding: 6px 5px;
-        border-radius: 7px;
-        font-size: 14px;
-    }
+       .nav-tab {
+           padding: 10px 5px;
+           border-radius: 7px;
+           font-size: 14px;
+       }
 
-    #subtit {
-        font-size: 12px;
-        bottom: 4px;
-    }
+       #subtit {
+           font-size: 12px;
+           bottom: 4px;
+       }
 
        .tab-content {
            padding: 7px;
            border-radius: 10px;
+           height: calc(100vh - 110px);
        }
 
        .calendar-container {
@@ -930,8 +931,8 @@
        }
 
        .calendar-day-header {
-    padding: 10px 3px;
-}
+           padding: 10px 3px;
+       }
 
        .calendar-day.today::after {
            top: 50%;
