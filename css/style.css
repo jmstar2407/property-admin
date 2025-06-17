@@ -873,15 +873,16 @@
            padding: 3px;
        }
 
-       .nav-tab {
-           padding: 7px 7px;
-           border-radius: 7px;
-           font-size: 12px;
-       }
+    .nav-tab {
+        padding: 6px 5px;
+        border-radius: 7px;
+        font-size: 14px;
+    }
 
-       #subtit {
-           font-size: 12px;
-       }
+    #subtit {
+        font-size: 12px;
+        bottom: 4px;
+    }
 
        .tab-content {
            padding: 7px;
@@ -927,6 +928,10 @@
            min-height: 57px;
            padding: 5px;
        }
+
+       .calendar-day-header {
+    padding: 10px 3px;
+}
 
        .calendar-day.today::after {
            top: 50%;
