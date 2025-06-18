@@ -96,8 +96,7 @@
                     Propiedad</button>
 
                 <div class="property-status-tabs">
-                    <button class="property-status-tab active" onclick="filterProperties('all')">Todas</button>
-                    <button class="property-status-tab" onclick="filterProperties('rented')">Rentadas</button>
+                    <button class="property-status-tab active" onclick="filterProperties('rented')">Rentadas</button>
                     <button class="property-status-tab" onclick="filterProperties('available')">Disponibles</button>
                     <button class="property-status-tab" onclick="filterProperties('maintenance')">En
                         Mantenimiento</button>
@@ -121,8 +120,8 @@
                 </div>
 
                 <div class="accounting-actions">
-                    <button class="btn" onclick="showIncomeModal()">➕ Agregar Ingreso Extra</button>
-                    <button class="btn btn-danger" onclick="showExpenseModal()">➖ Agregar Gasto</button>
+                    <button id="btn-gasto" class="btn btn-danger" onclick="showExpenseModal()">Agregar Gasto (-)</button>
+                    <button id="btn-ingr-extra" class="btn" onclick="showIncomeModal()">Agregar Ingreso Extra (+)</button>
                 </div>
 
                 <div class="expenses-list" id="expenses-list"></div>
@@ -422,7 +421,7 @@
                             <label for="contract-date">📑 Fecha de Inicio de Contrato</label>
                             <input type="date" id="contract-date">
                         </div>
-                                                <div class="form-group">
+                        <div class="form-group">
                             <label for="payment-day">📅 Día de Cobro (1-31)</label>
                             <input type="number" id="payment-day" min="1" max="31">
                         </div>
@@ -627,7 +626,7 @@
         let incomes = [];
         let currentPropertyForPayment = null;
         let currentView = 'calendar';
-        let currentPropertyFilter = 'all';
+        let currentPropertyFilter = 'rented';
 
 
 
@@ -793,7 +792,11 @@
                     createdAt: doc.data().createdAt?.toDate(),
                     contractStart: doc.data().contractStart?.toDate()
                 }));
+
+                // Mostrar solo propiedades rentadas inicialmente
+                currentPropertyFilter = 'rented';
                 displayProperties();
+
                 generateCalendar();
                 updateListView();
                 updateOverdueView();
@@ -972,10 +975,7 @@
             const container = document.getElementById('properties-list');
 
             // Filtrar propiedades según el estado seleccionado
-            let filteredProperties = properties;
-            if (currentPropertyFilter !== 'all') {
-                filteredProperties = properties.filter(p => p.status === currentPropertyFilter);
-            }
+            let filteredProperties = properties.filter(p => p.status === currentPropertyFilter);
 
             // Ordenar por dirección
             filteredProperties.sort((a, b) => a.address.localeCompare(b.address));
@@ -984,6 +984,7 @@
                 container.innerHTML = '<div class="no-data">📋 No hay propiedades registradas</div>';
                 return;
             }
+
 
             const html = filteredProperties.map(property => {
                 // Calcular días restantes del contrato si está rentado
@@ -1365,21 +1366,33 @@
                 const dayProperties = getPropertiesForDay(date);
                 if (dayProperties.length > 0) {
                     dayElement.classList.add('has-properties');
+
+                    // Verificar si TODAS las propiedades están pagadas
+                    const allPaid = dayProperties.every(({ property, date: dueDate }) =>
+                        isPropertyPaid(property, dueDate)
+                    );
+
+                    // Determinar el estado basado en todas las propiedades
                     let statusClass = '';
-                    dayProperties.forEach(({ property, date: dueDate }) => {
-                        if (isPropertyPaid(property, dueDate)) {
-                            statusClass = 'paid';
-                        } else {
+                    if (allPaid) {
+                        statusClass = 'paid';
+                    } else {
+                        // Si no todas están pagadas, verificar el peor estado
+                        let worstStatus = '';
+                        dayProperties.forEach(({ property, date: dueDate }) => {
+                            if (isPropertyPaid(property, dueDate)) return;
+
                             const daysOverdue = calculateOverdueDays(property, dueDate);
                             if (daysOverdue > 5) {
-                                statusClass = 'overdue';
-                            } else if (daysOverdue > 0) {
-                                statusClass = 'grace-period';
-                            } else {
-                                statusClass = 'pending';
+                                worstStatus = 'overdue';
+                            } else if (daysOverdue > 0 && worstStatus !== 'overdue') {
+                                worstStatus = 'grace-period';
+                            } else if (worstStatus === '') {
+                                worstStatus = 'pending';
                             }
-                        }
-                    });
+                        });
+                        statusClass = worstStatus || 'pending';
+                    }
 
                     dayElement.classList.add(statusClass);
 
@@ -1393,10 +1406,8 @@
                 grid.appendChild(dayElement);
             }
 
-            // 🔧 AQUÍ agregas la llamada:
             updateOverdueView();
-
-        } // Fin de generateCalendar
+        }
 
 
         // Update list view
@@ -1483,7 +1494,7 @@
                 <div class="property-list-item ${item.statusClass}" onclick="showPropertyDetail('${item.property.id}', '${item.dueDate.toISOString()}')">
                     <div id="titulo-dias">
                         <strong>${item.property.tenantName}</strong>
-                        <p>${item.property.address}</p>
+                        <p>📍 ${item.property.address}</p>
                     </div>
                     <div id="monto-dias">
                         <span>$${item.property.rentAmount.toLocaleString()}</span>
@@ -1496,9 +1507,6 @@
 
             container.innerHTML = html;
         }
-
-
-
 
 
         function updateOverdueView() {
@@ -1573,7 +1581,7 @@
                 return `
         <div class="property-list-item overdue" 
              onclick="showPropertyDetail('${item.property.id}', '${item.dueDate.toISOString()}')">
-            <div>
+            <div id="titulo-dias">
                 <strong>${item.property.tenantName}</strong>
                 <p>${item.property.address}</p>
                 Mes de <strong style="    color: red;">${monthName}</strong> pendiente de pago.
@@ -2135,25 +2143,25 @@
                     <h3>Total Cobrado</h3>
                     <div class="amount">${totalCollected.toLocaleString()}</div>
                 </div>
-                <div class="summary-card">
+                <div class="summary-card" style="background: linear-gradient(135deg, #14b7c7 0%, #038d47 100%);">
                     <h3>Comisión (10%)</h3>
                     <div class="amount">${commission.toLocaleString()}</div>
                 </div>
 
 
                 <div class="summary-card" style="background: #ffffff00;box-shadow: 0 10px 25px rgb(102 126 234 / 0%);padding: 0px;display: inline-flex;gap: 4px;flex-direction: column;">
-                    <div style="background: green;border-radius: 15px;box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);">
+                     <div id="ingr-gas" style="background: green;">
                     <h3>Ingresos Extra</h3>
                     <div class="amount">${totalIncomes.toLocaleString()}</div>
 </div>
-<div style="background: #800000;border-radius: 15px;box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);">
-                    <h3>Gastos del Mes</h3>
-                    <div class="amount">${totalExpenses.toLocaleString()}</div>
+                    <div id="ingr-gas" style="background: #800000;">
+                        <h3>Gastos del Mes</h3>
+                       <div class="amount">${totalExpenses.toLocaleString()}</div>
                     </div>
                 </div>
 
 
-                <div class="summary-card">
+                <div class="summary-card" style="background: linear-gradient(135deg, #4d8ceb 0%, #3168bb 100%);">
                     <h3>Ganancia Neta</h3>
                     <div class="amount">${netProfit.toLocaleString()}</div>
                 </div>
@@ -2558,4 +2566,4 @@
 
 </html>
 
-<!-- 1s -->
+<!-- 2 -->
