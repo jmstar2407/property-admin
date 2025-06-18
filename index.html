@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> -->
-    <title>Administrador de Propiedades</title>
+    <title>Sistema de Administración | Bieneraigar</title>
+    <link rel="icon" href="./img/logo_1.png" type="image/png">
 
     <link rel="stylesheet" href="./css/style.css" />
 
@@ -18,6 +19,7 @@
     <!-- Firebase SDK -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.2/firebase-app-compat.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.2/firebase-firestore-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.2/firebase-auth-compat.min.js"></script>
 
     <!-- PDF Generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -31,12 +33,31 @@
 </head>
 
 <body>
+    <!-- Contenedor de login -->
+    <div id="loginContainer">
+        <div class="animation-wrapper">
+            <div class="particle particle-1"></div>
+            <div class="particle particle-2"></div>
+            <div class="particle particle-3"></div>
+            <div class="particle particle-4"></div>
+        </div>
 
+        <div id="loginForm">
+            <h2 style="margin-block-end: 10px;">Bienvenido!</h2>
+            <img src="./img/logo_1.png" style="height: 100px;margin: 14px 0px;">
+            <h2>Bieneraigar</h2>
+            <input type="email" id="email" placeholder="Correo electrónico" style="margin-bottom: 14px;">
+            <input type="password" id="password" placeholder="Contraseña">
+            <div id="errorMessage" class="error-message"></div>
+            <button id="loginBtn">Iniciar sesión</button>
+        </div>
+    </div>
 
-    <div class="Master-Box">
+    <div class="Master-Box" style="display: none;">
         <!-- header fixed -->
         <div class="fixed-header">
             <div class="header">
+                <button id="logout-button"></button>
                 <div class="logo1"><img src="./img/logo_1.png"></div>
                 <div style="display: inline-flex;flex-direction: column;align-items: flex-start;">
                     <h1>Bieneraigar</h1>
@@ -145,179 +166,193 @@
     <!-- Modals -->
     <div id="day-modal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('day-modal')">&times;</span>
-            <h2 id="modal-day-title"></h2>
-            <div id="modal-properties-list"></div>
+
+            <div class="Modal-Title">
+                <h2 id="modal-day-title"></h2>
+                <span class="close" onclick="closeModal('day-modal')">&times;</span>
+            </div>
+            <div class="Modal-Body">
+                <div id="modal-properties-list"></div>
+            </div>
         </div>
     </div>
 
     <div id="property-detail-modal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('property-detail-modal')">&times;</span>
+
             <div id="property-detail-content"></div>
         </div>
     </div>
 
     <div id="property-edit-modal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('property-edit-modal')">&times;</span>
-            <h2>✏️ Editar Propiedad</h2>
-            <form id="property-edit-form">
-                <input type="hidden" id="edit-property-id">
-                <!-- Sección Propietario -->
-                <div class="section-title">Propietario</div>
-                <div class="form-section">
-                    <div class="form-group">
-                        <label for="edit-owner-name">Nombre del Propietario</label>
-                        <input type="text" id="edit-owner-name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-owner-phone">Teléfono del Propietario</label>
-                        <input type="tel" id="edit-owner-phone" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-owner-address">Dirección del Propietario</label>
-                        <input type="text" id="edit-owner-address" required>
-                    </div>
-                </div>
+            <div class="Modal-Title">
+                <h2>✏️ Editar Propiedad</h2>
+                <span class="close" onclick="closeModal('property-edit-modal')">&times;</span>
+            </div>
 
-                <!-- Sección Propiedad -->
-                <div class="section-title">Propiedad</div>
-                <div class="form-section">
-                    <div class="form-group">
-                        <label for="edit-property-type">Tipo de Propiedad</label>
-                        <select id="edit-property-type" required>
-                            <option value="casa">Casa</option>
-                            <option value="apartamento">Apartamento</option>
-                            <option value="local">Local Comercial</option>
-                            <option value="otro">Otro</option>
-                        </select>
+            <div class="Modal-Body">
+                <form id="property-edit-form">
+                    <input type="hidden" id="edit-property-id">
+                    <!-- Sección Propietario -->
+                    <div class="section-title">👤 Propietario:</div>
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="edit-owner-name">Nombre del Propietario</label>
+                            <input type="text" id="edit-owner-name" required placeholder="Nombre y Apellido">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-owner-phone">📞 Teléfono del Propietario</label>
+                            <input type="tel" id="edit-owner-phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-owner-address">📍 Dirección del Propietario</label>
+                            <input type="text" id="edit-owner-address" required>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="edit-bedrooms">Cantidad de Habitaciones</label>
-                        <input type="number" id="edit-bedrooms" min="0" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-bathrooms">Cantidad de Baños</label>
-                        <input type="number" id="edit-bathrooms" min="0" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-parking-spaces">Cantidad de Parqueos</label>
-                        <input type="number" id="edit-parking-spaces" min="0" required>
-                    </div>
+                    <!-- Sección Propiedad -->
+                    <div class="section-title">🏠 Propiedad:</div>
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="edit-property-type">🏠 Tipo de Propiedad</label>
+                            <select id="edit-property-type" required>
+                                <option value="casa">Casa</option>
+                                <option value="apartamento">Apartamento</option>
+                                <option value="local">Local Comercial</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
 
-
-
-                    <div class="form-group">
-                        <label for="edit-property-address">Dirección de la Propiedad</label>
-                        <input type="text" id="edit-property-address" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-rent-amount">Monto de la Renta ($)</label>
-                        <input type="number" id="edit-rent-amount" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-property-status">Estado</label>
-                        <select id="edit-property-status" required onchange="toggleTenantFields()">
-                            <option value="available">Disponible</option>
-                            <option value="rented">Rentado</option>
-                            <option value="maintenance">En Mantenimiento</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-property-notes">Notas sobre la propiedad</label>
-                        <textarea id="edit-property-notes" rows="3"></textarea>
-                    </div>
-                </div>
-
-                <!-- Sección Inquilino (solo si está rentado) -->
-                <div id="tenant-section" class="form-section">
-                    <div class="section-title">Inquilino</div>
-                    <div class="form-group">
-                        <label for="edit-tenant-name">Nombre del Inquilino</label>
-                        <input type="text" id="edit-tenant-name">
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-tenant-phone">Teléfono del Inquilino</label>
-                        <input type="tel" id="edit-tenant-phone">
-                    </div>
-                    <!-- Para el inquilino -->
-                    <div class="form-group">
-                        <label for="edit-tenant-id-type">Tipo de Identificación</label>
-                        <select id="edit-tenant-id-type">
-                            <option value="cedula">Cédula</option>
-                            <option value="pasaporte">Pasaporte</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-tenant-id">Número de Identificación</label>
-                        <input type="text" id="edit-tenant-id" placeholder="000-0000000-0 / 000000000">
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-payment-day">Día de Cobro (1-31)</label>
-                        <input type="number" id="edit-payment-day" min="1" max="31">
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-contract-date">Fecha de Inicio de Contrato</label>
-                        <input type="date" id="edit-contract-date">
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-contract-duration">Duración del Contrato (Meses)</label>
-                        <input type="number" id="edit-contract-duration" min="1">
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-tenant-notes">Notas sobre el inquilino</label>
-                        <textarea id="edit-tenant-notes" rows="2"></textarea>
-                    </div>
-
-                    <!-- Sección Garante -->
-                    <div class="section-title">Garante</div>
-                    <div class="form-group">
-                        <label for="edit-guarantor-name">Nombre del Garante</label>
-                        <input type="text" id="edit-guarantor-name">
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-guarantor-phone">Teléfono del Garante</label>
-                        <input type="tel" id="edit-guarantor-phone">
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-guarantor-address">Dirección del Garante</label>
-                        <input type="text" id="edit-guarantor-address">
-                    </div>
-                    <!-- Para el garante -->
-                    <div class="form-group">
-                        <label for="edit-guarantor-id-type">Tipo de Identificación</label>
-                        <select id="edit-guarantor-id-type">
-                            <option value="cedula">Cédula</option>
-                            <option value="pasaporte">Pasaporte</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-guarantor-id">Número de Identificación</label>
-                        <input type="text" id="edit-guarantor-id" placeholder="000-0000000-0 / 000000000">
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-guarantor-notes">Notas sobre el garante</label>
-                        <textarea id="edit-guarantor-notes" rows="2"></textarea>
-                    </div>
-                </div>
+                        <div class="form-group">
+                            <label for="edit-bedrooms">🛏️ Cantidad de Habitaciones</label>
+                            <input type="number" id="edit-bedrooms" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-bathrooms">🛁 Cantidad de Baños</label>
+                            <input type="number" id="edit-bathrooms" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-parking-spaces">🚘 Cantidad de Parqueos</label>
+                            <input type="number" id="edit-parking-spaces" min="0" required>
+                        </div>
 
 
 
-                <div class="form-group">
-                    <label for="edit-contract-image">Imagen del Contrato</label>
-                    <input type="file" id="edit-contract-image" accept="image/*">
-                </div>
-                <div class="contract-image-container" id="edit-current-image-container">
-                    <p>Imagen del contrato:</p>
-                    <img id="edit-current-image" class="contract-image" src="">
-                </div>
-                <button type="submit" class="btn">💾 Guardar Cambios</button>
+                        <div class="form-group">
+                            <label for="edit-property-address">📍🏠 Dirección de la Propiedad</label>
+                            <input type="text" id="edit-property-address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-rent-amount">Monto de la Renta (💲)</label>
+                            <input type="number" id="edit-rent-amount" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-property-status">✅ Estado</label>
+                            <select id="edit-property-status" required onchange="toggleTenantFields()">
+                                <option value="available">Disponible</option>
+                                <option value="rented">Rentado</option>
+                                <option value="maintenance">En Mantenimiento</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-property-notes">🗒️ Notas sobre la propiedad</label>
+                            <textarea id="edit-property-notes" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Sección Inquilino (solo si está rentado) -->
+                    <div id="tenant-section" class="form-section">
+                        <div class="section-title">👥 Inquilino:</div>
+                        <div class="form-group">
+                            <label for="edit-tenant-name">Nombre del Inquilino</label>
+                            <input type="text" id="edit-tenant-name" placeholder="Nombre y Apellido">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-tenant-phone">📞 Teléfono del Inquilino</label>
+                            <input type="tel" id="edit-tenant-phone">
+                        </div>
+                        <!-- Para el inquilino -->
+                        <div class="form-group">
+                            <label for="edit-tenant-id-type">🪪 Tipo de Identificación</label>
+                            <select id="edit-tenant-id-type">
+                                <option value="cedula">Cédula</option>
+                                <option value="pasaporte">Pasaporte</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-tenant-id">Número de Identificación</label>
+                            <input type="text" id="edit-tenant-id" placeholder="000-0000000-0 / 000000000">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-contract-date">📑Fecha de Inicio de Contrato</label>
+                            <input type="date" id="edit-contract-date">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-payment-day">📅 Día de Cobro (1-31)</label>
+                            <input type="number" id="edit-payment-day" min="1" max="31">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit-contract-duration">⏳ Duración del Contrato (Meses)</label>
+                            <input type="number" id="edit-contract-duration" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-tenant-notes">🗒️ Notas sobre el inquilino</label>
+                            <textarea id="edit-tenant-notes" rows="2"></textarea>
+                        </div>
+
+                        <!-- Sección Garante -->
+                        <div class="section-title">🪪 Garante:</div>
+                        <div class="form-group">
+                            <label for="edit-guarantor-name">Nombre del Garante</label>
+                            <input type="text" id="edit-guarantor-name" placeholder="Nombre y Apellido">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-guarantor-phone">📞 Teléfono del Garante</label>
+                            <input type="tel" id="edit-guarantor-phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-guarantor-address">Dirección del Garante</label>
+                            <input type="text" id="edit-guarantor-address">
+                        </div>
+                        <!-- Para el garante -->
+                        <div class="form-group">
+                            <label for="edit-guarantor-id-type">🪪 Tipo de Identificación</label>
+                            <select id="edit-guarantor-id-type">
+                                <option value="cedula">Cédula</option>
+                                <option value="pasaporte">Pasaporte</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-guarantor-id">Número de Identificación</label>
+                            <input type="text" id="edit-guarantor-id" placeholder="000-0000000-0 / 000000000">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-guarantor-notes">🗒️ Notas sobre el garante</label>
+                            <textarea id="edit-guarantor-notes" rows="2"></textarea>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="edit-contract-image">Imagen del Contrato</label>
+                        <input type="file" id="edit-contract-image" accept="image/*">
+                    </div>
+                    <div class="contract-image-container" id="edit-current-image-container">
+                        <p>Imagen del contrato:</p>
+                        <img id="edit-current-image" class="contract-image" src="">
+                    </div>
+            </div>
+
+            <div class="Modal-Footer">
                 <button type="button" class="btn btn-danger"
                     onclick="deleteProperty(document.getElementById('edit-property-id').value)">🗑️ Eliminar
                     Propiedad</button>
-            </form>
+                <button type="submit" class="btn">💾 Guardar Cambios</button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -337,10 +372,10 @@
                     <div class="form-section">
                         <div class="form-group">
                             <label for="owner-name">Nombre del Propietario</label>
-                            <input type="text" id="owner-name" required>
+                            <input type="text" id="owner-name" required placeholder="Nombre y Apellido">
                         </div>
                         <div class="form-group">
-                            <label for="owner-phone">📞Teléfono del Propietario</label>
+                            <label for="owner-phone">📞 Teléfono del Propietario</label>
                             <input type="tel" id="owner-phone" required>
                         </div>
                         <div class="form-group">
@@ -404,7 +439,7 @@
                         <div class="section-title">👥 Inquilino:</div>
                         <div class="form-group">
                             <label for="tenant-name">Nombre del Inquilino</label>
-                            <input type="text" id="tenant-name">
+                            <input type="text" id="tenant-name" placeholder="Nombre y Apellido">
                         </div>
                         <div class="form-group">
                             <label for="tenant-phone">📞 Teléfono del Inquilino</label>
@@ -431,7 +466,7 @@
                             <input type="number" id="payment-day" min="1" max="31">
                         </div>
                         <div class="form-group">
-                            <label for="contract-duration">⏳Duración del Contrato (Meses)</label>
+                            <label for="contract-duration">⏳ Duración del Contrato (Meses)</label>
                             <input type="number" id="contract-duration" min="1">
                         </div>
                         <div class="form-group">
@@ -443,7 +478,7 @@
                         <div class="section-title">🪪 Garante:</div>
                         <div class="form-group">
                             <label for="guarantor-name">Nombre del Garante</label>
-                            <input type="text" id="guarantor-name">
+                            <input type="text" id="guarantor-name" placeholder="Nombre y Apellido">
                         </div>
                         <div class="form-group">
                             <label for="guarantor-phone">📞 Teléfono del Garante</label>
@@ -491,9 +526,15 @@
     <!-- Payment History Modal -->
     <div id="payment-history-modal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('payment-history-modal')">&times;</span>
-            <h2>📜 Historial de Pagos</h2>
-            <div id="payment-history-content"></div>
+
+            <div class="Modal-Title">
+                <h2>📜 Historial de Pagos</h2>
+                <span class="close" onclick="closeModal('payment-history-modal')">&times;</span>
+            </div>
+
+            <div class="Modal-Body">
+                <div id="payment-history-content"></div>
+            </div>
         </div>
     </div>
 
@@ -513,48 +554,65 @@
     <!-- Income Modal -->
     <div id="income-modal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('income-modal')">&times;</span>
-            <h2>➕ Agregar Ingreso Extra</h2>
-            <form id="income-form">
-                <div class="form-group">
-                    <label for="income-description">Descripción del Ingreso Extra</label>
-                    <input type="text" id="income-description" required>
-                </div>
-                <div class="form-group">
-                    <label for="income-amount">Monto ($)</label>
-                    <input type="number" id="income-amount" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label for="income-date">Fecha</label>
-                    <input type="date" id="income-date" required>
-                </div>
-                <button type="submit" class="btn btn-success">💵 Registrar Ingreso</button>
+            <div class="Modal-Title">
+                <h2>Agregar Ingreso Extra (+)</h2>
+                <span class="close" onclick="closeModal('income-modal')">&times;</span>
+            </div>
+
+            <div class="Modal-Body">
+                <form id="income-form" style="padding: 15px;">
+                    <div class="form-group">
+                        <label for="income-description">📝 Descripción del Ingreso Extra:</label>
+                        <input type="text" id="income-description" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="income-amount">Monto (💲):</label>
+                        <input type="number" id="income-amount" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="income-date">📅 Fecha:</label>
+                        <input type="date" id="income-date" required>
+                    </div>
+            </div>
+
+            <div class="Modal-Footer">
                 <button type="button" class="btn btn-secondary" onclick="closeModal('income-modal')">Cancelar</button>
-            </form>
+                <button type="submit" class="btn btn-success">💵 Registrar Ingreso</button>
+                </form>
+            </div>
         </div>
     </div>
 
     <!-- Expense Modal -->
     <div id="expense-modal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('expense-modal')">&times;</span>
-            <h2>➖ Agregar Gasto</h2>
-            <form id="expense-form">
-                <div class="form-group">
-                    <label for="expense-description">Descripción del Gasto</label>
-                    <input type="text" id="expense-description" required>
-                </div>
-                <div class="form-group">
-                    <label for="expense-amount">Monto ($)</label>
-                    <input type="number" id="expense-amount" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label for="expense-date">Fecha</label>
-                    <input type="date" id="expense-date" required>
-                </div>
-                <button type="submit" class="btn btn-danger">💰 Registrar Gasto</button>
+
+            <div class="Modal-Title">
+                <h2>Agregar Gasto (-)</h2>
+                <span class="close" onclick="closeModal('expense-modal')">&times;</span>
+            </div>
+
+            <div class="Modal-Body">
+                <form id="expense-form" style="padding: 15px;">
+                    <div class="form-group">
+                        <label for="expense-description">📝 Descripción del Gasto:</label>
+                        <input type="text" id="expense-description" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expense-amount">Monto (💲):</label>
+                        <input type="number" id="expense-amount" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expense-date">📅 Fecha:</label>
+                        <input type="date" id="expense-date" required>
+                    </div>
+            </div>
+            <div class="Modal-Footer">
                 <button type="button" class="btn btn-secondary" onclick="closeModal('expense-modal')">Cancelar</button>
-            </form>
+                <button type="submit" class="btn btn-danger">💰 Registrar Gasto</button>
+
+                </form>
+            </div>
         </div>
     </div>
 
@@ -609,6 +667,7 @@
 
     <script>
         // Firebase Configuration
+ // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyChPTn15TxZzKluRLzDRFwqExplejeW1p4",
             authDomain: "propiedades-admin.firebaseapp.com",
@@ -621,6 +680,84 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // Verificar estado de autenticación
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Usuario autenticado
+                document.getElementById('loginContainer').style.display = 'none';
+                document.querySelector('.Master-Box').style.display = 'flex';
+                
+                // Inicializar la aplicación
+                initializeApp();
+            } else {
+                // No autenticado
+                document.getElementById('loginContainer').style.display = 'flex';
+                document.querySelector('.Master-Box').style.display = 'none';
+            }
+        });
+
+        // Función para inicializar la aplicación después del login
+        function initializeApp() {
+            // Mover aquí todo el código de inicialización que estaba en DOMContentLoaded
+            initializePhoneInputs();
+            loadProperties();
+            loadPayments();
+            loadExpenses();
+            loadIncomes();
+            generateCalendar();
+            updateAccountingView();
+
+            // Add form listeners
+            document.getElementById('property-form').addEventListener('submit', addProperty);
+            document.getElementById('income-form').addEventListener('submit', addIncome);
+            document.getElementById('expense-form').addEventListener('submit', addExpense);
+            document.getElementById('property-edit-form').addEventListener('submit', updateProperty);
+
+            // Inicialmente ocultar campos de inquilino si no está rentado
+            toggleTenantFields();
+            toggleTenantFields('add');
+        }
+
+        // Manejar el login
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (!email || !password) {
+                errorMessage.textContent = 'Por favor ingresa correo y contraseña';
+                return;
+            }
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    // El onAuthStateChanged manejará el cambio
+                })
+                .catch((error) => {
+                    let errorMsg = '';
+                    switch (error.code) {
+                        case 'auth/invalid-email':
+                            errorMsg = 'Correo electrónico inválido';
+                            break;
+                        case 'auth/user-disabled':
+                            errorMsg = 'Usuario deshabilitado';
+                            break;
+                        case 'auth/user-not-found':
+                            errorMsg = 'Usuario no encontrado';
+                            break;
+                        case 'auth/wrong-password':
+                            errorMsg = 'Contraseña incorrecta';
+                            break;
+                        default:
+                            errorMsg = 'Error al iniciar sesión';
+                            break;
+                    }
+                    errorMessage.textContent = errorMsg;
+                });
+        });
+
 
         // Global variables
         let currentDate = new Date();
@@ -662,27 +799,6 @@
         }
 
 
-
-        // Initialize app
-        document.addEventListener('DOMContentLoaded', function () {
-            initializePhoneInputs();
-            loadProperties();
-            loadPayments();
-            loadExpenses();
-            loadIncomes();
-            generateCalendar();
-            updateAccountingView();
-
-            // Add form listeners
-            document.getElementById('property-form').addEventListener('submit', addProperty);
-            document.getElementById('income-form').addEventListener('submit', addIncome);
-            document.getElementById('expense-form').addEventListener('submit', addExpense);
-            document.getElementById('property-edit-form').addEventListener('submit', updateProperty);
-
-            // Inicialmente ocultar campos de inquilino si no está rentado
-            toggleTenantFields();
-            toggleTenantFields('add');
-        });
 
         // Mostrar modal para agregar propiedad
         function showAddPropertyModal() {
@@ -1065,8 +1181,10 @@
             const content = document.getElementById('payment-history-content');
 
             let html = `
+            <div style="padding: 10px 15px;color: white;font-size: 14px;">
         <h3>${property.address}</h3>
         <p><strong>Propietario:</strong> ${property.ownerName}</p>
+        </div>
     `;
 
             if (propertyPayments.length > 0) {
@@ -1080,9 +1198,9 @@
         <p><strong>Mes pagado: </strong>${p.mesPagado} de ${p.year}</p>
     </div>
     <div class="btn-factura-content">
-        <button class="btn" onclick="showEditPaymentModal('${p.id}')">✏️</button>
+        <button class="btn" onclick="showEditPaymentModal('${p.id}')" style="background: #242733;">✏️</button>
         <button class="btn btn-danger" onclick="deletePaymentFromHistory('${p.id}', '${propertyId}')" style="display: none;">🗑️</button>
-        <button class="btn" onclick="downloadInvoice('${p.id}')">📄</button>
+        <button class="btn" onclick="downloadInvoice('${p.id}')" style="background: #242733;">📄</button>
     </div>
 </div>
                 `).join('')}
@@ -1728,8 +1846,12 @@
             const content = document.getElementById('property-detail-content');
 
             let html = `
+            <div class="Modal-Title">
         <h2>🏠 ${property.tenantName}</h2>
-        <div class="property-details">
+        <span class="close" onclick="closeModal('property-detail-modal')">&times;</span>
+        </div>
+        <div class="Modal-Body">
+        <div class="property-details" style="padding: 20px;">
             <p><strong>📍 Dirección:</strong> ${property.address}</p>
             <p><strong>💰 Renta Mensual:</strong> $${property.rentAmount.toLocaleString()}</p>
             <p><strong>📅 Fecha de pago:</strong> ${date.toLocaleDateString('es-ES')}</p>
@@ -1739,6 +1861,7 @@
                 }
             ${overdueDays > 0 ? `<p class="overdue-days"><strong>⚠️ Días de atraso:</strong> ${overdueDays}</p>` : ''}
         </div>
+         </div>
     `;
 
             if (isPaid && payment) {
@@ -1755,9 +1878,9 @@
                 }
 
                 html += `
-            <div class="property-card paid">
-                <h3>✅ Pago Registrado</h3>
-                <p><strong>${paymentDescription}</strong></p>
+            <div class="property-card paid" style="font-size: 14px;color: #b9b9b9;padding: 5px 10px;margin: 0px 14px;">
+                <h3>⭐ Pago Registrado</h3>
+                <p><strong>✅ ${paymentDescription}</strong></p>
                 <p><strong>💳 Método:</strong> ${payment.paymentMethod}</p>
                 <p><strong>📅 Fecha de pago:</strong> ${payment.paymentDate.toLocaleDateString('es-ES')}</p>
                 <p><strong>⏰ Días de atraso:</strong> ${payment.overdueDays || 0}</p>
@@ -1768,7 +1891,7 @@
             } else {
                 html += `
             <div class="form-container" style="margin-top: 20px;">
-                <h3>💳 Registrar Pago</h3>
+                <h3 style="color: white;margin-bottom: 10px;text-align: center;">💳 Registrar Pago 💲</h3>
                 ${isFirstMonth ?
                         `<p style="color: #e67e22; font-weight: bold;">
                     ⚠️ Este es el primer mes del contrato. Debe cobrar solo los días proporcionales
@@ -1824,10 +1947,11 @@
                         <label for="payment-notes">Notas (opcional)</label>
                         <textarea id="payment-notes" rows="2" placeholder="Ej: Referencia bancaria, etc."></textarea>
                     </div>
-                    
-                    <button type="submit" class="btn btn-success">✅ Registrar Pago</button>
+                    <div style="display: inline-flex;flex-direction: row;width: 100%;justify-content: space-evenly;">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('property-detail-modal')">Cancelar</button>
-                </form>
+                        <button type="submit" class="btn btn-success">✅ Registrar Pago</button>
+                </div>
+                    </form>
             </div>
         `;
             }
@@ -2379,8 +2503,8 @@
             }
             hiddenInput.value = id;
 
-            // Mostrar el modal
-            document.getElementById(modalId).style.display = 'block';
+            // Mostrar el modal con animación
+            openModal(modalId); // <-- Cambiado de style.display = 'block'
         }
 
 
@@ -2399,8 +2523,7 @@
             document.getElementById('edit-payment-date').value = payment.paymentDate.toISOString().split('T')[0];
             document.getElementById('edit-payment-notes').value = payment.notes || '';
 
-            openModal('edit-payment-modal');
-
+            openModal('edit-payment-modal'); // <-- Cambiado de style.display = 'block'
         }
 
         // Actualizar pago
@@ -2568,6 +2691,21 @@
                 }
             });
         }, 60000); // Check every minute
+
+
+
+
+                // Asegúrate de que la función de logout esté implementada
+        document.getElementById('logout-button').addEventListener('click', () => {
+            auth.signOut().then(() => {
+                // El onAuthStateChanged manejará el cambio
+            }).catch((error) => {
+                console.error('Error al cerrar sesión:', error);
+            });
+        });
+
+
+
     </script>
 </body>
 
