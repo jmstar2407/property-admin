@@ -28,7 +28,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/2.30.0/index.min.js"></script>
 
     <style>
-
+.whatsapp-btn {
+    color: white;
+    border: none;
+    border-radius: 9px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    height: 45px;
+    padding: 7px 6px;
+    background: #25D366;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+        
+        .whatsapp-btn:hover {
+            background-color: #128C7E;
+        }
     </style>
 </head>
 
@@ -1907,6 +1924,14 @@
         `;
             } else {
                 html += `
+
+                    <div style="margin: 20px 0; text-align: center;">
+        <button id="whatsapp-reminder-btn" class="whatsapp-btn" onclick="sendWhatsAppReminder('${property.id}')">
+            <img src="./img/whatsapp2.svg" style="height: 100%;">Enviar Recordatorio
+        </button>
+    </div>
+
+
             <div class="form-container" style="margin-top: 20px;">
                 <h3 style="color: white;margin-bottom: 10px;text-align: center;">💳 Registrar Pago 💲</h3>
                 ${isFirstMonth ?
@@ -2708,6 +2733,47 @@
                 }
             });
         }, 60000); // Check every minute
+
+
+
+
+
+
+
+
+
+
+// Función para enviar recordatorio por WhatsApp
+function sendWhatsAppReminder(propertyId) {
+    const property = properties.find(p => p.id === propertyId);
+    if (!property || !property.tenantPhone) {
+        alert('No se encontró el número de teléfono del inquilino');
+        return;
+    }
+
+    // Limpiar el número de teléfono (eliminar caracteres no numéricos)
+    const cleanedPhone = property.tenantPhone.replace(/\D/g, '');
+    
+    // Mensaje predeterminado
+    const message = encodeURIComponent(
+        `Saludos, te recuerdo que toca el pago de la renta 😊. ` +
+        `Monto: RD$${property.rentAmount.toLocaleString()}. ` +
+        `Avísame cualquier cosa. ¡Gracias!`
+    );
+    
+    // Crear el enlace de WhatsApp
+    const whatsappUrl = `https://wa.me/${cleanedPhone}?text=${message}`;
+    
+    // Abrir en una nueva pestaña
+    window.open(whatsappUrl, '_blank');
+}
+
+
+
+
+
+
+
 
 
 
