@@ -53,6 +53,12 @@
      background-position: center center;
      background-size: 32px;
      transition: 0.3s;
+     cursor: pointer;
+ }
+
+  #logout-button:hover {
+     background-size: 28px;
+     transition: 0.3s;
  }
 
  /*LOGIN*/
