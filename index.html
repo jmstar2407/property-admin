@@ -37,8 +37,11 @@
         <!-- header fixed -->
         <div class="fixed-header">
             <div class="header">
-                <h1>Bieneraigar</h1>
-                <p id="subtit">Sistema de gestión y contabilidad</p>
+                <div class="logo1"><img src="./img/logo_1.png"></div>
+                <div>
+                    <h1>Bieneraigar</h1>
+                    <p id="subtit">Sistema de Administración</p>
+                </div>
             </div>
 
             <div class="nav-tabs">
@@ -120,8 +123,10 @@
                 </div>
 
                 <div class="accounting-actions">
-                    <button id="btn-gasto" class="btn btn-danger" onclick="showExpenseModal()">Agregar Gasto (-)</button>
-                    <button id="btn-ingr-extra" class="btn" onclick="showIncomeModal()">Agregar Ingreso Extra (+)</button>
+                    <button id="btn-gasto" class="btn btn-danger" onclick="showExpenseModal()">Agregar Gasto
+                        (-)</button>
+                    <button id="btn-ingr-extra" class="btn" onclick="showIncomeModal()">Agregar Ingreso Extra
+                        (+)</button>
                 </div>
 
                 <div class="expenses-list" id="expenses-list"></div>
@@ -2143,25 +2148,25 @@
                     <h3>Total Cobrado</h3>
                     <div class="amount">${totalCollected.toLocaleString()}</div>
                 </div>
-                <div class="summary-card" style="background: linear-gradient(135deg, #14b7c7 0%, #038d47 100%);">
+                <div class="summary-card" style="background: linear-gradient(135deg, #2585a9 0%, #00bd4c 100%);">
                     <h3>Comisión (10%)</h3>
                     <div class="amount">${commission.toLocaleString()}</div>
                 </div>
 
 
                 <div class="summary-card" style="background: #ffffff00;box-shadow: 0 10px 25px rgb(102 126 234 / 0%);padding: 0px;display: inline-flex;gap: 4px;flex-direction: column;">
-                     <div id="ingr-gas" style="background: green;">
+                     <div id="ingr-gas" style="background: linear-gradient(135deg, #2585a9 0%, #00bd4c 100%);">
                     <h3>Ingresos Extra</h3>
                     <div class="amount">${totalIncomes.toLocaleString()}</div>
 </div>
-                    <div id="ingr-gas" style="background: #800000;">
+                    <div id="ingr-gas" style="background: linear-gradient(135deg, #7b1111, #c71212, #771414);">
                         <h3>Gastos del Mes</h3>
                        <div class="amount">${totalExpenses.toLocaleString()}</div>
                     </div>
                 </div>
 
 
-                <div class="summary-card" style="background: linear-gradient(135deg, #4d8ceb 0%, #3168bb 100%);">
+                <div class="summary-card" style="background: linear-gradient(135deg, #46e0ef 0%, #00398f 100%);">
                     <h3>Ganancia Neta</h3>
                     <div class="amount">${netProfit.toLocaleString()}</div>
                 </div>
