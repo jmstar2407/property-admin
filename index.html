@@ -38,7 +38,7 @@
         <div class="fixed-header">
             <div class="header">
                 <div class="logo1"><img src="./img/logo_1.png"></div>
-                <div>
+                <div style="display: inline-flex;flex-direction: column;align-items: flex-start;">
                     <h1>Bieneraigar</h1>
                     <p id="subtit">Sistema de Administración</p>
                 </div>
@@ -1324,8 +1324,9 @@
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
 
+            const monthYear = currentDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
             document.getElementById('calendar-title').textContent =
-                currentDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+                monthYear.charAt(0).toUpperCase() + monthYear.slice(1);
 
             document.getElementById('list-title').textContent =
                 currentDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
@@ -2111,8 +2112,9 @@
             const month = currentAccountingDate.getMonth();
             const year = currentAccountingDate.getFullYear();
 
+            const monthYear = currentAccountingDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
             document.getElementById('accounting-month-title').textContent =
-                currentAccountingDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+                monthYear.charAt(0).toUpperCase() + monthYear.slice(1);
 
             // Calculate totals
             const monthPayments = payments.filter(p =>
