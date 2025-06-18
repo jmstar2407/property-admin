@@ -185,7 +185,7 @@
 
  #list-font-mes {
      color: #ffffff;
-     margin-block-end: 11px;
+     margin-block-end: 7px;
      font-weight: 400;
      font-size: 17px;
  }
@@ -297,7 +297,7 @@
  }
 
  .property-list-item {
-     background: #475367;
+     background: #384355;
      color: white;
      padding: 7px;
      border-radius: 10px;
@@ -322,19 +322,23 @@
  }
 
  .property-list-item.pending {
-     border-left: 5px solid #f59e0b;
+     box-shadow: inset 0px 0px 0px 1px rgb(255 252 0);
+     background: #ffd60054;
  }
 
  .property-list-item.grace-period {
-     border-left: 5px solid #ea580c;
+     box-shadow: inset 0px 0px 0px 1px rgb(239 105 35);
+     background: #ea580c36;
  }
 
  .property-list-item.overdue {
      box-shadow: inset 0px 0px 0px 1px rgb(155 14 14);
+     background: #ff00001a;
  }
 
  .property-list-item.paid {
-     border-left: 5px solid #16a34a;
+     box-shadow: inset 0px 0px 0px 1px rgb(9 175 63);
+     background: #00ff971a;
  }
 
  #titulo-dias {
@@ -354,8 +358,12 @@
      align-items: center;
  }
 
-
-
+ #monto-dias-2 {
+     display: inline-flex;
+     flex-direction: column;
+     width: 185px;
+     align-items: center;
+ }
 
  /* Form Styles */
  .form-container {
@@ -374,7 +382,7 @@
      margin-bottom: 8px;
      font-weight: 600;
      color: #c0c4cb;
-     font-size: 14px;
+     font-size: 16px;
  }
 
  .form-group input,
@@ -384,7 +392,7 @@
      padding: 12px;
      border: 0px solid #66707d;
      border-radius: 10px;
-     font-size: 12px;
+     font-size: 15px;
      transition: all 0.3s ease;
      background: #22252c;
      color: white;
@@ -562,7 +570,7 @@
  }
 
  .status-badge {
-     padding: 5px 12px;
+     padding: 4px 10px;
      border-radius: 20px;
      font-size: 12px;
      font-weight: 600;
@@ -575,14 +583,14 @@
  }
 
  .status-badge.pending {
-     background: #fed7d7;
-     color: #742a2a;
+     background: #fefdd7;
+     color: #817f3d;
  }
 
  .status-badge.overdue {
-     background: #ff000024;
-     color: #ffdede;
-     box-shadow: inset 0px 0px 0px 1px rgb(255 0 0);
+     background: #fec8c8;
+     color: #892020;
+     box-shadow: inset 0px 0px 0px 1px rgb(255 0 0 / 0%);
  }
 
  .status-badge.grace-period {
@@ -971,11 +979,11 @@
          flex-direction: column;
          width: 100%;
          justify-content: space-between;
-         gap: 0px;
+         gap: 2px;
      }
 
      .header h1 {
-         font-size: 20px;
+         font-size: 24px;
      }
 
      .nav-tabs {
@@ -998,6 +1006,7 @@
          padding: 7px;
          border-radius: 10px;
          overflow: auto;
+         margin-bottom: 10px;
      }
 
      .calendar-container {
@@ -1165,11 +1174,11 @@
  }
 
  .añadir {
-    background: #00ff801c;
-    box-shadow: inset 0px 0px 0px 1px rgb(8 186 97);
+     background: #00ff801c;
+     box-shadow: inset 0px 0px 0px 1px rgb(8 186 97);
  }
 
  .restar {
-background: #ff00000a;
-    box-shadow: inset 0px 0px 0px 1px rgb(186 8 8);
-}
+     background: #ff00000a;
+     box-shadow: inset 0px 0px 0px 1px rgb(186 8 8);
+ }

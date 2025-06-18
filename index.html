@@ -1576,9 +1576,9 @@
             <div>
                 <strong>${item.property.tenantName}</strong>
                 <p>${item.property.address}</p>
-                Mes de <strong>${monthName}</strong> pendiente de pago.
+                Mes de <strong style="    color: red;">${monthName}</strong> pendiente de pago.
             </div>
-            <div>
+            <div id="monto-dias-2">
                 <span>RD$${item.property.rentAmount.toLocaleString()}</span>
                 <span class="status-badge overdue">${item.daysOverdue} Días de Atraso</span>
             </div>
