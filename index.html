@@ -204,6 +204,7 @@
                     </div>
 
 
+
                     <div class="form-group">
                         <label for="edit-property-address">Dirección de la Propiedad</label>
                         <input type="text" id="edit-property-address" required>
@@ -298,6 +299,8 @@
                     </div>
                 </div>
 
+
+
                 <div class="form-group">
                     <label for="edit-contract-image">Imagen del Contrato</label>
                     <input type="file" id="edit-contract-image" accept="image/*">
@@ -317,157 +320,167 @@
     <!-- Add Property Modal -->
     <div id="add-property-modal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('add-property-modal')">&times;</span>
-            <h2>📝 Agregar Nueva Propiedad</h2>
-            <form id="property-form">
-                <!-- Sección Propietario -->
-                <div class="section-title">Propietario</div>
-                <div class="form-section">
-                    <div class="form-group">
-                        <label for="owner-name">Nombre del Propietario</label>
-                        <input type="text" id="owner-name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="owner-phone">Teléfono del Propietario</label>
-                        <input type="tel" id="owner-phone" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="owner-address">Dirección del Propietario</label>
-                        <input type="text" id="owner-address" required>
-                    </div>
-                </div>
 
-                <!-- Sección Propiedad -->
-                <div class="section-title">Propiedad</div>
-                <div class="form-section">
-                    <div class="form-group">
-                        <label for="property-type">Tipo de Propiedad</label>
-                        <select id="property-type" required>
-                            <option value="casa">Casa</option>
-                            <option value="apartamento">Apartamento</option>
-                            <option value="local">Local Comercial</option>
-                            <option value="otro">Otro</option>
-                        </select>
+            <div class="Modal-Title">
+                <h2>📝 Agregar Nueva Propiedad</h2>
+                <span class="close" onclick="closeModal('add-property-modal')">&times;</span>
+            </div>
+
+            <div class="Modal-Body">
+                <form id="property-form">
+                    <!-- Sección Propietario -->
+                    <div class="section-title">👤 Propietario:</div>
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="owner-name">Nombre del Propietario</label>
+                            <input type="text" id="owner-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="owner-phone">📞Teléfono del Propietario</label>
+                            <input type="tel" id="owner-phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="owner-address">📍 Dirección del Propietario</label>
+                            <input type="text" id="owner-address" required>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="bedrooms">Cantidad de Habitaciones</label>
-                        <input type="number" id="bedrooms" min="0" placeholder="0" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="bathrooms">Cantidad de Baños</label>
-                        <input type="number" id="bathrooms" min="0" placeholder="0" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="parking-spaces">Cantidad de Parqueos</label>
-                        <input type="number" id="parking-spaces" min="0" placeholder="0" required>
-                    </div>
+                    <!-- Sección Propiedad -->
+                    <div class="section-title">🏠 Propiedad:</div>
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="property-type">🏠 Tipo de Propiedad</label>
+                            <select id="property-type" required>
+                                <option value="casa">Casa</option>
+                                <option value="apartamento">Apartamento</option>
+                                <option value="local">Local Comercial</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bedrooms">🛏️ Cantidad de Habitaciones</label>
+                            <input type="number" id="bedrooms" min="0" placeholder="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bathrooms">🛁 Cantidad de Baños</label>
+                            <input type="number" id="bathrooms" min="0" placeholder="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="parking-spaces">🚘 Cantidad de Parqueos</label>
+                            <input type="number" id="parking-spaces" min="0" placeholder="0" required>
+                        </div>
 
 
-                    <div class="form-group">
-                        <label for="property-address">Dirección de la Propiedad</label>
-                        <input type="text" id="property-address" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="rent-amount">Monto de la Renta ($)</label>
-                        <input type="number" id="rent-amount" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="property-status">Estado</label>
-                        <select id="property-status" required onchange="toggleTenantFields('add')">
+                        <div class="form-group">
+                            <label for="property-address">📍🏠 Dirección de la Propiedad</label>
+                            <input type="text" id="property-address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rent-amount">Monto de la Renta (💲)</label>
+                            <input type="number" id="rent-amount" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="property-status">✅ Estado</label>
+                            <select id="property-status" required onchange="toggleTenantFields('add')">
 
-                            <option value="available">Disponible</option>
-                            <option value="rented">Rentado</option>
-                            <option value="maintenance">En Mantenimiento</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="property-notes">Notas sobre la propiedad</label>
-                        <textarea id="property-notes" rows="3"></textarea>
-                    </div>
-                </div>
-
-                <!-- Sección Inquilino (solo si está rentado) -->
-                <div id="tenant-section-add" class="form-section">
-                    <div class="section-title">Inquilino</div>
-                    <div class="form-group">
-                        <label for="tenant-name">Nombre del Inquilino</label>
-                        <input type="text" id="tenant-name">
-                    </div>
-                    <div class="form-group">
-                        <label for="tenant-phone">Teléfono del Inquilino</label>
-                        <input type="tel" id="tenant-phone">
-                    </div>
-                    <!-- Para el inquilino -->
-                    <div class="form-group">
-                        <label for="tenant-id-type">Tipo de Identificación</label>
-                        <select id="tenant-id-type">
-                            <option value="cedula">Cédula</option>
-                            <option value="pasaporte">Pasaporte</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="tenant-id">Número de Identificación</label>
-                        <input type="text" id="tenant-id" placeholder="000-0000000-0 / 000000000">
-                    </div>
-                    <div class="form-group">
-                        <label for="payment-day">Día de Cobro (1-31)</label>
-                        <input type="number" id="payment-day" min="1" max="31">
-                    </div>
-                    <div class="form-group">
-                        <label for="contract-date">Fecha de Inicio de Contrato</label>
-                        <input type="date" id="contract-date">
-                    </div>
-                    <div class="form-group">
-                        <label for="contract-duration">Duración del Contrato (Meses)</label>
-                        <input type="number" id="contract-duration" min="1">
-                    </div>
-                    <div class="form-group">
-                        <label for="tenant-notes">Notas sobre el inquilino</label>
-                        <textarea id="tenant-notes" rows="2"></textarea>
+                                <option value="available">Disponible</option>
+                                <option value="rented">Rentado</option>
+                                <option value="maintenance">En Mantenimiento</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="property-notes">🗒️ Notas sobre la propiedad</label>
+                            <textarea id="property-notes" rows="3"></textarea>
+                        </div>
                     </div>
 
-                    <!-- Sección Garante -->
-                    <div class="section-title">Garante</div>
-                    <div class="form-group">
-                        <label for="guarantor-name">Nombre del Garante</label>
-                        <input type="text" id="guarantor-name">
-                    </div>
-                    <div class="form-group">
-                        <label for="guarantor-phone">Teléfono del Garante</label>
-                        <input type="tel" id="guarantor-phone">
-                    </div>
-                    <div class="form-group">
-                        <label for="guarantor-address">Dirección del Garante</label>
-                        <input type="text" id="guarantor-address">
-                    </div>
-                    <!-- Para el garante -->
-                    <div class="form-group">
-                        <label for="guarantor-id-type">Tipo de Identificación</label>
-                        <select id="guarantor-id-type">
-                            <option value="cedula">Cédula</option>
-                            <option value="pasaporte">Pasaporte</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="guarantor-id">Número de Identificación</label>
-                        <input type="text" id="guarantor-id" placeholder="000-0000000-0 / 000000000">
-                    </div>
-                    <div class="form-group">
-                        <label for="guarantor-notes">Notas sobre el garante</label>
-                        <textarea id="guarantor-notes" rows="2"></textarea>
-                    </div>
-                </div>
+                    <!-- Sección Inquilino (solo si está rentado) -->
+                    <div id="tenant-section-add" class="form-section">
+                        <div class="section-title">👥 Inquilino:</div>
+                        <div class="form-group">
+                            <label for="tenant-name">Nombre del Inquilino</label>
+                            <input type="text" id="tenant-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="tenant-phone">📞 Teléfono del Inquilino</label>
+                            <input type="tel" id="tenant-phone">
+                        </div>
+                        <!-- Para el inquilino -->
+                        <div class="form-group">
+                            <label for="tenant-id-type">🪪 Tipo de Identificación</label>
+                            <select id="tenant-id-type">
+                                <option value="cedula">Cédula</option>
+                                <option value="pasaporte">Pasaporte</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tenant-id">Número de Identificación</label>
+                            <input type="text" id="tenant-id" placeholder="000-0000000-0 / 000000000">
+                        </div>
+                        <div class="form-group">
+                            <label for="contract-date">📑 Fecha de Inicio de Contrato</label>
+                            <input type="date" id="contract-date">
+                        </div>
+                                                <div class="form-group">
+                            <label for="payment-day">📅 Día de Cobro (1-31)</label>
+                            <input type="number" id="payment-day" min="1" max="31">
+                        </div>
+                        <div class="form-group">
+                            <label for="contract-duration">⏳Duración del Contrato (Meses)</label>
+                            <input type="number" id="contract-duration" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="tenant-notes">🗒️Notas sobre el inquilino</label>
+                            <textarea id="tenant-notes" rows="2"></textarea>
+                        </div>
 
-                <div class="form-group">
-                    <label for="contract-image">Imagen del Contrato</label>
-                    <input type="file" id="contract-image" accept="image/*">
-                </div>
+                        <!-- Sección Garante -->
+                        <div class="section-title">🪪 Garante:</div>
+                        <div class="form-group">
+                            <label for="guarantor-name">Nombre del Garante</label>
+                            <input type="text" id="guarantor-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="guarantor-phone">📞 Teléfono del Garante</label>
+                            <input type="tel" id="guarantor-phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="guarantor-address">📍 Dirección del Garante</label>
+                            <input type="text" id="guarantor-address">
+                        </div>
+                        <!-- Para el garante -->
+                        <div class="form-group">
+                            <label for="guarantor-id-type">🪪 Tipo de Identificación</label>
+                            <select id="guarantor-id-type">
+                                <option value="cedula">Cédula</option>
+                                <option value="pasaporte">Pasaporte</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="guarantor-id">Número de Identificación</label>
+                            <input type="text" id="guarantor-id" placeholder="000-0000000-0 / 000000000">
+                        </div>
+                        <div class="form-group">
+                            <label for="guarantor-notes">🗒️ Notas sobre el garante</label>
+                            <textarea id="guarantor-notes" rows="2"></textarea>
+                        </div>
+                    </div>
 
-                <button type="submit" class="btn">✅ Agregar Propiedad</button>
-                <button type="button" class="btn btn-secondary"
-                    onclick="closeModal('add-property-modal')">Cancelar</button>
-            </form>
+                    <div class="form-group">
+                        <label for="contract-image">Imagen del Contrato</label>
+                        <input type="file" id="contract-image" accept="image/*">
+                    </div>
+            </div>
+
+            <div class="Modal-Footer">
+                <!-- <button type="button" class="btn btn-secondary"
+                    onclick="closeModal('add-property-modal')">❌ Cancelar</button> -->
+                <button type="submit" class="btn añadir">✅ Agregar Propiedad</button>
+
+                </form>
+            </div>
+
         </div>
     </div>
 
@@ -1468,7 +1481,7 @@
                 paymentDays[day].forEach(item => {
                     html += `
                 <div class="property-list-item ${item.statusClass}" onclick="showPropertyDetail('${item.property.id}', '${item.dueDate.toISOString()}')">
-                    <div>
+                    <div id="titulo-dias">
                         <strong>${item.property.tenantName}</strong>
                         <p>${item.property.address}</p>
                     </div>
