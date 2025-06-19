@@ -50,40 +50,33 @@
 
 
 
-         /* Efecto Ripple Instantáneo */
-    .btn-ripple {
-        position: relative;
-        overflow: hidden;
-        transition: background-color 0.3s;
-    }
-    
-    .btn-ripple:active::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 5px;
-        height: 5px;
-        background: rgba(255, 255, 255, 0.5);
-        opacity: 1;
-        border-radius: 100%;
-        transform: scale(1, 1) translate(-50%, -50%);
-        transform-origin: 50% 50%;
-        animation: ripple 0.3s ease-out;
-    }
-    
-
     
     /* Efecto Destello Instantáneo */
-    .btn-flash:active {
+    /*span:active,
+    button:active {
         animation: flash 0.2s;
     }
     
     @keyframes flash {
         0% { background-color: rgba(255, 255, 255, 0.7); }
         100% { background-color: transparent; }
-    }
+    }*/
 
+
+
+      button, span, a {
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  button:active, span:active, a:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  }
+
+  button:hover, a:hover {
+    filter: brightness(1.1);
+  }
 
     </style>
 </head>
@@ -118,7 +111,7 @@
         <div class="fixed-header">
             <div class="header">
                 <div class="header-content">
-                    <button id="logout-button" class="btn-flash"></button>
+                    <button id="logout-button"></button>
                     <div class="logo1"><img src="./img/logo_1.png"></div>
                     <div style="display: inline-flex;flex-direction: column;align-items: flex-start;">
                         <h1>Bieneraigar</h1>
@@ -129,9 +122,9 @@
 
             <div class="nav-tabs">
                 <div class="nav-tabs-content">
-                    <button class="nav-tab btn-flash active" onclick="showTab('calendar')">📅 Calendario</button>
-                    <button class="nav-tab btn-flash" onclick="showTab('properties')">🏘️ Propiedades</button>
-                    <button class="nav-tab btn-flash" onclick="showTab('accounting')">💰 Contabilidad</button>
+                    <button class="nav-tab active" onclick="showTab('calendar')">📅 Calendario</button>
+                    <button class="nav-tab" onclick="showTab('properties')">🏘️ Propiedades</button>
+                    <button class="nav-tab" onclick="showTab('accounting')">💰 Contabilidad</button>
                 </div>
             </div>
         </div>
@@ -142,9 +135,9 @@
             <!-- Calendar Tab -->
             <div id="calendar-tab" class="tab-content active">
                 <div class="view-toggle">
-                    <button class="view-btn btn-flash active" onclick="showView('calendar')">Calendario</button>
-                    <button class="view-btn btn-flash" onclick="showView('list')">Lista de Pagos</button>
-                    <button class="view-btn btn-flash" id="overdue-btn" onclick="showView('overdue')">
+                    <button class="view-btn active" onclick="showView('calendar')">Calendario</button>
+                    <button class="view-btn" onclick="showView('list')">Lista de Pagos</button>
+                    <button class="view-btn" id="overdue-btn" onclick="showView('overdue')">
                         Atrasos <span id="overdue-count"
                             style="display:none; background:red;color:white;border-radius:50%;padding:2px 8px;margin-left:5px;">0</span>
                     </button>
@@ -154,9 +147,9 @@
                 <div id="calendar-view" class="calendar-view">
                     <div class="calendar-container">
                         <div class="calendar-header">
-                            <button class="calendar-nav btn-flash" onclick="changeMonth(-1)">← Anterior</button>
+                            <button class="calendar-nav" onclick="changeMonth(-1)">← Anterior</button>
                             <h2 class="calendar-title" id="calendar-title"></h2>
-                            <button class="calendar-nav btn-flash" onclick="changeMonth(1)">Siguiente →</button>
+                            <button class="calendar-nav" onclick="changeMonth(1)">Siguiente →</button>
                         </div>
                         <div class="calendar-grid" id="calendar-grid"></div>
                     </div>
