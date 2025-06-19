@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sistema de Administración | Bieneraigar</title>
+    <title>Bieneraigar | Sistema de Administración</title>
     <link rel="icon" href="./img/logo_1.png" type="image/png">
 
     <link rel="stylesheet" href="./css/style.css" />
@@ -28,24 +28,70 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/2.30.0/index.min.js"></script>
 
     <style>
-.whatsapp-btn {
-    color: white;
-    border: none;
-    border-radius: 9px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: bold;
-    height: 45px;
-    padding: 7px 6px;
-    background: #25D366;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-        
+        .whatsapp-btn {
+            color: white;
+            border: none;
+            border-radius: 9px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            height: 45px;
+            padding: 7px 6px;
+            background: #25D366;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
         .whatsapp-btn:hover {
             background-color: #128C7E;
         }
+
+
+
+
+         /* Efecto Ripple Instantáneo */
+    .btn-ripple {
+        position: relative;
+        overflow: hidden;
+        transition: background-color 0.3s;
+    }
+    
+    .btn-ripple:active::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        opacity: 1;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%, -50%);
+        transform-origin: 50% 50%;
+        animation: ripple 0.3s ease-out;
+    }
+    
+    @keyframes ripple {
+        0% {
+            transform: scale(0, 0) translate(-50%, -50%);
+            opacity: 0.5;
+        }
+        100% {
+            transform: scale(20, 20) translate(-50%, -50%);
+            opacity: 0;
+        }
+    }
+    
+    /* Efecto Destello Instantáneo */
+    .btn-flash:active {
+        animation: flash 0.2s;
+    }
+    
+    @keyframes flash {
+        0% { background-color: rgba(255, 255, 255, 0.7); }
+        100% { background-color: transparent; }
+    }
 
 
     </style>
@@ -80,18 +126,22 @@
         <!-- header fixed -->
         <div class="fixed-header">
             <div class="header">
-                <button id="logout-button"></button>
-                <div class="logo1"><img src="./img/logo_1.png"></div>
-                <div style="display: inline-flex;flex-direction: column;align-items: flex-start;">
-                    <h1>Bieneraigar</h1>
-                    <p id="subtit">Sistema de Administración</p>
+                <div class="header-content">
+                    <button id="logout-button"></button>
+                    <div class="logo1"><img src="./img/logo_1.png"></div>
+                    <div style="display: inline-flex;flex-direction: column;align-items: flex-start;">
+                        <h1>Bieneraigar</h1>
+                        <p id="subtit">Sistema de Administración</p>
+                    </div>
                 </div>
             </div>
 
             <div class="nav-tabs">
-                <button class="nav-tab active" onclick="showTab('calendar')">📅 Calendario</button>
-                <button class="nav-tab" onclick="showTab('properties')">🏘️ Propiedades</button>
-                <button class="nav-tab" onclick="showTab('accounting')">💰 Contabilidad</button>
+                <div class="nav-tabs-content">
+                    <button class="nav-tab btn-ripple active" onclick="showTab('calendar')">📅 Calendario</button>
+                    <button class="nav-tab btn-flash" onclick="showTab('properties')">🏘️ Propiedades</button>
+                    <button class="nav-tab" onclick="showTab('accounting')">💰 Contabilidad</button>
+                </div>
             </div>
         </div>
         <!-- header fixed FIN -->
@@ -690,7 +740,7 @@
 
     <script>
         // Firebase Configuration
- // Firebase Configuration
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyChPTn15TxZzKluRLzDRFwqExplejeW1p4",
             authDomain: "propiedades-admin.firebaseapp.com",
@@ -705,29 +755,29 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-    // Verificar estado de autenticación
-    auth.onAuthStateChanged((user) => {
-        const loginBtn = document.getElementById('loginBtn');
-        
-        if (user) {
-            // Usuario autenticado
-            document.getElementById('loginContainer').style.display = 'none';
-            document.querySelector('.Master-Box').style.display = 'flex';
-            
-            // Inicializar la aplicación
-            initializeApp();
-        } else {
-            // No autenticado - restablecer el botón de login
-            document.getElementById('loginContainer').style.display = 'flex';
-            document.querySelector('.Master-Box').style.display = 'none';
-            
-            // Restablecer el botón de login
-            if (loginBtn) {
-                loginBtn.textContent = 'Iniciar sesión';
-                loginBtn.disabled = false;
+        // Verificar estado de autenticación
+        auth.onAuthStateChanged((user) => {
+            const loginBtn = document.getElementById('loginBtn');
+
+            if (user) {
+                // Usuario autenticado
+                document.getElementById('loginContainer').style.display = 'none';
+                document.querySelector('.Master-Box').style.display = 'flex';
+
+                // Inicializar la aplicación
+                initializeApp();
+            } else {
+                // No autenticado - restablecer el botón de login
+                document.getElementById('loginContainer').style.display = 'flex';
+                document.querySelector('.Master-Box').style.display = 'none';
+
+                // Restablecer el botón de login
+                if (loginBtn) {
+                    loginBtn.textContent = 'Iniciar sesión';
+                    loginBtn.disabled = false;
+                }
             }
-        }
-    });
+        });
 
         // Función para inicializar la aplicación después del login
         function initializeApp() {
@@ -751,65 +801,65 @@
             toggleTenantFields('add');
         }
 
-      // Manejar el login al presionar Enter
-    document.getElementById('email').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            document.getElementById('loginBtn').click();
-        }
-    });
+        // Manejar el login al presionar Enter
+        document.getElementById('email').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('loginBtn').click();
+            }
+        });
 
-    document.getElementById('password').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            document.getElementById('loginBtn').click();
-        }
-    });
+        document.getElementById('password').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('loginBtn').click();
+            }
+        });
 
-   // Manejar el login
-    document.getElementById('loginBtn').addEventListener('click', () => {
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        const errorMessage = document.getElementById('errorMessage');
-        const loginBtn = document.getElementById('loginBtn');
+        // Manejar el login
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const loginBtn = document.getElementById('loginBtn');
 
-        if (!email || !password) {
-            errorMessage.textContent = 'Por favor ingresa correo y contraseña';
-            return;
-        }
+            if (!email || !password) {
+                errorMessage.textContent = 'Por favor ingresa correo y contraseña';
+                return;
+            }
 
-        // Cambiar el texto del botón
-        loginBtn.textContent = 'Ingresando...';
-        loginBtn.disabled = true;
+            // Cambiar el texto del botón
+            loginBtn.textContent = 'Ingresando...';
+            loginBtn.disabled = true;
 
-        auth.signInWithEmailAndPassword(email, password)
-            .then(() => {
-                // El texto del botón se restablecerá en onAuthStateChanged
-            })
-            .catch((error) => {
-                // Restablecer el botón en caso de error
-                loginBtn.textContent = 'Iniciar sesión';
-                loginBtn.disabled = false;
-                
-                let errorMsg = '';
-                switch (error.code) {
-                    case 'auth/invalid-email':
-                        errorMsg = 'Correo electrónico inválido';
-                        break;
-                    case 'auth/user-disabled':
-                        errorMsg = 'Usuario deshabilitado';
-                        break;
-                    case 'auth/user-not-found':
-                        errorMsg = 'Usuario no encontrado';
-                        break;
-                    case 'auth/wrong-password':
-                        errorMsg = 'Contraseña incorrecta';
-                        break;
-                    default:
-                        errorMsg = 'Credenciales incorrectas';
-                        break;
-                }
-                errorMessage.textContent = errorMsg;
-            });
-    });
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    // El texto del botón se restablecerá en onAuthStateChanged
+                })
+                .catch((error) => {
+                    // Restablecer el botón en caso de error
+                    loginBtn.textContent = 'Iniciar sesión';
+                    loginBtn.disabled = false;
+
+                    let errorMsg = '';
+                    switch (error.code) {
+                        case 'auth/invalid-email':
+                            errorMsg = 'Correo electrónico inválido';
+                            break;
+                        case 'auth/user-disabled':
+                            errorMsg = 'Usuario deshabilitado';
+                            break;
+                        case 'auth/user-not-found':
+                            errorMsg = 'Usuario no encontrado';
+                            break;
+                        case 'auth/wrong-password':
+                            errorMsg = 'Contraseña incorrecta';
+                            break;
+                        default:
+                            errorMsg = 'Credenciales incorrectas';
+                            break;
+                    }
+                    errorMessage.textContent = errorMsg;
+                });
+        });
 
 
         // Global variables
@@ -2762,32 +2812,30 @@
 
 
 
-// Función para enviar recordatorio por WhatsApp
-function sendWhatsAppReminder(propertyId) {
-    const property = properties.find(p => p.id === propertyId);
-    if (!property || !property.tenantPhone) {
-        alert('No se encontró el número de teléfono del inquilino');
-        return;
-    }
+        // Función para enviar recordatorio por WhatsApp
+        function sendWhatsAppReminder(propertyId) {
+            const property = properties.find(p => p.id === propertyId);
+            if (!property || !property.tenantPhone) {
+                alert('No se encontró el número de teléfono del inquilino');
+                return;
+            }
 
-    // Limpiar el número de teléfono (eliminar caracteres no numéricos)
-    const cleanedPhone = property.tenantPhone.replace(/\D/g, '');
-    
-    // Mensaje predeterminado
-    const message = encodeURIComponent(
-        `Saludos, te recuerdo que toca el pago de la renta. Avísame cualquier cosa. ¡Gracias!`
-       // `Monto: RD$${property.rentAmount.toLocaleString()}. ` +
+            // Limpiar el número de teléfono (eliminar caracteres no numéricos)
+            const cleanedPhone = property.tenantPhone.replace(/\D/g, '');
 
-    );
-    
-    // Crear el enlace de WhatsApp
-    const whatsappUrl = `https://wa.me/${cleanedPhone}?text=${message}`;
-    
-    // Abrir en una nueva pestaña
-    window.open(whatsappUrl, '_blank');
-}
+            // Mensaje predeterminado
+            const message = encodeURIComponent(
+                `Saludos, te recuerdo que toca el pago de la renta. Avísame cualquier cosa. ¡Gracias!`
+                // `Monto: RD$${property.rentAmount.toLocaleString()}. ` +
 
+            );
 
+            // Crear el enlace de WhatsApp
+            const whatsappUrl = `https://wa.me/${cleanedPhone}?text=${message}`;
+
+            // Abrir en una nueva pestaña
+            window.open(whatsappUrl, '_blank');
+        }
 
 
 
@@ -2797,7 +2845,9 @@ function sendWhatsAppReminder(propertyId) {
 
 
 
-                // Asegúrate de que la función de logout esté implementada
+
+
+        // Asegúrate de que la función de logout esté implementada
         document.getElementById('logout-button').addEventListener('click', () => {
             auth.signOut().then(() => {
                 // El onAuthStateChanged manejará el cambio
@@ -2807,6 +2857,103 @@ function sendWhatsAppReminder(propertyId) {
         });
 
 
+
+
+        // Configuración de notificaciones
+function setupNotifications() {
+    // Verificar si el navegador soporta notificaciones
+    if (!("Notification" in window)) {
+        console.log("Este navegador no soporta notificaciones");
+        return;
+    }
+
+    // Solicitar permiso para notificaciones
+    if (Notification.permission !== "granted" && Notification.permission !== "denied") {
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+                console.log("Permiso para notificaciones concedido");
+                startNotificationChecks();
+            }
+        });
+    } else if (Notification.permission === "granted") {
+        startNotificationChecks();
+    }
+}
+
+// Iniciar verificaciones de notificaciones
+function startNotificationChecks() {
+    // Verificar inmediatamente al iniciar
+    checkNotificationTime();
+    
+    // Verificar cada minuto (60000 ms)
+    setInterval(checkNotificationTime, 5000);
+}
+
+// Verificar si es hora de enviar notificaciones (UTC-4)
+function checkNotificationTime() {
+    // Obtener hora actual en UTC-4 (República Dominicana)
+    const now = new Date();
+    const utcOffset = -4 * 60; // UTC-4 en minutos
+    const localTime = new Date(now.getTime() + (utcOffset * 60 * 1000));
+    
+    const currentHour = localTime.getHours();
+    const currentMinutes = localTime.getMinutes();
+
+    // Horas objetivo modificadas (8 AM, 12 PM, 5 PM y 9:20 PM) en UTC-4
+    const targetTimes = [
+        { hour: 8, minutes: 0, name: "mañana" },
+        { hour: 12, minutes: 0, name: "mediodía" },
+        { hour: 17, minutes: 0, name: "tarde" },
+        { hour: 21, minutes: 23, name: "noche" } // 9:20 PM
+    ];
+    
+    // Verificar si la hora actual coincide con alguna hora objetivo
+    targetTimes.forEach(time => {
+        if (currentHour === time.hour && currentMinutes === time.minutes) {
+            sendPendingPaymentsNotification(time.name);
+        }
+    });
+}
+
+// Enviar notificación de pagos pendientes
+function sendPendingPaymentsNotification(timeOfDay) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const overdueProperties = properties.filter(property => {
+        if (property.status !== 'rented' || !property.paymentDay) return false;
+        
+        const dueDate = new Date(today.getFullYear(), today.getMonth(), property.paymentDay);
+        dueDate.setHours(0, 0, 0, 0);
+        
+        return dueDate <= today && !isPropertyPaid(property, dueDate);
+    });
+
+    if (overdueProperties.length > 0) {
+        const notificationTitle = `Recordatorio de pagos (${timeOfDay})`;
+        const notificationMessage = overdueProperties.length === 1 
+            ? `Pago pendiente: ${overdueProperties[0].tenantName} - RD$${overdueProperties[0].rentAmount.toLocaleString()}`
+            : `${overdueProperties.length} pagos pendientes hoy`;
+        
+        try {
+            new Notification(notificationTitle, {
+                body: notificationMessage,
+                icon: "./img/logo_1.png"
+            });
+            console.log(`🔔 Notificación enviada (${timeOfDay}): ${notificationMessage}`);
+        } catch (error) {
+            console.error("Error mostrando notificación:", error);
+        }
+    }
+}
+
+// Inicializar notificaciones cuando la app esté lista
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        // Esperar 3 segundos después del login para solicitar permisos
+        setTimeout(setupNotifications, 3000);
+    }
+});
 
     </script>
 </body>
