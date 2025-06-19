@@ -15,7 +15,7 @@
     <!-- intl-tel-input JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
-    <!-- Font Awesome para el icono del ojo -->
+        <!-- Font Awesome para el icono del ojo -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Firebase SDK -->
@@ -52,9 +52,9 @@
 
 
 
-
-        /* Efecto Destello Instantáneo */
-        /*span:active,
+    
+    /* Efecto Destello Instantáneo */
+    /*span:active,
     button:active {
         animation: flash 0.2s;
     }
@@ -66,97 +66,54 @@
 
 
 
-        button,
-        span,
-        a {
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
+      button, span, a {
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
 
-        button:active,
-        span:active,
-        a:active {
-            transform: scale(0.95);
-        }
+  button:active, span:active, a:active {
+    transform: scale(0.95);
+  }
 
-        button:hover,
-        a:hover {
-            filter: brightness(1.1);
-        }
+  button:hover, a:hover {
+    filter: brightness(1.1);
+  }
 
 
 
 
 
 
-        .password-container {
-            position: relative;
-            margin-bottom: 14px;
-            width: 100%;
-        }
+.password-container {
+    position: relative;
+    margin-bottom: 14px;
+    width: 100%;
+}
 
-        .password-container input {
-            padding-right: 40px;
-            /* Espacio para el icono */
-            width: 100%;
-            box-sizing: border-box;
-        }
+.password-container input {
+    padding-right: 40px; /* Espacio para el icono */
+    width: 100%;
+    box-sizing: border-box;
+}
 
-        .toggle-password {
-            position: absolute;
-            right: 0px;
-            top: 50%;
+.toggle-password {
+    position: absolute;
+    right: 0px;
+    top: 50%;
 
-            cursor: pointer;
-            color: #777;
-            background: none;
-            border: none;
-            outline: none;
-            font-size: 16px;
-        }
+    cursor: pointer;
+    color: #777;
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 16px;
+}
 
-        .toggle-password:hover {
-            color: #333;
-        }
+.toggle-password:hover {
+    color: #333;
+}
+  
 
-
-
-
-
-
-
-
-
-
-
-        .forgot-password {
-            text-align: right;
-            margin-bottom: 20px;
-        }
-
-        .forgot-password a {
-            color: #4a82cb;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .forgot-password a:hover {
-            text-decoration: underline;
-        }
-
-        #resetPasswordModal {
-            display: none;
-            /* Mantén el mismo estilo que otros modales */
-        }
-
-        #resetPasswordModal .modal-content {
-            background: #242733;
-            margin: 10% auto;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 400px;
-            color: white;
-        }
     </style>
 </head>
 
@@ -176,18 +133,12 @@
             <h2>Bieneraigar</h2>
             <p id="subtit" style="margin-bottom: 20px;">Sistema de Administración</p>
             <input type="email" id="email" placeholder="Correo electrónico" style="margin-bottom: 14px;">
-          <div class="password-container">
+            <div class="password-container">
     <input type="password" id="password" placeholder="Contraseña" style="padding: 17px 60px 17px 24px;">
     <button class="toggle-password" aria-label="Mostrar contraseña" style="margin-top: 5px;width: 60px;background: #3258b100;margin-bottom: 0px;top: 0px;">
         <i class="far fa-eye" style="color: #c5c7cb;"></i>
     </button>
 </div>
-<!-- Agrega este div debajo del password-container -->
-<div class="forgot-password" style="text-align: right; margin-bottom: 20px;">
-    <a href="#" id="forgotPasswordLink" style="color: #4a82cb; text-decoration: none; font-size: 14px;">¿Olvidaste tu contraseña?</a>
-</div>
-
-
             <div id="errorMessage" class="error-message"></div>
             <button id="loginBtn">Iniciar sesión</button>
         </div>
@@ -778,7 +729,7 @@
                     <select id="edit-payment-type" required>
                         <option value="complete">Pago Completo</option>
                         <option value="partial">Pago Parcial</option>
-                        <option value="late">Pago con Mora</option>
+                        <option value="late">Pago con Mora (+ 5%)</option>
                         <option value="custom">Pago Personalizado</option>
                     </select>
                 </div>
@@ -810,48 +761,23 @@
 
 
 
-<!-- Reset Password Modal -->
-<div id="resetPasswordModal" class="modal">
-    <div class="modal-content">
-        <div class="Modal-Title">
-            <h2>Recuperar Contraseña</h2>
-            <span class="close" onclick="closeModal('resetPasswordModal')">&times;</span>
-        </div>
-        <div class="Modal-Body">
-            <p>Ingresa tu correo electrónico para recibir un enlace de recuperación:</p>
-            <input type="email" id="resetEmail" placeholder="Correo electrónico" style="width: 100%; padding: 10px; margin-bottom: 15px;">
-            <div id="resetPasswordMessage" style="margin-bottom: 15px; font-size: 14px;"></div>
-            <button id="sendResetLink" class="btn" style="width: 100%;">
-                <span id="resetButtonText">Enviar Enlace</span>
-                <span id="resetSpinner" style="display: none;">⌛</span>
-            </button>
-            <div id="resetTips" style="margin-top: 20px; font-size: 13px; color: #aaa;">
-                <p>Si no recibes el correo:</p>
-                <ul>
-                    <li>Revisa tu carpeta de spam</li>
-                    <li>Verifica que escribiste correctamente tu correo</li>
-                    <li>Espera unos minutos (puede tardar hasta 5 minutos)</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
+
 
     <script>
-        document.querySelector('.toggle-password').addEventListener('click', function () {
-            const passwordInput = document.getElementById('password');
-            const icon = this.querySelector('i');
-
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        });
+document.querySelector('.toggle-password').addEventListener('click', function() {
+    const passwordInput = document.getElementById('password');
+    const icon = this.querySelector('i');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+});
         // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyChPTn15TxZzKluRLzDRFwqExplejeW1p4",
@@ -2133,7 +2059,7 @@
                         '<option value="complete">Pago Completo</option>'
                     }
                             ${isFirstMonth ? '' : '<option value="partial">Pago Parcial</option>'}
-                            ${isFirstMonth ? '' : '<option value="late">Pago con Mora</option>'}
+                            ${isFirstMonth ? '' : '<option value="late">Pago con Mora (+ 5%)</option>'}
                             <option value="custom">Pago Personalizado</option>
                         </select>
                     </div>
@@ -2393,61 +2319,128 @@
             return Math.max(0, diffDays);
         }
 
-        // Invoice generation
-        function generateInvoice(payment) {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
 
-            // Header
-            doc.setFontSize(20);
-            doc.setTextColor(102, 126, 234);
-            doc.text('FACTURA DE RENTA', 20, 30);
-
-            // Invoice details
-            doc.setFontSize(12);
-            doc.setTextColor(0, 0, 0);
-            doc.text(`ID de Factura: ${payment.id}`, 20, 50);
-            doc.text(`Fecha de emisión: ${new Date().toLocaleDateString('es-ES')}`, 20, 60);
-
-            // Tenant information
-            doc.setFontSize(14);
-            doc.text('DATOS DEL INQUILINO:', 20, 80);
-            doc.setFontSize(12);
-            doc.text(`Nombre: ${payment.tenantName}`, 20, 95);
-            doc.text(`Dirección: ${payment.address}`, 20, 105);
-
-            // Payment details
-            doc.setFontSize(14);
-            doc.text('DETALLES DEL PAGO:', 20, 125);
-            doc.setFontSize(12);
-
-            // Nueva línea para mostrar el mes y año pagado en formato "Julio de 2025"
-            doc.text(`Mes pagado: ${payment.mesPagado} de ${payment.year}`, 20, 140);
-
-            doc.text(`Tipo de Pago: ${payment.paymentType === 'complete' ? 'Completo' :
-                payment.paymentType === 'partial' ? 'Parcial' :
-                    payment.paymentType === 'late' ? 'Con Mora' : 'Personalizado'}`, 20, 150);
-            doc.text(`Renta: $${payment.rentAmount.toLocaleString()}`, 20, 160);
-            doc.text(`Monto recibido: $${payment.amount.toLocaleString()}`, 20, 170);
-
-            doc.text(`Método de pago: ${payment.paymentMethod}`, 20, 180);
-            doc.text(`Fecha de pago: ${payment.paymentDate.toLocaleDateString('es-ES')}`, 20, 190);
-            doc.text(`Días de atraso: ${payment.overdueDays}`, 20, 200);
-            if (payment.notes) {
-                doc.text(`Notas: ${payment.notes}`, 20, 210);
-            }
-
-            // Save PDF
-            const fileName = `factura_${payment.tenantName.replace(/\s+/g, '_')}_${payment.mesPagado.replace(/\s+/g, '_')}_${payment.year}.pdf`;
-            doc.save(fileName);
+        
+     // Invoice generation
+async function generateInvoice(payment) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Intentar obtener la imagen de firma de Firebase
+    let signatureImage = null;
+    try {
+        const configDoc = await db.collection('config').doc('configuracion').get();
+        if (configDoc.exists) {
+            signatureImage = configDoc.data().imagenFirma;
         }
+    } catch (error) {
+        console.error('Error obteniendo imagen de firma:', error);
+    }
 
-        function downloadInvoice(paymentId) {
-            const payment = payments.find(p => p.id === paymentId);
-            if (payment) {
-                generateInvoice(payment);
-            }
+  
+
+        // Sección de firma
+    doc.setFontSize(20);
+    doc.text('Bieneraigar, S.R.L.', 105, 15, { align: 'center' });
+
+
+        // Sección de firma
+    doc.setFontSize(12);
+    doc.text('RNC: 132716991', 105, 22, { align: 'center' });
+
+
+        doc.setFontSize(17);
+        doc.setTextColor(102, 126, 234);
+    doc.text('RECIBO DE PAGO DE RENTA', 105, 35, { align: 'center' });
+
+
+    // Invoice details
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`ID de Factura: ${payment.id}`, 20, 60);
+    doc.text(`Fecha de emisión: ${payment.paymentDate.toLocaleDateString('es-ES')}`, 20, 70);
+
+    // Tenant information
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold'); // Establecer fuente en negrita
+    doc.text('DATOS DEL INQUILINO:', 20, 90);
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Nombre: ${payment.tenantName}`, 20, 100);
+    doc.text(`Dirección: ${payment.address}`, 20, 110);
+
+    // Payment details
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold'); // Establecer fuente en negrita
+    doc.text('DETALLES DEL PAGO:', 20, 130);
+
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    // Nueva línea para mostrar el mes y año pagado en formato "Julio de 2025"
+    doc.text(`Mes pagado: ${payment.mesPagado} de ${payment.year}`, 20, 140);
+
+    doc.text(`Tipo de Pago: ${payment.paymentType === 'complete' ? 'Completo' : 
+        payment.paymentType === 'partial' ? 'Parcial' :
+            payment.paymentType === 'late' ? 'Con Mora' : 'Personalizado'}`, 20, 150);
+    doc.text(`Renta: $${payment.rentAmount.toLocaleString()}`, 20, 160);
+    doc.text(`Monto recibido: $${payment.amount.toLocaleString()}`, 20, 170);
+
+    doc.text(`Método de pago: ${payment.paymentMethod}`, 20, 180);
+    doc.text(`Fecha de pago: ${payment.paymentDate.toLocaleDateString('es-ES')}`, 20, 190);
+    
+    if (payment.overdueDays >= 1) {
+    doc.text(`Días de atraso: ${payment.overdueDays}`, 20, 200);
+}
+    if (payment.notes) {
+        doc.text(`Notas: ${payment.notes}`, 20, 210);
+    }
+
+    // Sección de firma
+    doc.setFontSize(12);
+    doc.text('Firma del administrativo:', 105, 245, { align: 'center' });
+    
+    // Línea para firma
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.5);
+    doc.line(60, 260, 150, 260);
+    
+    // Agregar imagen de firma si existe
+    if (signatureImage) {
+        try {
+
+const imgWidth = 70;
+const imgHeight = 25;
+const x = (210 - imgWidth) / 2; // Centrar horizontalmente
+doc.addImage(signatureImage, 'PNG', x, 242, imgWidth, imgHeight);
+
+        } catch (error) {
+            console.error('Error al agregar imagen de firma:', error);
         }
+    }
+
+
+
+    
+    // Texto final
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Este recibo certifica que el inquilino ha pagado satisfactoriamente el monto', 105, 270, { align: 'center' });
+    doc.text('correspondiente al alquiler del mes indicado.', 105, 275, { align: 'center' });
+
+    // Save PDF
+    const fileName = `factura_${payment.tenantName.replace(/\s+/g, '_')}_${payment.mesPagado.replace(/\s+/g, '_')}_${payment.year}.pdf`;
+    doc.save(fileName);
+}
+
+// Modificar la función downloadInvoice para que sea asíncrona
+async function downloadInvoice(paymentId) {
+    const payment = payments.find(p => p.id === paymentId);
+    if (payment) {
+        await generateInvoice(payment);
+    }
+}
 
         // Accounting functions
         function changeAccountingMonth(direction) {
@@ -2924,30 +2917,39 @@
 
 
 
-        // Función para enviar recordatorio por WhatsApp
-        function sendWhatsAppReminder(propertyId) {
-            const property = properties.find(p => p.id === propertyId);
-            if (!property || !property.tenantPhone) {
-                alert('No se encontró el número de teléfono del inquilino');
-                return;
-            }
+// Función para enviar recordatorio por WhatsApp
+async function sendWhatsAppReminder(propertyId) {
+    const property = properties.find(p => p.id === propertyId);
+    if (!property || !property.tenantPhone) {
+        alert('No se encontró el número de teléfono del inquilino');
+        return;
+    }
 
-            // Limpiar el número de teléfono (eliminar caracteres no numéricos)
-            const cleanedPhone = property.tenantPhone.replace(/\D/g, '');
-
-            // Mensaje predeterminado
-            const message = encodeURIComponent(
-                `Saludos, te recuerdo que toca el pago de la renta. Avísame cualquier cosa. ¡Gracias!`
-                // `Monto: RD$${property.rentAmount.toLocaleString()}. ` +
-
-            );
-
-            // Crear el enlace de WhatsApp
-            const whatsappUrl = `https://wa.me/${cleanedPhone}?text=${message}`;
-
-            // Abrir en una nueva pestaña
-            window.open(whatsappUrl, '_blank');
+    try {
+        // Obtener la configuración de Firebase
+        const configDoc = await db.collection('config').doc('configuracion').get();
+        let message = "Saludos, te recuerdo que toca el pago de la renta. Avísame cualquier cosa. ¡Gracias!";
+        
+        if (configDoc.exists && configDoc.data().WSmensaje) {
+            message = configDoc.data().WSmensaje;
         }
+
+        // Limpiar el número de teléfono (eliminar caracteres no numéricos)
+        const cleanedPhone = property.tenantPhone.replace(/\D/g, '');
+
+        // Codificar el mensaje para URL
+        const encodedMessage = encodeURIComponent(message);
+
+        // Crear el enlace de WhatsApp
+        const whatsappUrl = `https://wa.me/${cleanedPhone}?text=${encodedMessage}`;
+
+        // Abrir en una nueva pestaña
+        window.open(whatsappUrl, '_blank');
+    } catch (error) {
+        console.error('Error al obtener la configuración:', error);
+        alert('Error al obtener la configuración del mensaje');
+    }
+}
 
 
 
@@ -2964,102 +2966,11 @@
 
 
 
-// Password recovery functionality
-document.getElementById('forgotPasswordLink').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('resetEmail').value = document.getElementById('email').value;
-    document.getElementById('resetPasswordMessage').textContent = '';
-    document.getElementById('resetButtonText').style.display = 'inline';
-    document.getElementById('resetSpinner').style.display = 'none';
-    openModal('resetPasswordModal');
-});
-
-document.getElementById('sendResetLink').addEventListener('click', async function() {
-    const email = document.getElementById('resetEmail').value.trim();
-    const messageElement = document.getElementById('resetPasswordMessage');
-    const buttonText = document.getElementById('resetButtonText');
-    const spinner = document.getElementById('resetSpinner');
-    
-    // Resetear mensajes
-    messageElement.textContent = '';
-    messageElement.style.color = '';
-    
-    if (!email) {
-        showResetMessage('Por favor ingresa tu correo electrónico', 'error');
-        return;
-    }
-    
-    // Validar formato de email
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        showResetMessage('Por favor ingresa un correo electrónico válido', 'error');
-        return;
-    }
-    
-    // Mostrar spinner
-    buttonText.style.display = 'none';
-    spinner.style.display = 'inline';
-    this.disabled = true;
-    
-    try {
-        // Primero verificamos si el correo existe
-        const methods = await auth.fetchSignInMethodsForEmail(email);
         
-        if (methods.length === 0) {
-            showResetMessage('No hay ninguna cuenta registrada con este correo electrónico', 'error');
-            return;
-        }
-        
-        // Si el correo existe, procedemos a enviar el enlace
-        await auth.sendPasswordResetEmail(email);
-        
-        showResetMessage('✅ Se ha enviado un enlace de recuperación a tu correo. Revisa tu bandeja de entrada y la carpeta de spam.', 'success');
-        
-        // Cerrar el modal después de 5 segundos
-        setTimeout(() => {
-            closeModal('resetPasswordModal');
-        }, 5000);
-        
-    } catch (error) {
-        let errorMessage = 'Error al enviar el enlace de recuperación';
-        switch (error.code) {
-            case 'auth/invalid-email':
-                errorMessage = 'Correo electrónico inválido';
-                break;
-            case 'auth/too-many-requests':
-                errorMessage = 'Demasiados intentos. Por favor, intenta más tarde';
-                break;
-            case 'auth/user-not-found':
-                errorMessage = 'No hay ninguna cuenta registrada con este correo electrónico';
-                break;
-            default:
-                errorMessage = `Error: ${error.message}`;
-                break;
-        }
-        showResetMessage(errorMessage, 'error');
-    } finally {
-        // Restaurar botón
-        buttonText.style.display = 'inline';
-        spinner.style.display = 'none';
-        this.disabled = false;
-    }
-});
-
-function showResetMessage(message, type) {
-    const messageElement = document.getElementById('resetPasswordMessage');
-    messageElement.textContent = message;
-    messageElement.style.color = type === 'error' ? '#f44336' : '#4CAF50';
-}
-
-// Permitir enviar con Enter
-document.getElementById('resetEmail').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        document.getElementById('sendResetLink').click();
-    }
-});
 
     </script>
 </body>
 
 </html>
 
-<!-- 1 -->
+<!-- 7 -->
