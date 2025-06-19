@@ -72,16 +72,7 @@
         animation: ripple 0.3s ease-out;
     }
     
-    @keyframes ripple {
-        0% {
-            transform: scale(0, 0) translate(-50%, -50%);
-            opacity: 0.5;
-        }
-        100% {
-            transform: scale(20, 20) translate(-50%, -50%);
-            opacity: 0;
-        }
-    }
+
     
     /* Efecto Destello Instantáneo */
     .btn-flash:active {
@@ -127,7 +118,7 @@
         <div class="fixed-header">
             <div class="header">
                 <div class="header-content">
-                    <button id="logout-button"></button>
+                    <button id="logout-button" class="btn-flash"></button>
                     <div class="logo1"><img src="./img/logo_1.png"></div>
                     <div style="display: inline-flex;flex-direction: column;align-items: flex-start;">
                         <h1>Bieneraigar</h1>
@@ -138,9 +129,9 @@
 
             <div class="nav-tabs">
                 <div class="nav-tabs-content">
-                    <button class="nav-tab btn-ripple active" onclick="showTab('calendar')">📅 Calendario</button>
+                    <button class="nav-tab btn-flash active" onclick="showTab('calendar')">📅 Calendario</button>
                     <button class="nav-tab btn-flash" onclick="showTab('properties')">🏘️ Propiedades</button>
-                    <button class="nav-tab" onclick="showTab('accounting')">💰 Contabilidad</button>
+                    <button class="nav-tab btn-flash" onclick="showTab('accounting')">💰 Contabilidad</button>
                 </div>
             </div>
         </div>
@@ -151,9 +142,9 @@
             <!-- Calendar Tab -->
             <div id="calendar-tab" class="tab-content active">
                 <div class="view-toggle">
-                    <button class="view-btn active" onclick="showView('calendar')">Calendario</button>
-                    <button class="view-btn" onclick="showView('list')">Lista de Pagos</button>
-                    <button class="view-btn" id="overdue-btn" onclick="showView('overdue')">
+                    <button class="view-btn btn-flash active" onclick="showView('calendar')">Calendario</button>
+                    <button class="view-btn btn-flash" onclick="showView('list')">Lista de Pagos</button>
+                    <button class="view-btn btn-flash" id="overdue-btn" onclick="showView('overdue')">
                         Atrasos <span id="overdue-count"
                             style="display:none; background:red;color:white;border-radius:50%;padding:2px 8px;margin-left:5px;">0</span>
                     </button>
@@ -163,9 +154,9 @@
                 <div id="calendar-view" class="calendar-view">
                     <div class="calendar-container">
                         <div class="calendar-header">
-                            <button class="calendar-nav" onclick="changeMonth(-1)">← Anterior</button>
+                            <button class="calendar-nav btn-flash" onclick="changeMonth(-1)">← Anterior</button>
                             <h2 class="calendar-title" id="calendar-title"></h2>
-                            <button class="calendar-nav" onclick="changeMonth(1)">Siguiente →</button>
+                            <button class="calendar-nav btn-flash" onclick="changeMonth(1)">Siguiente →</button>
                         </div>
                         <div class="calendar-grid" id="calendar-grid"></div>
                     </div>
@@ -2851,54 +2842,7 @@
 
 
 
-// Pedir permiso para notificar
-  Notification.requestPermission().then((permission) => {
-    if (permission === "granted") {
-      programarNotificacionesDiarias();
-    }
-  });
 
-  function programarNotificacionesDiarias() {
-    // Calculamos los tiempos en milisegundos para hoy a las 8 AM, 12 PM y 5 PM (hora local)
-    const ahora = new Date();
-    const horarios = [
-      { h: 22, m: 26 },  // 8:00
-      { h: 22, m: 27 }, // 12:00
-      { h: 22, m: 28 }  // 17:00
-    ];
-    horarios.forEach(horario => {
-      let horaNotif = new Date(
-        ahora.getFullYear(),
-        ahora.getMonth(),
-        ahora.getDate(),
-        horario.h,
-        horario.m,
-        0
-      );
-
-      // Si la hora ya pasó hoy, programa para mañana
-      if (horaNotif <= ahora) {
-        horaNotif.setDate(horaNotif.getDate() + 1);
-      }
-
-      const tiempoHastaNotificacion = horaNotif.getTime() - ahora.getTime();
-
-      setTimeout(() => {
-        new Notification('Pagos pendientes', {
-          body: 'Tienes propiedades con pagos pendientes hoy. Revísalas ahora.',
-          icon: './img/logo_1.png'
-        });
-
-        // Después que notifique, programa el siguiente día automáticamente
-        setInterval(() => {
-          new Notification('Pagos pendientes', {
-            body: 'Tienes propiedades con pagos pendientes hoy. Revísalas ahora.',
-            icon: './img/logo_1.png'
-          });
-        }, 24 * 60 * 60 * 1000); // cada 24 horas
-      }, tiempoHastaNotificacion);
-    });
-  }
         
 
     </script>
