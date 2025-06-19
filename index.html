@@ -114,12 +114,60 @@
 }
   
 
+
+
+
+
+
+
+    /* Loading Indicator */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        color: white;
+    }
+    
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 15px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
     </style>
 </head>
 
 <body>
+
+
+
+        <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Cargando datos...</p>
+    </div>
+
+
+
     <!-- Contenedor de login -->
-    <div id="loginContainer">
+    <div id="loginContainer" style="display: none;">
         <div class="animation-wrapper">
             <div class="particle particle-1"></div>
             <div class="particle particle-2"></div>
@@ -214,8 +262,7 @@
 
             <!-- Properties Tab -->
             <div id="properties-tab" class="tab-content">
-                <button class="btn add-property-btn" onclick="showAddPropertyModal()">📝 Agregar Nueva
-                    Propiedad</button>
+                <button class="btn add-property-btn" onclick="showAddPropertyModal()">🏠 Agregar Nueva Propiedad (+)</button>
 
                 <div class="property-status-tabs">
                     <button class="property-status-tab active" onclick="filterProperties('rented')">Rentadas</button>
@@ -459,7 +506,7 @@
         <div class="modal-content">
 
             <div class="Modal-Title">
-                <h2>📝 Agregar Nueva Propiedad</h2>
+                <h2>🏠 Agregar Nueva Propiedad (+)</h2>
                 <span class="close" onclick="closeModal('add-property-modal')">&times;</span>
             </div>
 
@@ -818,27 +865,45 @@ document.querySelector('.toggle-password').addEventListener('click', function() 
         });
 
         // Función para inicializar la aplicación después del login
-        function initializeApp() {
-            // Mover aquí todo el código de inicialización que estaba en DOMContentLoaded
-            initializePhoneInputs();
-            loadProperties();
-            loadPayments();
-            loadExpenses();
-            loadIncomes();
-            generateCalendar();
-            updateAccountingView();
+// Función para inicializar la aplicación después del login
+async function initializeApp() {
+    try {
+        // Mostrar el indicador de carga
+        document.getElementById('loadingOverlay').style.display = 'flex';
+        
+        // Inicializar componentes
+        initializePhoneInputs();
+        
+        // Cargar datos en paralelo
+        await Promise.all([
+            loadProperties(),
+            loadPayments(),
+            loadExpenses(),
+            loadIncomes()
+        ]);
+        
+        // Generar vistas
+        generateCalendar();
+        updateAccountingView();
+        
+        // Add form listeners
+        document.getElementById('property-form').addEventListener('submit', addProperty);
+        document.getElementById('income-form').addEventListener('submit', addIncome);
+        document.getElementById('expense-form').addEventListener('submit', addExpense);
+        document.getElementById('property-edit-form').addEventListener('submit', updateProperty);
 
-            // Add form listeners
-            document.getElementById('property-form').addEventListener('submit', addProperty);
-            document.getElementById('income-form').addEventListener('submit', addIncome);
-            document.getElementById('expense-form').addEventListener('submit', addExpense);
-            document.getElementById('property-edit-form').addEventListener('submit', updateProperty);
-
-            // Inicialmente ocultar campos de inquilino si no está rentado
-            toggleTenantFields();
-            toggleTenantFields('add');
-        }
-
+        // Inicialmente ocultar campos de inquilino si no está rentado
+        toggleTenantFields();
+        toggleTenantFields('add');
+        
+    } catch (error) {
+        console.error('Error inicializando la app:', error);
+        alert('Error al cargar los datos');
+    } finally {
+        // Ocultar el indicador de carga
+        document.getElementById('loadingOverlay').style.display = 'none';
+    }
+}
         // Manejar el login al presionar Enter
         document.getElementById('email').addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
@@ -1045,25 +1110,23 @@ document.querySelector('.toggle-password').addEventListener('click', function() 
 
 
         // Load data from Firebase
-        async function loadProperties() {
-            try {
-                const snapshot = await db.collection('properties').get();
-                properties = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                    createdAt: doc.data().createdAt?.toDate(),
-                    contractStart: doc.data().contractStart?.toDate()
-                }));
+async function loadProperties() {
+    try {
+        const snapshot = await db.collection('properties').get();
+        properties = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            createdAt: doc.data().createdAt?.toDate(),
+            contractStart: doc.data().contractStart?.toDate()
+        }));
 
-                // Mostrar solo propiedades rentadas inicialmente
-                currentPropertyFilter = 'rented';
-                displayProperties();
-
-                generateCalendar();
-                updateListView();
-                updateOverdueView();
-            } catch (error) {
-                console.error('Error loading properties:', error);
+        currentPropertyFilter = 'rented';
+        displayProperties();
+        generateCalendar();
+        updateListView();
+        updateOverdueView();
+    } catch (error) {
+        console.error('Error loading properties:', error);
                 // Use mock data for demo
                 properties = [
                     {
@@ -1301,7 +1364,7 @@ document.querySelector('.toggle-password').addEventListener('click', function() 
         </div>
         <div class="property-actions">
             <button class="btn" onclick="showPropertyDetailModal('${property.id}')">✏️ Editar</button>
-            <button class="btn btn-secondary" onclick="openModal('payment-history-modal'); showPaymentHistory('${property.id}')">📜 Historial</button>
+            <button class="btn btn-secondary" onclick="openModal('payment-history-modal'); showPaymentHistory('${property.id}')" style="background: linear-gradient(135deg, #46a9ef 0%, #1a5dc1 100%);">📜 Historial</button>
         </div>
     </div>
 `;
