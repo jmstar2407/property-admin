@@ -2851,150 +2851,55 @@
 
 
 
-
-        /* ====================== */
-/* SISTEMA DE NOTIFICACIONES COMPLETO (4 horarios) */
-/* ====================== */
-
-// 1. CONFIGURACIÓN DE HORARIOS (UTC-4 para República Dominicana)
-const NOTIFICATION_SCHEDULE = [
-  { hour: 8, minute: 0, name: "mañana" },     // 8:00 AM
-  { hour: 12, minute: 0, name: "mediodía" },  // 12:00 PM
-  { hour: 17, minute: 0, name: "tarde" },     // 5:00 PM
-  { hour: 20, minute: 8, name: "noche" }     // 9:20 PM
-];
-
-// 2. VARIABLES DE CONTROL
-let notificationPermissionGranted = false;
-let notificationTimer = null;
-let lastNotificationTime = { hour: -1, minute: -1 }; // Evita duplicados
-
-// 3. FUNCIÓN MEJORADA PARA PERMISOS
-async function initializeNotifications() {
-  try {
-    if (!('Notification' in window)) {
-      console.warn('Notificaciones no soportadas');
-      return false;
-    }
-
-    // Solución definitiva para errores de permisos
-    if (Notification.permission === 'granted') {
-      notificationPermissionGranted = true;
-      return true;
-    }
-
-    const permission = await Notification.requestPermission().catch(() => 'denied');
-    notificationPermissionGranted = permission === 'granted';
-    return notificationPermissionGranted;
-  } catch (error) {
-    console.error('Error en permisos:', error);
-    return false;
-  }
-}
-
-// 4. FUNCIÓN ROBUSTA PARA NOTIFICACIONES
-function showSystemNotification(title, message) {
-  if (!notificationPermissionGranted) return;
-
-  try {
-    // Solución para el error "message port closed"
-    setTimeout(() => {
-      try {
-        const notification = new Notification(title, {
-          body: message,
-          icon: '/img/logo_1.png', // Asegúrate de tener este archivo
-          requireInteraction: false
-        });
-
-        notification.onclick = () => {
-          window.focus();
-          notification.close();
-        };
-
-        // Cierre automático después de 8 segundos
-        setTimeout(() => notification.close(), 8000);
-      } catch (innerError) {
-        console.error('Error al crear notificación:', innerError);
-      }
-    }, 100);
-  } catch (error) {
-    console.error('Error en showSystemNotification:', error);
-  }
-}
-
-// 5. VERIFICACIÓN DE HORARIOS CON PRECISIÓN
-function checkNotificationTime() {
-  const now = new Date();
-  const utcOffset = -4 * 60 * 60 * 1000; // UTC-4
-  const localTime = new Date(now.getTime() + utcOffset);
-  const currentHour = localTime.getHours();
-  const currentMinute = localTime.getMinutes();
-
-  // Evita notificaciones duplicadas en el mismo minuto
-  if (lastNotificationTime.hour === currentHour && 
-      lastNotificationTime.minute === currentMinute) {
-    return;
-  }
-
-  NOTIFICATION_SCHEDULE.forEach(({ hour, minute, name }) => {
-    if (currentHour === hour && currentMinute === minute) {
-      console.log(`⏰ Disparando notificación (${name})`);
-      lastNotificationTime = { hour: currentHour, minute: currentMinute };
-      
-      // Obtener propiedades pendientes (usa tu función existente)
-      const pendingProperties = getPendingPayments(); 
-      
-      // Mostrar notificación para cada propiedad
-      pendingProperties.forEach(property => {
-        showSystemNotification(
-          'Recordatorio de Pago',
-          `${property.tenantName}: RD$${property.rentAmount.toLocaleString()}`
-        );
-      });
+// Pedir permiso para notificar
+  Notification.requestPermission().then((permission) => {
+    if (permission === "granted") {
+      programarNotificacionesDiarias();
     }
   });
-}
 
-// 6. TEMPORIZADOR DE ALTA PRECISIÓN
-function startPreciseTimer() {
-  if (notificationTimer) clearTimeout(notificationTimer);
-  
-  const now = new Date();
-  const delay = 60000 - (now.getSeconds() * 1000 + now.getMilliseconds());
-  
-  notificationTimer = setTimeout(() => {
-    checkNotificationTime();
-    startPreciseTimer(); // Siguiente ciclo
-  }, delay);
-}
+  function programarNotificacionesDiarias() {
+    // Calculamos los tiempos en milisegundos para hoy a las 8 AM, 12 PM y 5 PM (hora local)
+    const ahora = new Date();
+    const horarios = [
+      { h: 8, m: 0 },  // 8:00
+      { h: 12, m: 0 }, // 12:00
+      { h: 22, m: 19 }  // 17:00
+    ];
+    horarios.forEach(horario => {
+      let horaNotif = new Date(
+        ahora.getFullYear(),
+        ahora.getMonth(),
+        ahora.getDate(),
+        horario.h,
+        horario.m,
+        0
+      );
 
-// 7. INICIALIZACIÓN COMPLETA
-async function startNotificationSystem() {
-  await initializeNotifications();
-  checkNotificationTime(); // Verificación inmediata
-  startPreciseTimer(); // Iniciar temporizador preciso
-  
-  console.log('🔔 Notificaciones activas en horarios:', 
-    NOTIFICATION_SCHEDULE.map(t => `${t.hour}:${t.minute.toString().padStart(2, '0')}`).join(', ')
-  );
-}
+      // Si la hora ya pasó hoy, programa para mañana
+      if (horaNotif <= ahora) {
+        horaNotif.setDate(horaNotif.getDate() + 1);
+      }
 
-// 8. INTEGRACIÓN CON TU SISTEMA DE AUTENTICACIÓN
-auth.onAuthStateChanged((user) => {
-  if (user) {
-    // Iniciar con retardo para evitar conflictos
-    setTimeout(startNotificationSystem, 3000); 
-  } else {
-    if (notificationTimer) {
-      clearTimeout(notificationTimer);
-      notificationTimer = null;
-    }
+      const tiempoHastaNotificacion = horaNotif.getTime() - ahora.getTime();
+
+      setTimeout(() => {
+        new Notification('Pagos pendientes', {
+          body: 'Tienes propiedades con pagos pendientes hoy. Revísalas ahora.',
+          icon: './img/logo_1.png'
+        });
+
+        // Después que notifique, programa el siguiente día automáticamente
+        setInterval(() => {
+          new Notification('Pagos pendientes', {
+            body: 'Tienes propiedades con pagos pendientes hoy. Revísalas ahora.',
+            icon: './img/logo_1.png'
+          });
+        }, 24 * 60 * 60 * 1000); // cada 24 horas
+      }, tiempoHastaNotificacion);
+    });
   }
-});
-
-/* ====================== */
-/* FIN DEL SISTEMA DE NOTIFICACIONES */
-/* ====================== */
+        
 
     </script>
 </body>
