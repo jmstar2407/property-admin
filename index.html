@@ -15,7 +15,7 @@
     <!-- intl-tel-input JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
-        <!-- Font Awesome para el icono del ojo -->
+    <!-- Font Awesome para el icono del ojo -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Firebase SDK -->
@@ -52,9 +52,9 @@
 
 
 
-    
-    /* Efecto Destello Instantáneo */
-    /*span:active,
+
+        /* Efecto Destello Instantáneo */
+        /*span:active,
     button:active {
         animation: flash 0.2s;
     }
@@ -66,54 +66,97 @@
 
 
 
-      button, span, a {
-    transition: all 0.2s ease;
-    cursor: pointer;
-  }
+        button,
+        span,
+        a {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
 
-  button:active, span:active, a:active {
-    transform: scale(0.95);
-  }
+        button:active,
+        span:active,
+        a:active {
+            transform: scale(0.95);
+        }
 
-  button:hover, a:hover {
-    filter: brightness(1.1);
-  }
+        button:hover,
+        a:hover {
+            filter: brightness(1.1);
+        }
 
 
 
 
 
 
-.password-container {
-    position: relative;
-    margin-bottom: 14px;
-    width: 100%;
-}
+        .password-container {
+            position: relative;
+            margin-bottom: 14px;
+            width: 100%;
+        }
 
-.password-container input {
-    padding-right: 40px; /* Espacio para el icono */
-    width: 100%;
-    box-sizing: border-box;
-}
+        .password-container input {
+            padding-right: 40px;
+            /* Espacio para el icono */
+            width: 100%;
+            box-sizing: border-box;
+        }
 
-.toggle-password {
-    position: absolute;
-    right: 0px;
-    top: 50%;
+        .toggle-password {
+            position: absolute;
+            right: 0px;
+            top: 50%;
 
-    cursor: pointer;
-    color: #777;
-    background: none;
-    border: none;
-    outline: none;
-    font-size: 16px;
-}
+            cursor: pointer;
+            color: #777;
+            background: none;
+            border: none;
+            outline: none;
+            font-size: 16px;
+        }
 
-.toggle-password:hover {
-    color: #333;
-}
-  
+        .toggle-password:hover {
+            color: #333;
+        }
 
+
+
+
+
+
+
+
+
+
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password a {
+            color: #4a82cb;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        #resetPasswordModal {
+            display: none;
+            /* Mantén el mismo estilo que otros modales */
+        }
+
+        #resetPasswordModal .modal-content {
+            background: #242733;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 400px;
+            color: white;
+        }
     </style>
 </head>
 
@@ -133,12 +176,18 @@
             <h2>Bieneraigar</h2>
             <p id="subtit" style="margin-bottom: 20px;">Sistema de Administración</p>
             <input type="email" id="email" placeholder="Correo electrónico" style="margin-bottom: 14px;">
-            <div class="password-container">
-    <input type="password" id="password" placeholder="Contraseña" style="padding: 17px 85px 17px 24px;">
+          <div class="password-container">
+    <input type="password" id="password" placeholder="Contraseña" style="padding: 17px 60px 17px 24px;">
     <button class="toggle-password" aria-label="Mostrar contraseña" style="margin-top: 5px;width: 60px;background: #3258b100;margin-bottom: 0px;top: 0px;">
         <i class="far fa-eye" style="color: #c5c7cb;"></i>
     </button>
 </div>
+<!-- Agrega este div debajo del password-container -->
+<div class="forgot-password" style="text-align: right; margin-bottom: 20px;">
+    <a href="#" id="forgotPasswordLink" style="color: #4a82cb; text-decoration: none; font-size: 14px;">¿Olvidaste tu contraseña?</a>
+</div>
+
+
             <div id="errorMessage" class="error-message"></div>
             <button id="loginBtn">Iniciar sesión</button>
         </div>
@@ -761,23 +810,48 @@
 
 
 
-
+<!-- Reset Password Modal -->
+<div id="resetPasswordModal" class="modal">
+    <div class="modal-content">
+        <div class="Modal-Title">
+            <h2>Recuperar Contraseña</h2>
+            <span class="close" onclick="closeModal('resetPasswordModal')">&times;</span>
+        </div>
+        <div class="Modal-Body">
+            <p>Ingresa tu correo electrónico para recibir un enlace de recuperación:</p>
+            <input type="email" id="resetEmail" placeholder="Correo electrónico" style="width: 100%; padding: 10px; margin-bottom: 15px;">
+            <div id="resetPasswordMessage" style="margin-bottom: 15px; font-size: 14px;"></div>
+            <button id="sendResetLink" class="btn" style="width: 100%;">
+                <span id="resetButtonText">Enviar Enlace</span>
+                <span id="resetSpinner" style="display: none;">⌛</span>
+            </button>
+            <div id="resetTips" style="margin-top: 20px; font-size: 13px; color: #aaa;">
+                <p>Si no recibes el correo:</p>
+                <ul>
+                    <li>Revisa tu carpeta de spam</li>
+                    <li>Verifica que escribiste correctamente tu correo</li>
+                    <li>Espera unos minutos (puede tardar hasta 5 minutos)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 
     <script>
-document.querySelector('.toggle-password').addEventListener('click', function() {
-    const passwordInput = document.getElementById('password');
-    const icon = this.querySelector('i');
-    
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-    } else {
-        passwordInput.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-    }
-});
+        document.querySelector('.toggle-password').addEventListener('click', function () {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
         // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyChPTn15TxZzKluRLzDRFwqExplejeW1p4",
@@ -2890,7 +2964,98 @@ document.querySelector('.toggle-password').addEventListener('click', function() 
 
 
 
+// Password recovery functionality
+document.getElementById('forgotPasswordLink').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('resetEmail').value = document.getElementById('email').value;
+    document.getElementById('resetPasswordMessage').textContent = '';
+    document.getElementById('resetButtonText').style.display = 'inline';
+    document.getElementById('resetSpinner').style.display = 'none';
+    openModal('resetPasswordModal');
+});
+
+document.getElementById('sendResetLink').addEventListener('click', async function() {
+    const email = document.getElementById('resetEmail').value.trim();
+    const messageElement = document.getElementById('resetPasswordMessage');
+    const buttonText = document.getElementById('resetButtonText');
+    const spinner = document.getElementById('resetSpinner');
+    
+    // Resetear mensajes
+    messageElement.textContent = '';
+    messageElement.style.color = '';
+    
+    if (!email) {
+        showResetMessage('Por favor ingresa tu correo electrónico', 'error');
+        return;
+    }
+    
+    // Validar formato de email
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showResetMessage('Por favor ingresa un correo electrónico válido', 'error');
+        return;
+    }
+    
+    // Mostrar spinner
+    buttonText.style.display = 'none';
+    spinner.style.display = 'inline';
+    this.disabled = true;
+    
+    try {
+        // Primero verificamos si el correo existe
+        const methods = await auth.fetchSignInMethodsForEmail(email);
         
+        if (methods.length === 0) {
+            showResetMessage('No hay ninguna cuenta registrada con este correo electrónico', 'error');
+            return;
+        }
+        
+        // Si el correo existe, procedemos a enviar el enlace
+        await auth.sendPasswordResetEmail(email);
+        
+        showResetMessage('✅ Se ha enviado un enlace de recuperación a tu correo. Revisa tu bandeja de entrada y la carpeta de spam.', 'success');
+        
+        // Cerrar el modal después de 5 segundos
+        setTimeout(() => {
+            closeModal('resetPasswordModal');
+        }, 5000);
+        
+    } catch (error) {
+        let errorMessage = 'Error al enviar el enlace de recuperación';
+        switch (error.code) {
+            case 'auth/invalid-email':
+                errorMessage = 'Correo electrónico inválido';
+                break;
+            case 'auth/too-many-requests':
+                errorMessage = 'Demasiados intentos. Por favor, intenta más tarde';
+                break;
+            case 'auth/user-not-found':
+                errorMessage = 'No hay ninguna cuenta registrada con este correo electrónico';
+                break;
+            default:
+                errorMessage = `Error: ${error.message}`;
+                break;
+        }
+        showResetMessage(errorMessage, 'error');
+    } finally {
+        // Restaurar botón
+        buttonText.style.display = 'inline';
+        spinner.style.display = 'none';
+        this.disabled = false;
+    }
+});
+
+function showResetMessage(message, type) {
+    const messageElement = document.getElementById('resetPasswordMessage');
+    messageElement.textContent = message;
+    messageElement.style.color = type === 'error' ? '#f44336' : '#4CAF50';
+}
+
+// Permitir enviar con Enter
+document.getElementById('resetEmail').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        document.getElementById('sendResetLink').click();
+    }
+});
 
     </script>
 </body>
