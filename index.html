@@ -2853,78 +2853,99 @@
 
 
         /* ====================== */
-/* SISTEMA DE NOTIFICACIONES MEJORADO */
-/* (Pegar al final del código) */
+/* SISTEMA DE NOTIFICACIONES COMPLETO (4 horarios) */
 /* ====================== */
 
-// Configuración centralizada de horarios (UTC-4 para República Dominicana)
+// 1. CONFIGURACIÓN DE HORARIOS (UTC-4 para República Dominicana)
 const NOTIFICATION_SCHEDULE = [
-  { hour: 8, minute: 0, name: "mañana" },    // 8:00 AM
-  { hour: 12, minute: 0, name: "mediodía" }, // 12:00 PM
-  { hour: 17, minute: 0, name: "tarde" },    // 5:00 PM
-  { hour: 22, minute: 0, name: "noche" }    // 10:00 PM
+  { hour: 8, minute: 0, name: "mañana" },     // 8:00 AM
+  { hour: 12, minute: 0, name: "mediodía" },  // 12:00 PM
+  { hour: 17, minute: 0, name: "tarde" },     // 5:00 PM
+  { hour: 20, minute: 8, name: "noche" }     // 9:20 PM
 ];
 
-// Variables de control
+// 2. VARIABLES DE CONTROL
 let notificationPermissionGranted = false;
 let notificationTimer = null;
+let lastNotificationTime = { hour: -1, minute: -1 }; // Evita duplicados
 
-// Función robusta para solicitar permisos
+// 3. FUNCIÓN MEJORADA PARA PERMISOS
 async function initializeNotifications() {
   try {
     if (!('Notification' in window)) {
-      console.warn('Este navegador no soporta notificaciones del sistema');
+      console.warn('Notificaciones no soportadas');
       return false;
     }
 
+    // Solución definitiva para errores de permisos
     if (Notification.permission === 'granted') {
       notificationPermissionGranted = true;
       return true;
     }
 
-    const permission = await Notification.requestPermission();
+    const permission = await Notification.requestPermission().catch(() => 'denied');
     notificationPermissionGranted = permission === 'granted';
     return notificationPermissionGranted;
   } catch (error) {
-    console.error('Error al solicitar permisos:', error);
+    console.error('Error en permisos:', error);
     return false;
   }
 }
 
-// Mostrar notificación del sistema con manejo de errores
+// 4. FUNCIÓN ROBUSTA PARA NOTIFICACIONES
 function showSystemNotification(title, message) {
   if (!notificationPermissionGranted) return;
 
   try {
-    const notification = new Notification(title, {
-      body: message,
-      icon: './img/logo_1.png',
-      requireInteraction: false
-    });
+    // Solución para el error "message port closed"
+    setTimeout(() => {
+      try {
+        const notification = new Notification(title, {
+          body: message,
+          icon: '/img/logo_1.png', // Asegúrate de tener este archivo
+          requireInteraction: false
+        });
 
-    notification.onclick = () => {
-      window.focus();
-      notification.close();
-    };
+        notification.onclick = () => {
+          window.focus();
+          notification.close();
+        };
 
-    setTimeout(() => notification.close(), 10000);
+        // Cierre automático después de 8 segundos
+        setTimeout(() => notification.close(), 8000);
+      } catch (innerError) {
+        console.error('Error al crear notificación:', innerError);
+      }
+    }, 100);
   } catch (error) {
-    console.error('Error al mostrar notificación:', error);
+    console.error('Error en showSystemNotification:', error);
   }
 }
 
-// Verificación horaria precisa
+// 5. VERIFICACIÓN DE HORARIOS CON PRECISIÓN
 function checkNotificationTime() {
   const now = new Date();
   const utcOffset = -4 * 60 * 60 * 1000; // UTC-4
   const localTime = new Date(now.getTime() + utcOffset);
-  
-  console.log(`[${localTime.getHours()}:${localTime.getMinutes()}] Verificando horarios...`);
+  const currentHour = localTime.getHours();
+  const currentMinute = localTime.getMinutes();
+
+  // Evita notificaciones duplicadas en el mismo minuto
+  if (lastNotificationTime.hour === currentHour && 
+      lastNotificationTime.minute === currentMinute) {
+    return;
+  }
 
   NOTIFICATION_SCHEDULE.forEach(({ hour, minute, name }) => {
-    if (localTime.getHours() === hour && localTime.getMinutes() === minute) {
-      const properties = getPendingPayments(); // Usa tu función existente
-      properties.forEach(property => {
+    if (currentHour === hour && currentMinute === minute) {
+      console.log(`⏰ Disparando notificación (${name})`);
+      lastNotificationTime = { hour: currentHour, minute: currentMinute };
+      
+      // Obtener propiedades pendientes (usa tu función existente)
+      const pendingProperties = getPendingPayments(); 
+      
+      // Mostrar notificación para cada propiedad
+      pendingProperties.forEach(property => {
         showSystemNotification(
           'Recordatorio de Pago',
           `${property.tenantName}: RD$${property.rentAmount.toLocaleString()}`
@@ -2934,7 +2955,7 @@ function checkNotificationTime() {
   });
 }
 
-// Temporizador de alta precisión
+// 6. TEMPORIZADOR DE ALTA PRECISIÓN
 function startPreciseTimer() {
   if (notificationTimer) clearTimeout(notificationTimer);
   
@@ -2943,22 +2964,26 @@ function startPreciseTimer() {
   
   notificationTimer = setTimeout(() => {
     checkNotificationTime();
-    startPreciseTimer();
+    startPreciseTimer(); // Siguiente ciclo
   }, delay);
 }
 
-// Inicialización completa del sistema
-async function initializeNotificationSystem() {
+// 7. INICIALIZACIÓN COMPLETA
+async function startNotificationSystem() {
   await initializeNotifications();
-  checkNotificationTime();
-  startPreciseTimer();
-  console.log('Notificaciones programadas para:', NOTIFICATION_SCHEDULE);
+  checkNotificationTime(); // Verificación inmediata
+  startPreciseTimer(); // Iniciar temporizador preciso
+  
+  console.log('🔔 Notificaciones activas en horarios:', 
+    NOTIFICATION_SCHEDULE.map(t => `${t.hour}:${t.minute.toString().padStart(2, '0')}`).join(', ')
+  );
 }
 
-// Integración con el sistema de autenticación
-auth.onAuthStateChanged(async (user) => {
+// 8. INTEGRACIÓN CON TU SISTEMA DE AUTENTICACIÓN
+auth.onAuthStateChanged((user) => {
   if (user) {
-    await initializeNotificationSystem();
+    // Iniciar con retardo para evitar conflictos
+    setTimeout(startNotificationSystem, 3000); 
   } else {
     if (notificationTimer) {
       clearTimeout(notificationTimer);
