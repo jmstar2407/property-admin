@@ -2840,13 +2840,6 @@
 
 
 
-
-
-
-
-
-
-
         // Asegúrate de que la función de logout esté implementada
         document.getElementById('logout-button').addEventListener('click', () => {
             auth.signOut().then(() => {
@@ -2859,144 +2852,128 @@
 
 
 
-       // Variables globales para el control de notificaciones
-let notificationInterval = null;
-let notificationTimeout = null;
+        /* ====================== */
+/* SISTEMA DE NOTIFICACIONES MEJORADO */
+/* (Pegar al final del código) */
+/* ====================== */
 
-// Configuración de notificaciones mejorada
-function setupNotifications() {
-    // Verificar soporte de notificaciones
-    if (!("Notification" in window)) {
-        console.log("Este navegador no soporta notificaciones");
-        return;
+// Configuración centralizada de horarios (UTC-4 para República Dominicana)
+const NOTIFICATION_SCHEDULE = [
+  { hour: 8, minute: 0, name: "mañana" },    // 8:00 AM
+  { hour: 12, minute: 0, name: "mediodía" }, // 12:00 PM
+  { hour: 17, minute: 0, name: "tarde" },    // 5:00 PM
+  { hour: 22, minute: 0, name: "noche" }    // 10:00 PM
+];
+
+// Variables de control
+let notificationPermissionGranted = false;
+let notificationTimer = null;
+
+// Función robusta para solicitar permisos
+async function initializeNotifications() {
+  try {
+    if (!('Notification' in window)) {
+      console.warn('Este navegador no soporta notificaciones del sistema');
+      return false;
     }
 
-    // Verificar permisos existentes
-    if (Notification.permission === "granted") {
-        startNotificationChecks();
-    } 
-    else if (Notification.permission !== "denied") {
-        // Solicitar permisos con manejo adecuado de promesas
-        Notification.requestPermission()
-            .then(permission => {
-                if (permission === "granted") {
-                    startNotificationChecks();
-                } else {
-                    console.log("Permiso denegado para notificaciones");
-                }
-            })
-            .catch(err => {
-                console.error("Error al solicitar permisos:", err);
-            });
+    if (Notification.permission === 'granted') {
+      notificationPermissionGranted = true;
+      return true;
     }
+
+    const permission = await Notification.requestPermission();
+    notificationPermissionGranted = permission === 'granted';
+    return notificationPermissionGranted;
+  } catch (error) {
+    console.error('Error al solicitar permisos:', error);
+    return false;
+  }
 }
 
-// Iniciar verificaciones de notificaciones
-function startNotificationChecks() {
-    // Limpiar cualquier intervalo previo
-    if (notificationInterval) {
-        clearInterval(notificationInterval);
-    }
-    if (notificationTimeout) {
-        clearTimeout(notificationTimeout);
-    }
+// Mostrar notificación del sistema con manejo de errores
+function showSystemNotification(title, message) {
+  if (!notificationPermissionGranted) return;
 
-    // Verificación inmediata
-    checkNotificationTime();
-
-    // Configurar verificación periódica cada minuto
-    notificationInterval = setInterval(checkNotificationTime, 60000);
-}
-
-// Verificación horaria mejorada
-function checkNotificationTime() {
-    // Obtener hora actual en UTC-4 (República Dominicana)
-    const now = new Date();
-    const utcOffset = -4 * 60; // UTC-4 en minutos
-    const localTime = new Date(now.getTime() + (utcOffset * 60 * 1000));
-    
-    console.log('Verificando notificaciones a las:', localTime.getHours(), ':', localTime.getMinutes());
-
-    // Horarios objetivo (ajustados para coincidir con intervalos)
-    const targetTimes = [
-        { hour: 8, minutes: 0, name: "mañana" },
-        { hour: 12, minutes: 0, name: "mediodía" },
-        { hour: 17, minutes: 0, name: "tarde" },
-        { hour: 21, minutes: 50, name: "noche" } // Cambiado a 9:20 PM
-    ];
-    
-    // Verificar coincidencia con horarios objetivo
-    targetTimes.forEach(time => {
-        if (localTime.getHours() === time.hour && localTime.getMinutes() === time.minutes) {
-            sendPendingPaymentsNotification(time.name);
-        }
+  try {
+    const notification = new Notification(title, {
+      body: message,
+      icon: './img/logo_1.png',
+      requireInteraction: false
     });
-    
-    // Programar próximo chequeo (alternativa a setInterval)
-    notificationTimeout = setTimeout(checkNotificationTime, 60000);
+
+    notification.onclick = () => {
+      window.focus();
+      notification.close();
+    };
+
+    setTimeout(() => notification.close(), 10000);
+  } catch (error) {
+    console.error('Error al mostrar notificación:', error);
+  }
 }
 
-// Función mejorada para enviar notificaciones
-function sendPendingPaymentsNotification(timeOfDay) {
-    try {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        
-        // Filtrar propiedades con pagos pendientes
-        const overdueProperties = properties.filter(property => {
-            if (property.status !== 'rented' || !property.paymentDay) return false;
-            
-            const dueDate = new Date(today.getFullYear(), today.getMonth(), property.paymentDay);
-            dueDate.setHours(0, 0, 0, 0);
-            
-            return dueDate <= today && !isPropertyPaid(property, dueDate);
-        });
+// Verificación horaria precisa
+function checkNotificationTime() {
+  const now = new Date();
+  const utcOffset = -4 * 60 * 60 * 1000; // UTC-4
+  const localTime = new Date(now.getTime() + utcOffset);
+  
+  console.log(`[${localTime.getHours()}:${localTime.getMinutes()}] Verificando horarios...`);
 
-        if (overdueProperties.length > 0) {
-            const notificationTitle = `Recordatorio de pagos (${timeOfDay})`;
-            const notificationMessage = overdueProperties.length === 1 
-                ? `Pago pendiente: ${overdueProperties[0].tenantName} - RD$${overdueProperties[0].rentAmount.toLocaleString()}`
-                : `${overdueProperties.length} pagos pendientes hoy`;
-            
-            // Verificar permisos antes de mostrar
-            if (Notification.permission === "granted") {
-                new Notification(notificationTitle, {
-                    body: notificationMessage,
-                    icon: "./img/logo_1.png"
-                });
-                console.log("Notificación enviada:", notificationMessage);
-            } else {
-                console.log("Permiso para notificaciones no concedido");
-            }
-        }
-    } catch (error) {
-        console.error("Error en sendPendingPaymentsNotification:", error);
+  NOTIFICATION_SCHEDULE.forEach(({ hour, minute, name }) => {
+    if (localTime.getHours() === hour && localTime.getMinutes() === minute) {
+      const properties = getPendingPayments(); // Usa tu función existente
+      properties.forEach(property => {
+        showSystemNotification(
+          'Recordatorio de Pago',
+          `${property.tenantName}: RD$${property.rentAmount.toLocaleString()}`
+        );
+      });
     }
+  });
 }
 
-// Inicialización cuando el usuario está autenticado
-auth.onAuthStateChanged((user) => {
-    if (user) {
-        // Esperar 3 segundos antes de solicitar permisos
-        setTimeout(() => {
-            setupNotifications();
-        }, 3000);
-    } else {
-        // Limpiar intervalos al cerrar sesión
-        if (notificationInterval) {
-            clearInterval(notificationInterval);
-            notificationInterval = null;
-        }
-        if (notificationTimeout) {
-            clearTimeout(notificationTimeout);
-            notificationTimeout = null;
-        }
+// Temporizador de alta precisión
+function startPreciseTimer() {
+  if (notificationTimer) clearTimeout(notificationTimer);
+  
+  const now = new Date();
+  const delay = 60000 - (now.getSeconds() * 1000 + now.getMilliseconds());
+  
+  notificationTimer = setTimeout(() => {
+    checkNotificationTime();
+    startPreciseTimer();
+  }, delay);
+}
+
+// Inicialización completa del sistema
+async function initializeNotificationSystem() {
+  await initializeNotifications();
+  checkNotificationTime();
+  startPreciseTimer();
+  console.log('Notificaciones programadas para:', NOTIFICATION_SCHEDULE);
+}
+
+// Integración con el sistema de autenticación
+auth.onAuthStateChanged(async (user) => {
+  if (user) {
+    await initializeNotificationSystem();
+  } else {
+    if (notificationTimer) {
+      clearTimeout(notificationTimer);
+      notificationTimer = null;
     }
+  }
 });
+
+/* ====================== */
+/* FIN DEL SISTEMA DE NOTIFICACIONES */
+/* ====================== */
 
     </script>
 </body>
 
 </html>
 
-<!-- 2 -->
+<!-- 1 -->
