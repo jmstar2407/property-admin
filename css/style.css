@@ -335,15 +335,16 @@
 
 
 
- 
 
- ::-webkit-scrollbar {
-  width: 8px;
-  height: 5px;
+
+::-webkit-scrollbar {
+    width: 7px;
+    height: 5px;
+    background: #8383830f;
 }
 
 ::-webkit-scrollbar-thumb {
-background: #296fb9c7;
+    background: #084c7b;
     border-radius: 2px;
 }
 
@@ -1292,7 +1293,11 @@ background: #296fb9c7;
          padding: 10px;
      }
 
-     .modal-content {}
+    ::-webkit-scrollbar {
+    width: 4px;
+    height: 5px;
+    background: #8383830f;
+}
 
 
  }
@@ -1307,6 +1312,10 @@ background: #296fb9c7;
          width: 100%;
      }
 
+     #accounting-month-title {
+    font-size: 14px;
+}
+
 .Modal-Body {
     padding: 10px;
 }
@@ -1318,7 +1327,7 @@ background: #296fb9c7;
      .nav-tab {
          padding: 10px 5px;
          border-radius: 7px;
-         font-size: 14px;
+         font-size: 12px;
      }
 
      #subtit {
@@ -1346,7 +1355,7 @@ background: #296fb9c7;
      }
 
      .calendar-title {
-         font-size: 20px;
+         font-size: 14px;
          font-weight: 600;
          color: #1180cb;
      }
