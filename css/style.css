@@ -241,24 +241,23 @@
      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
  }
 
-.tab-content {
-    display: none;
-    background: #202733;
-    border-radius: 20px;
-    /* padding: 30px; */
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-    /* margin-top: 10px; */
-    height: 100%;
-    overflow: auto;
-}
+ .tab-content {
+     display: none;
+     background: #202733;
+     border-radius: 20px;
+     /* padding: 30px; */
+     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+     backdrop-filter: blur(10px);
+     /* margin-top: 10px; */
+     height: 100%;
+     overflow: auto;
+ }
 
-.tab-content.active {
-    display: flex
-;
-    animation: slideIn 0.3s ease-out;
-    flex-direction: column;
-}
+ .tab-content.active {
+     display: flex;
+     animation: slideIn 0.3s ease-out;
+     flex-direction: column;
+ }
 
 
 
@@ -276,11 +275,11 @@
      border-radius: 10px 10px 0px 0px;
  }
 
-#Modal-Title-2 {
-    min-height: 20px;
-    border-bottom: 0px solid rgb(79 89 111);
-    background: rgb(27 30 35 / 0%);
-}
+ #Modal-Title-2 {
+     min-height: 20px;
+     border-bottom: 0px solid rgb(79 89 111);
+     background: rgb(27 30 35 / 0%);
+ }
 
 
  .Modal-Title h2 {
@@ -292,12 +291,12 @@
  }
 
 
-.Modal-Body {
-    background: rgba(255, 255, 255, 0);
-    overflow: auto;
-    flex: 1;
-    padding: 20px;
-}
+ .Modal-Body {
+     background: rgba(255, 255, 255, 0);
+     overflow: auto;
+     flex: 1;
+     padding: 20px;
+ }
 
 
  .Modal-Footer {
@@ -337,16 +336,16 @@
 
 
 
-::-webkit-scrollbar {
-    width: 7px;
-    height: 5px;
-    background: #8383830f;
-}
+ ::-webkit-scrollbar {
+     width: 7px;
+     height: 5px;
+     background: #8383830f;
+ }
 
-::-webkit-scrollbar-thumb {
-    background: #084c7b;
-    border-radius: 2px;
-}
+ ::-webkit-scrollbar-thumb {
+     background: #084c7b;
+     border-radius: 2px;
+ }
 
 
  @keyframes slideIn {
@@ -391,14 +390,14 @@
  #accounting-month-title {
      font-size: 20px;
      font-weight: 600;
-     color: #1180cb;
+     color: #0091f3;
      text-align: center;
  }
 
  .calendar-title {
      font-size: 1.5rem;
      font-weight: 600;
-     color: #1180cb;
+     color: #0094f7;
      text-align: center;
  }
 
@@ -641,12 +640,12 @@
  }
 
  /* Form Styles */
-.form-container {
-    background: #14181c;
-    margin: 0px 0px;
-    padding: 10px;
-    border-radius: 15px;
-}
+ .form-container {
+     background: #14181c;
+     margin: 0px 0px;
+     padding: 10px;
+     border-radius: 15px;
+ }
 
  .form-group {
      margin-bottom: 20px;
@@ -790,8 +789,8 @@
      color: #7d1010;
  }
 
- #property-detail-content{
-    display: contents;
+ #property-detail-content {
+     display: contents;
  }
 
  .accounting-actions {
@@ -998,14 +997,13 @@
      font-weight: bold;
  }
 
-.month-selector {
-    display: flex
-;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 40px;
-    gap: 20px;
-}
+ .month-selector {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin-bottom: 40px;
+     gap: 20px;
+ }
 
  .expenses-list {
      background: #475367;
@@ -1150,10 +1148,10 @@
  }
 
  .add-property-btn {
-    margin-bottom: 20px;
-    background: #178b4642;
-    box-shadow: inset 0px 0px 0px 1px rgb(0 255 88);
-}
+     margin-bottom: 20px;
+     background: #178b4642;
+     box-shadow: inset 0px 0px 0px 1px rgb(0 255 88);
+ }
 
 
 
@@ -1248,17 +1246,16 @@
 
  /* Nuevos estilos para el layout fijo */
 
-.fixed-footer {
-    display: inline-flex
-;
-    justify-content: center;
-    background: #202733;
-    padding: 7px 20px;
-    text-align: center;
-    color: #ffffff;
-    font-size: 12px;
-    margin-top: 10px;
-}
+ .fixed-footer {
+     display: inline-flex;
+     justify-content: center;
+     background: #202733;
+     padding: 7px 20px;
+     text-align: center;
+     color: #ffffff;
+     font-size: 12px;
+     margin-top: 10px;
+ }
 
 
 
@@ -1297,11 +1294,11 @@
          padding: 10px;
      }
 
-    ::-webkit-scrollbar {
-    width: 4px;
-    height: 5px;
-    background: #8383830f;
-}
+     ::-webkit-scrollbar {
+         width: 4px;
+         height: 5px;
+         background: #8383830f;
+     }
 
 
  }
@@ -1317,12 +1314,12 @@
      }
 
      #accounting-month-title {
-    font-size: 14px;
-}
+         font-size: 14px;
+     }
 
-.Modal-Body {
-    padding: 10px;
-}
+     .Modal-Body {
+         padding: 10px;
+     }
 
      .nav-tabs-content {
          border-radius: 10px;
@@ -1360,8 +1357,6 @@
 
      .calendar-title {
          font-size: 14px;
-         font-weight: 600;
-         color: #1180cb;
      }
 
      .view-toggle {
@@ -1408,11 +1403,11 @@
          border-radius: 0px;
      }
 
-    .add-property-btn {
-        width: 100%;
-        margin-top: 10px;
-        padding: 7px 10px;
-    }
+     .add-property-btn {
+         width: 100%;
+         margin-top: 10px;
+         padding: 7px 10px;
+     }
 
      .property-status-tabs {
          display: flex;
@@ -1474,14 +1469,13 @@
  }
 
 
-.fixed-header {
-    background: #ff000000;
-    display: inline-flex
-;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 10px;
-}
+ .fixed-header {
+     background: #ff000000;
+     display: inline-flex;
+     flex-direction: column;
+     gap: 10px;
+     margin-bottom: 10px;
+ }
 
 
  .Master-Box {
@@ -1499,15 +1493,15 @@
      background-color: rgba(0, 0, 0, 0.5);
  }
 
-.scrollable-content {
-    background: rgba(255, 255, 255, 0);
-    overflow: hidden;
-    flex: 1;
-    padding: 0px 10px;
-    width: 100%;
-    max-width: 1210px;
-    margin: 0 auto;
-}
+ .scrollable-content {
+     background: rgba(255, 255, 255, 0);
+     overflow: hidden;
+     flex: 1;
+     padding: 0px 10px;
+     width: 100%;
+     max-width: 1210px;
+     margin: 0 auto;
+ }
 
 
 

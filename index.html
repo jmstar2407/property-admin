@@ -1392,14 +1392,13 @@
             <div class="property-title">📍 Dirección: ${property.address}</div>
             <span class="property-status-badge ${statusClass}">${statusText}</span>
         </div>
-        <div class="property-details">
+        <div class="property-details" style="padding: 5px;">
             <p><strong>🏠 Tipo:</strong> ${property.propertyType}</p>
             <p><strong>🛏️ Habit.:</strong> ${property.bedrooms || 0}<strong> | 🚿 Baños:</strong> ${property.bathrooms || 0} | <strong>🚗 Garaj.:</strong> ${property.parkingSpaces || 0}</p>
             <p><strong>💰 Renta (Mes):</strong> <span style="color: #4a82cb;font-weight: bold;">RD$ ${property.rentAmount.toLocaleString()}</span></p>
             <p><strong>👤 Propietario:</strong> ${property.ownerName}</p>
             ${property.status === 'rented' ? `<p><strong>👥 Inquilino:</strong> ${property.tenantName}</p>` : ''}
-
-            ${property.notes ? `<p><strong>📝 Notas:</strong> ${property.notes}</p>` : ''}
+            ${property.status === 'rented' ? `<p><strong>📅 Día de Cobro:</strong> <span style="color: #4a82cb;font-weight: bold;">${property.paymentDay}</span></p>` : ''}
             ${contractInfo}
         </div>
         <div class="property-actions">
@@ -2043,7 +2042,7 @@
                     <div class="property-title">${property.tenantName}</div>
                     <span class="status-badge ${statusClass}">${statusText}</span>
                 </div>
-                <div class="property-details">
+                <div class="property-details" style="padding: 5px;">
                     <p><strong>📍</strong> ${property.address}</p>
                     <p><strong>💰</strong> $${property.rentAmount.toLocaleString()}</p>
                     ${daysOverdue > 0 ? `<p class="overdue-days"><strong>⚠️</strong> ${daysOverdue} días de atraso</p>` : ''}
@@ -2097,14 +2096,15 @@
         <span class="close" onclick="closeModal('property-detail-modal')">&times;</span>
         </div>
         <div class="Modal-Body">
-        <div class="property-details" style="padding: 20px;">
+        <div class="property-details" style="padding: 5px;">
             <p><strong>📍 Dirección:</strong> ${property.address}</p>
-            <p><strong>💰 Renta Mensual:</strong> $${property.rentAmount.toLocaleString()}</p>
+            <p><strong>💰 Renta Mensual:</strong> <span style="color: #4a82cb;font-weight: bold;">$${property.rentAmount.toLocaleString()}</span></p>
             <p><strong>📅 Fecha de pago:</strong> ${date.toLocaleDateString('es-ES')}</p>
             ${isFirstMonth ?
                     `<p><strong>📅 Periodo a pagar:</strong> ${daysToPay} días desde ${contractDate.toLocaleDateString('es-ES')}</p>` :
                     `<p><strong>📅 Mes que se paga:</strong> ${paidMonth.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}</p>`
                 }
+            <p><strong>📅 Día de Cobro:</strong> <span style="color: #4a82cb;font-weight: bold;">${property.paymentDay}</span></p>
             ${overdueDays > 0 ? `<p class="overdue-days"><strong>⚠️ Días de atraso:</strong> ${overdueDays}</p>` : ''}
 
          </div>
