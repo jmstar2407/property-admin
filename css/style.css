@@ -641,12 +641,12 @@
  }
 
  /* Form Styles */
- .form-container {
-     background: #14181c;
-     margin: 0px 10px;
-     padding: 10px;
-     border-radius: 15px;
- }
+.form-container {
+    background: #14181c;
+    margin: 0px 0px;
+    padding: 10px;
+    border-radius: 15px;
+}
 
  .form-group {
      margin-bottom: 20px;
@@ -829,7 +829,7 @@
  }
 
  #modal-properties-list {
-     padding: 15px;
+     padding: 5px;
  }
 
  .property-card.overdue {
