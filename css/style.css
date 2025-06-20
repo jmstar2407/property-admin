@@ -790,6 +790,10 @@
      color: #7d1010;
  }
 
+ #property-detail-content{
+    display: contents;
+ }
+
  .accounting-actions {
      display: inline-flex;
      width: 100%;
@@ -1349,7 +1353,7 @@
      }
 
      .calendar-nav {
-         padding: 8px 14px;
+         padding: 8px 7px;
          border-radius: 8px;
          font-size: 12px;
      }

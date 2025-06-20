@@ -328,7 +328,7 @@
 
                     <div class="expenses-list" id="expenses-list"></div>
                 </div>
-                
+
             </div>
         </div>
         <!-- Contenido FIN -->
@@ -2106,7 +2106,7 @@
                     `<p><strong>📅 Mes que se paga:</strong> ${paidMonth.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}</p>`
                 }
             ${overdueDays > 0 ? `<p class="overdue-days"><strong>⚠️ Días de atraso:</strong> ${overdueDays}</p>` : ''}
-        </div>
+
          </div>
     `;
 
@@ -2201,11 +2201,13 @@
                         <label for="payment-notes">Notas (opcional)</label>
                         <textarea id="payment-notes" rows="2" placeholder="Ej: Referencia bancaria, etc."></textarea>
                     </div>
-                    <div style="display: inline-flex;flex-direction: row;width: 100%;justify-content: space-evenly;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('property-detail-modal')">Cancelar</button>
+                            </div>
+                             </div>
+                    <div class="Modal-Footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('property-detail-modal')">Cancelar</button>
                         <button type="submit" class="btn btn-success">✅ Registrar Pago</button>
-                </div>
                     </form>
+                    </div>
             </div>
         `;
             }
