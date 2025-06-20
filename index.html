@@ -800,8 +800,13 @@
     <!-- Edit Payment Modal -->
     <div id="edit-payment-modal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('edit-payment-modal')">&times;</span>
-            <h2>✏️ Editar Factura de Pago</h2>
+
+            <div class="Modal-Title">
+                <h2>✏️ Editar Factura de Pago</h2>
+                <span class="close" onclick="closeModal('edit-payment-modal')">&times;</span>
+            </div>
+
+            <div class="Modal-Body">
             <form id="edit-payment-form">
                 <input type="hidden" id="edit-payment-id">
                 <div class="form-group">
@@ -833,9 +838,14 @@
                     <label for="edit-payment-notes">Notas</label>
                     <textarea id="edit-payment-notes" rows="3"></textarea>
                 </div>
-                <button type="submit" class="btn">💾 Guardar Cambios</button>
+                </div>
+
+                <div class="Modal-Footer">
                 <button type="button" class="btn btn-danger" onclick="deletePayment()">🗑️ Eliminar Factura</button>
+           <button type="submit" class="btn">💾 Guardar Cambios</button>
             </form>
+            </div>
+
         </div>
     </div>
 
@@ -1060,31 +1070,31 @@
         }
 
         // Toggle tenant fields based on property status
-function toggleTenantFields(formType = 'edit') {
-    const status = formType === 'add'
-        ? document.getElementById('property-status').value
-        : document.getElementById('edit-property-status').value;
+        function toggleTenantFields(formType = 'edit') {
+            const status = formType === 'add'
+                ? document.getElementById('property-status').value
+                : document.getElementById('edit-property-status').value;
 
-    const tenantSection = formType === 'add'
-        ? document.getElementById('tenant-section-add')
-        : document.getElementById('tenant-section');
+            const tenantSection = formType === 'add'
+                ? document.getElementById('tenant-section-add')
+                : document.getElementById('tenant-section');
 
-    if (status === 'rented') {
-        tenantSection.style.display = 'block';
-        // Hacer requeridos los campos excepto las notas
-        const requiredFields = tenantSection.querySelectorAll('input:not([type="file"]), select');
-        requiredFields.forEach(field => {
-            field.required = true;
-        });
-    } else {
-        tenantSection.style.display = 'none';
-        // Quitar requerido si no es rentado
-        const requiredFields = tenantSection.querySelectorAll('input, select, textarea');
-        requiredFields.forEach(field => {
-            field.required = false;
-        });
-    }
-}
+            if (status === 'rented') {
+                tenantSection.style.display = 'block';
+                // Hacer requeridos los campos excepto las notas
+                const requiredFields = tenantSection.querySelectorAll('input:not([type="file"]), select');
+                requiredFields.forEach(field => {
+                    field.required = true;
+                });
+            } else {
+                tenantSection.style.display = 'none';
+                // Quitar requerido si no es rentado
+                const requiredFields = tenantSection.querySelectorAll('input, select, textarea');
+                requiredFields.forEach(field => {
+                    field.required = false;
+                });
+            }
+        }
 
         // Filtrar propiedades por estado
         function filterProperties(status) {

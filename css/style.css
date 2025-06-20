@@ -323,7 +323,9 @@
  }
 
 
-
+ #edit-payment-form {
+     margin: 5px 10px;
+ }
 
 
 
@@ -659,14 +661,13 @@
      border: 0px solid #66707d;
      border-radius: 10px;
      font-size: 15px;
-     transition: all 0.3s ease;
-     background: #22252c;
+     background: #343843;
      color: white;
  }
 
  .iti__selected-flag {
      color: white !important;
-     background: #303543 !important;
+     background: #00000047 !important;
      border-radius: 8px 1px 1px 8px;
  }
 
@@ -768,17 +769,17 @@
      font-weight: bold;
      cursor: pointer;
      transition: all 0.3s ease;
-    background: #f84f4f;
-    color: #6c0000;
+     background: #f84f4f;
+     color: #6c0000;
      padding: 0px 12px;
      border-radius: 7px;
      pointer-events: auto;
  }
 
-.close:hover {
-    background: #eb0707;
-    color: #290909;
-}
+ .close:hover {
+     background: #eb0707;
+     color: #290909;
+ }
 
  #property-detail-content {
      display: contents;
@@ -805,7 +806,7 @@
  }
 
  .property-card {
-  background: #252835;
+     background: #252835;
      padding: 7px;
      border-radius: 15px;
      margin-bottom: 15px;
@@ -925,17 +926,16 @@
      flex-direction: column;
  }
 
-.payment-item {
-    padding: 10px;
-    display: flex
-;
-    justify-content: space-between;
-    background: #333945;
-    color: #d7d7d7;
-    border-radius: 11px;
-    margin: 4px 20px;
-    font-size: 12px;
-}
+ .payment-item {
+     padding: 10px;
+     display: flex;
+     justify-content: space-between;
+     background: #333945;
+     color: #d7d7d7;
+     border-radius: 11px;
+     margin: 4px 20px;
+     font-size: 12px;
+ }
 
  .payment-item:last-child {
      border-bottom: none;
