@@ -385,7 +385,7 @@
                         </div>
                         <div class="form-group">
                             <label for="edit-owner-address">📍 Dirección del Propietario</label>
-                            <input type="text" id="edit-owner-address" required>
+                            <input type="text" id="edit-owner-address">
                         </div>
                     </div>
 
@@ -558,7 +558,7 @@
                         </div>
                         <div class="form-group">
                             <label for="owner-address">📍 Dirección del Propietario</label>
-                            <input type="text" id="owner-address" required>
+                            <input type="text" id="owner-address">
                         </div>
                     </div>
 
@@ -710,7 +710,7 @@
                 <span class="close" onclick="closeModal('payment-history-modal')">&times;</span>
             </div>
 
-            <div class="Modal-Body">
+            <div class="Modal-Body" style="padding: 0px;background: #202733;">
                 <div id="payment-history-content"></div>
             </div>
         </div>
@@ -740,7 +740,7 @@
             <div class="Modal-Body">
                 <form id="income-form" style="padding: 15px;">
                     <div class="form-group">
-                        <label for="income-description">📝 Descripción del Ingreso Extra:</label>
+                        <label for="income-description">📝 Descripción del Ingreso Extra (+):</label>
                         <input type="text" id="income-description" required>
                     </div>
                     <div class="form-group">
@@ -773,7 +773,7 @@
             <div class="Modal-Body">
                 <form id="expense-form" style="padding: 15px;">
                     <div class="form-group">
-                        <label for="expense-description">📝 Descripción del Gasto:</label>
+                        <label for="expense-description">📝 Descripción del Gasto (-):</label>
                         <input type="text" id="expense-description" required>
                     </div>
                     <div class="form-group">
@@ -1060,31 +1060,31 @@
         }
 
         // Toggle tenant fields based on property status
-        function toggleTenantFields(formType = 'edit') {
-            const status = formType === 'add'
-                ? document.getElementById('property-status').value
-                : document.getElementById('edit-property-status').value;
+function toggleTenantFields(formType = 'edit') {
+    const status = formType === 'add'
+        ? document.getElementById('property-status').value
+        : document.getElementById('edit-property-status').value;
 
-            const tenantSection = formType === 'add'
-                ? document.getElementById('tenant-section-add')
-                : document.getElementById('tenant-section');
+    const tenantSection = formType === 'add'
+        ? document.getElementById('tenant-section-add')
+        : document.getElementById('tenant-section');
 
-            if (status === 'rented') {
-                tenantSection.style.display = 'block';
-                // Hacer requeridos los campos si es rentado
-                const requiredFields = tenantSection.querySelectorAll('input, textarea');
-                requiredFields.forEach(field => {
-                    field.required = true;
-                });
-            } else {
-                tenantSection.style.display = 'none';
-                // Quitar requerido si no es rentado
-                const requiredFields = tenantSection.querySelectorAll('input, textarea');
-                requiredFields.forEach(field => {
-                    field.required = false;
-                });
-            }
-        }
+    if (status === 'rented') {
+        tenantSection.style.display = 'block';
+        // Hacer requeridos los campos excepto las notas
+        const requiredFields = tenantSection.querySelectorAll('input:not([type="file"]), select');
+        requiredFields.forEach(field => {
+            field.required = true;
+        });
+    } else {
+        tenantSection.style.display = 'none';
+        // Quitar requerido si no es rentado
+        const requiredFields = tenantSection.querySelectorAll('input, select, textarea');
+        requiredFields.forEach(field => {
+            field.required = false;
+        });
+    }
+}
 
         // Filtrar propiedades por estado
         function filterProperties(status) {
@@ -1424,9 +1424,9 @@
             const content = document.getElementById('payment-history-content');
 
             let html = `
-            <div style="padding: 10px 15px;color: white;font-size: 14px;">
-        <h3>${property.address}</h3>
-        <p><strong>Propietario:</strong> ${property.ownerName}</p>
+            <div style="border-bottom: 1px solid #383f4f; padding: 10px 15px;color: white;font-size: 14px;background: #252835;">
+        <h3>🏠📍 ${property.address}</h3>
+        <p><strong>👤 Propietario:</strong> ${property.ownerName}</p>
         </div>
     `;
 
@@ -1441,16 +1441,16 @@
         <p><strong>Mes pagado: </strong>${p.mesPagado} de ${p.year}</p>
     </div>
     <div class="btn-factura-content">
-        <button class="btn" onclick="showEditPaymentModal('${p.id}')" style="background: #242733;">✏️</button>
+        <button class="btn" onclick="showEditPaymentModal('${p.id}')" style="background: #145b4e;">✏️</button>
         <button class="btn btn-danger" onclick="deletePaymentFromHistory('${p.id}', '${propertyId}')" style="display: none;">🗑️</button>
-        <button class="btn" onclick="downloadInvoice('${p.id}')" style="background: #242733;">📄</button>
+        <button class="btn" onclick="downloadInvoice('${p.id}')" style="background: #2266bd;">📄</button>
     </div>
 </div>
                 `).join('')}
             </div>
         `;
             } else {
-                html += '<p>No hay pagos registrados para esta propiedad.</p>';
+                html += '<p style="text-align: center;margin: 50px 5px;color: #a0aec0;">📋 No hay pagos registrados para esta propiedad.</p>';
             }
 
             content.innerHTML = html;

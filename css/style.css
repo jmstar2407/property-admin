@@ -221,7 +221,7 @@
  }
 
  .nav-tab {
-     padding: 15px 30px;
+     padding: 15px 24px;
      background: none;
      border: none;
      color: white;
@@ -322,15 +322,6 @@
      transition: all 0.3s ease;
  }
 
- .añadir {
-     background: #00ff801c;
-     box-shadow: inset 0px 0px 0px 1px rgb(8 186 97);
- }
-
- .restar {
-     background: #ff00000a;
-     box-shadow: inset 0px 0px 0px 1px rgb(186 8 8);
- }
 
 
 
@@ -777,17 +768,17 @@
      font-weight: bold;
      cursor: pointer;
      transition: all 0.3s ease;
-     background: #f84f4f;
-     color: #840404;
+    background: #f84f4f;
+    color: #6c0000;
      padding: 0px 12px;
      border-radius: 7px;
      pointer-events: auto;
  }
 
- .close:hover {
-     background: #fb3b3b;
-     color: #7d1010;
- }
+.close:hover {
+    background: #eb0707;
+    color: #290909;
+}
 
  #property-detail-content {
      display: contents;
@@ -814,17 +805,12 @@
  }
 
  .property-card {
-     background: #232529;
+  background: #252835;
      padding: 7px;
      border-radius: 15px;
      margin-bottom: 15px;
      box-shadow: 4px 4px 7px 1px rgb(0 0 0 / 20%), inset 0px 0px 0px 1px rgb(255 255 255 / 5%);
      transition: all 0.3s ease;
- }
-
- .property-card:hover {
-     transform: translateY(-3px);
-     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
  }
 
  #modal-properties-list {
@@ -933,23 +919,23 @@
  /* Payment History */
  .payment-history {
      width: 100%;
-     border-top: 1px solid #e2e8f0;
      padding: 10px 0px;
      display: inline-flex;
      gap: 4px;
      flex-direction: column;
  }
 
- .payment-item {
-     padding: 10px;
-     display: flex;
-     justify-content: space-between;
-     background: #333945;
-     color: #d7d7d7;
-     border-radius: 11px;
-     margin: 0px 10px;
-     font-size: 12px;
- }
+.payment-item {
+    padding: 10px;
+    display: flex
+;
+    justify-content: space-between;
+    background: #333945;
+    color: #d7d7d7;
+    border-radius: 11px;
+    margin: 4px 20px;
+    font-size: 12px;
+}
 
  .payment-item:last-child {
      border-bottom: none;
@@ -1271,6 +1257,15 @@
 
 
 
+ .añadir {
+     background: #00ff801c;
+     box-shadow: inset 0px 0px 0px 1px rgb(8 186 97);
+ }
+
+ .restar {
+     background: #ff00000a;
+     box-shadow: inset 0px 0px 0px 1px rgb(186 8 8);
+ }
 
 
 
