@@ -203,14 +203,14 @@
 
 
 
-    
 
-        <!-- Loading Overlay (oculto inicialmente) -->
+
+    <!-- Loading Overlay (oculto inicialmente) -->
     <div id="loadingOverlay" class="loading-overlay" style="display: none;">
         <div class="loading-spinner"></div>
         <p>Cargando datos...</p>
     </div>
-    
+
 
 
 
@@ -243,80 +243,92 @@
         <div class="scrollable-content">
             <!-- Calendar Tab -->
             <div id="calendar-tab" class="tab-content active">
-                <div class="view-toggle">
-                    <button class="view-btn active" onclick="showView('calendar')">Calendario</button>
-                    <button class="view-btn" onclick="showView('list')">Lista de Pagos</button>
-                    <button class="view-btn" id="overdue-btn" onclick="showView('overdue')">
-                        Atrasos <span id="overdue-count"
-                            style="display:none; background:red;color:white;border-radius:50%;padding:2px 8px;margin-left:5px;">0</span>
-                    </button>
-                </div>
 
 
-                <div id="calendar-view" class="calendar-view">
-                    <div class="calendar-container">
+
+                <div class="Modal-Body">
+                    <div class="view-toggle">
+                        <button class="view-btn active" onclick="showView('calendar')">Calendario</button>
+                        <button class="view-btn" onclick="showView('list')">Lista de Pagos</button>
+                        <button class="view-btn" id="overdue-btn" onclick="showView('overdue')">
+                            Atrasos <span id="overdue-count"
+                                style="display:none; background:red;color:white;border-radius:50%;padding:2px 8px;margin-left:5px;">0</span>
+                        </button>
+                    </div>
+
+
+                    <div id="calendar-view" class="calendar-view">
+                        <div class="calendar-container">
+                            <div class="calendar-header">
+                                <button class="calendar-nav" onclick="changeMonth(-1)">← Anterior</button>
+                                <h2 class="calendar-title" id="calendar-title"></h2>
+                                <button class="calendar-nav" onclick="changeMonth(1)">Siguiente →</button>
+                            </div>
+                            <div class="calendar-grid" id="calendar-grid"></div>
+                        </div>
+                    </div>
+
+                    <div id="list-view" class="list-view">
                         <div class="calendar-header">
                             <button class="calendar-nav" onclick="changeMonth(-1)">← Anterior</button>
-                            <h2 class="calendar-title" id="calendar-title"></h2>
+                            <h2 class="calendar-title" id="list-title"></h2>
                             <button class="calendar-nav" onclick="changeMonth(1)">Siguiente →</button>
                         </div>
-                        <div class="calendar-grid" id="calendar-grid"></div>
+                        <div id="properties-list-view"></div>
+                    </div>
+
+                    <div id="overdue-view" class="list-view">
+                        <div id="overdue-list"></div>
                     </div>
                 </div>
-
-                <div id="list-view" class="list-view">
-                    <div class="calendar-header">
-                        <button class="calendar-nav" onclick="changeMonth(-1)">← Anterior</button>
-                        <h2 class="calendar-title" id="list-title"></h2>
-                        <button class="calendar-nav" onclick="changeMonth(1)">Siguiente →</button>
-                    </div>
-                    <div id="properties-list-view"></div>
-                </div>
-
-                <div id="overdue-view" class="list-view">
-                    <div id="overdue-list"></div>
-                </div>
-
 
             </div>
 
             <!-- Properties Tab -->
             <div id="properties-tab" class="tab-content">
-                <button class="btn add-property-btn" onclick="showAddPropertyModal()">🏠 Agregar Nueva Propiedad
-                    (+)</button>
 
-                <div class="property-status-tabs">
-                    <button class="property-status-tab active" onclick="filterProperties('rented')">Rentadas</button>
-                    <button class="property-status-tab" onclick="filterProperties('available')">Disponibles</button>
-                    <button class="property-status-tab" onclick="filterProperties('maintenance')">En
-                        Mantenimiento</button>
-                </div>
+                <div class="Modal-Body">
+                    <button class="btn add-property-btn" onclick="showAddPropertyModal()">🏠 Agregar Nueva Propiedad
+                        (+)</button>
 
-                <div id="properties-list">
-                    <div class="loading">Cargando propiedades...</div>
+                    <div class="property-status-tabs">
+                        <button class="property-status-tab active"
+                            onclick="filterProperties('rented')">Rentadas</button>
+                        <button class="property-status-tab" onclick="filterProperties('available')">Disponibles</button>
+                        <button class="property-status-tab" onclick="filterProperties('maintenance')">En
+                            Mantenimiento</button>
+                    </div>
+
+                    <div id="properties-list">
+                        <div class="loading">Cargando propiedades...</div>
+                    </div>
                 </div>
             </div>
 
             <!-- Accounting Tab -->
             <div id="accounting-tab" class="tab-content">
-                <div class="month-selector">
-                    <button class="calendar-nav" onclick="changeAccountingMonth(-1)">← Anterior</button>
-                    <h3 id="accounting-month-title"></h3>
-                    <button class="calendar-nav" onclick="changeAccountingMonth(1)">Siguiente →</button>
-                </div>
 
-                <div class="accounting-summary" id="accounting-summary">
-                    <div class="loading">Calculando datos...</div>
-                </div>
+                <div class="Modal-Body">
+                    <div class="month-selector">
+                        <button class="calendar-nav" onclick="changeAccountingMonth(-1)">← Anterior</button>
+                        <h3 id="accounting-month-title"></h3>
+                        <button class="calendar-nav" onclick="changeAccountingMonth(1)">Siguiente →</button>
+                    </div>
 
-                <div class="accounting-actions">
-                    <button id="btn-gasto" class="btn btn-danger" onclick="showExpenseModal()">Agregar Gasto
-                        (-)</button>
-                    <button id="btn-ingr-extra" class="btn" onclick="showIncomeModal()">Agregar Ingreso Extra
-                        (+)</button>
-                </div>
+                    <div class="accounting-summary" id="accounting-summary">
+                        <div class="loading">Calculando datos...</div>
+                    </div>
 
-                <div class="expenses-list" id="expenses-list"></div>
+                    <div class="accounting-actions">
+                        <button id="btn-gasto" class="btn btn-danger" onclick="showExpenseModal()">Agregar Gasto
+                            (-)</button>
+                        <button id="btn-ingr-extra" class="btn" onclick="showIncomeModal()">Agregar Ingreso Extra
+                            (+)</button>
+                    </div>
+
+                    <div class="expenses-list" id="expenses-list"></div>
+                </div>
+                
             </div>
         </div>
         <!-- Contenido FIN -->
@@ -862,71 +874,71 @@
         const auth = firebase.auth();
 
         // Verificar estado de autenticación
-auth.onAuthStateChanged((user) => {
-    const loginBtn = document.getElementById('loginBtn');
+        auth.onAuthStateChanged((user) => {
+            const loginBtn = document.getElementById('loginBtn');
 
-    if (user) {
-        // Usuario autenticado
-        document.getElementById('loginContainer').style.display = 'none';
-        document.querySelector('.Master-Box').style.display = 'flex';
-        
-        // Mostrar loader antes de inicializar la app
-        document.getElementById('loadingOverlay').style.display = 'flex';
-        
-        // Inicializar la aplicación
-        initializeApp();
-    } else {
-        // No autenticado - ocultar loader si está visible
-        document.getElementById('loadingOverlay').style.display = 'none';
-        document.getElementById('loginContainer').style.display = 'flex';
-        document.querySelector('.Master-Box').style.display = 'none';
+            if (user) {
+                // Usuario autenticado
+                document.getElementById('loginContainer').style.display = 'none';
+                document.querySelector('.Master-Box').style.display = 'flex';
 
-        // Restablecer el botón de login
-        if (loginBtn) {
-            loginBtn.textContent = 'Iniciar sesión';
-            loginBtn.disabled = false;
+                // Mostrar loader antes de inicializar la app
+                document.getElementById('loadingOverlay').style.display = 'flex';
+
+                // Inicializar la aplicación
+                initializeApp();
+            } else {
+                // No autenticado - ocultar loader si está visible
+                document.getElementById('loadingOverlay').style.display = 'none';
+                document.getElementById('loginContainer').style.display = 'flex';
+                document.querySelector('.Master-Box').style.display = 'none';
+
+                // Restablecer el botón de login
+                if (loginBtn) {
+                    loginBtn.textContent = 'Iniciar sesión';
+                    loginBtn.disabled = false;
+                }
+            }
+        });
+
+        // Función para inicializar la aplicación después del login
+        async function initializeApp() {
+            try {
+                // Los loaders ya se muestran en onAuthStateChanged
+
+                // Inicializar componentes
+                initializePhoneInputs();
+
+                // Cargar datos en paralelo
+                await Promise.all([
+                    loadProperties(),
+                    loadPayments(),
+                    loadExpenses(),
+                    loadIncomes()
+                ]);
+
+                // Generar vistas
+                generateCalendar();
+                updateAccountingView();
+
+                // Add form listeners
+                document.getElementById('property-form').addEventListener('submit', addProperty);
+                document.getElementById('income-form').addEventListener('submit', addIncome);
+                document.getElementById('expense-form').addEventListener('submit', addExpense);
+                document.getElementById('property-edit-form').addEventListener('submit', updateProperty);
+
+                // Inicialmente ocultar campos de inquilino si no está rentado
+                toggleTenantFields();
+                toggleTenantFields('add');
+
+            } catch (error) {
+                console.error('Error inicializando la app:', error);
+                alert('Error al cargar los datos');
+            } finally {
+                // Ocultar el indicador de carga
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }
         }
-    }
-});
-
-     // Función para inicializar la aplicación después del login
-async function initializeApp() {
-    try {
-        // Los loaders ya se muestran en onAuthStateChanged
-        
-        // Inicializar componentes
-        initializePhoneInputs();
-        
-        // Cargar datos en paralelo
-        await Promise.all([
-            loadProperties(),
-            loadPayments(),
-            loadExpenses(),
-            loadIncomes()
-        ]);
-        
-        // Generar vistas
-        generateCalendar();
-        updateAccountingView();
-        
-        // Add form listeners
-        document.getElementById('property-form').addEventListener('submit', addProperty);
-        document.getElementById('income-form').addEventListener('submit', addIncome);
-        document.getElementById('expense-form').addEventListener('submit', addExpense);
-        document.getElementById('property-edit-form').addEventListener('submit', updateProperty);
-
-        // Inicialmente ocultar campos de inquilino si no está rentado
-        toggleTenantFields();
-        toggleTenantFields('add');
-        
-    } catch (error) {
-        console.error('Error inicializando la app:', error);
-        alert('Error al cargar los datos');
-    } finally {
-        // Ocultar el indicador de carga
-        document.getElementById('loadingOverlay').style.display = 'none';
-    }
-}
 
 
         // Manejar el login al presionar Enter
@@ -942,33 +954,33 @@ async function initializeApp() {
             }
         });
 
-       // Manejar el login
-document.getElementById('loginBtn').addEventListener('click', () => {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const errorMessage = document.getElementById('errorMessage');
-    const loginBtn = document.getElementById('loginBtn');
+        // Manejar el login
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const loginBtn = document.getElementById('loginBtn');
 
-    if (!email || !password) {
-        errorMessage.textContent = 'Por favor ingresa correo y contraseña';
-        return;
-    }
+            if (!email || !password) {
+                errorMessage.textContent = 'Por favor ingresa correo y contraseña';
+                return;
+            }
 
-    // Cambiar el texto del botón
-    loginBtn.textContent = 'Ingresando...';
-    loginBtn.disabled = true;
+            // Cambiar el texto del botón
+            loginBtn.textContent = 'Ingresando...';
+            loginBtn.disabled = true;
 
-    auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
-            // El onAuthStateChanged manejará el loader
-        })
-        .catch((error) => {
-            // Asegurarse de ocultar el loader si falla el login
-            document.getElementById('loadingOverlay').style.display = 'none';
-            
-            // Restablecer el botón
-            loginBtn.textContent = 'Iniciar sesión';
-            loginBtn.disabled = false;
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    // El onAuthStateChanged manejará el loader
+                })
+                .catch((error) => {
+                    // Asegurarse de ocultar el loader si falla el login
+                    document.getElementById('loadingOverlay').style.display = 'none';
+
+                    // Restablecer el botón
+                    loginBtn.textContent = 'Iniciar sesión';
+                    loginBtn.disabled = false;
 
                     let errorMsg = '';
                     switch (error.code) {
@@ -1678,8 +1690,10 @@ document.getElementById('loginBtn').addEventListener('click', () => {
             document.getElementById('calendar-title').textContent =
                 monthYear.charAt(0).toUpperCase() + monthYear.slice(1);
 
+            // Esta es la línea modificada:
+            const listMonthYear = currentDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
             document.getElementById('list-title').textContent =
-                currentDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+                listMonthYear.charAt(0).toUpperCase() + listMonthYear.slice(1);
 
             const firstDay = new Date(year, month, 1);
             const lastDay = new Date(year, month + 1, 0);
@@ -3064,4 +3078,4 @@ document.getElementById('loginBtn').addEventListener('click', () => {
 
 </html>
 
-<!-- 7 -->
+<!-- 1 -->
