@@ -154,13 +154,14 @@
                     <button class="btn add-property-btn" onclick="showAddPropertyModal()">🏠 Agregar Nueva Propiedad
                         (+)</button>
 
-                    <div class="property-status-tabs">
-                        <button class="property-status-tab active"
-                            onclick="filterProperties('rented')">Rentadas</button>
-                        <button class="property-status-tab" onclick="filterProperties('available')">Disponibles</button>
-                        <button class="property-status-tab" onclick="filterProperties('maintenance')">En
-                            Mantenimiento</button>
-                    </div>
+<div class="property-status-tabs">
+    <button class="property-status-tab active" onclick="filterProperties('rented')">Rentadas <span class="count">0</span>
+    </button>
+    <button class="property-status-tab" onclick="filterProperties('available')">Disponibles <span class="count">0</span>
+    </button>
+    <button class="property-status-tab" onclick="filterProperties('maintenance')">En Mantenimiento <span class="count">0</span>
+    </button>
+</div>
 
                     <div id="properties-list">
                         <div class="loading">Cargando propiedades...</div>
@@ -1066,17 +1067,47 @@
             }
         }
 
-        // Filtrar propiedades por estado
-        function filterProperties(status) {
-            currentPropertyFilter = status;
-            displayProperties();
+       // Filtrar propiedades por estado
+    function filterProperties(status) {
+        currentPropertyFilter = status;
+        displayProperties();
 
-            // Actualizar pestañas activas
-            document.querySelectorAll('.property-status-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            event.target.classList.add('active');
+        // Actualizar pestañas activas
+        document.querySelectorAll('.property-status-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        event.target.classList.add('active');
+
+        // Actualizar contadores (no requiere nueva lectura de Firebase)
+        updatePropertyCounters();
+    }
+
+    // Función para actualizar los contadores de propiedades
+function updatePropertyCounters() {
+    if (!properties || properties.length === 0) return;
+
+    // Contar propiedades por estado
+    const counts = {
+        rented: 0,
+        available: 0,
+        maintenance: 0
+    };
+
+    properties.forEach(property => {
+        if (property.status && counts.hasOwnProperty(property.status)) {
+            counts[property.status]++;
         }
+    });
+
+    // Actualizar los contadores
+    document.querySelectorAll('.property-status-tab').forEach(tab => {
+        const status = tab.getAttribute('onclick').match(/'(.*?)'/)[1];
+        const countSpan = tab.querySelector('.count');
+        if (countSpan) {
+            countSpan.textContent = `${counts[status] || 0}`;
+        }
+    });
+}
 
         // Tab navigation
         function showTab(tabName) {
@@ -1130,23 +1161,24 @@
 
 
         // Load data from Firebase
-        async function loadProperties() {
-            try {
-                const snapshot = await db.collection('properties').get();
-                properties = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                    createdAt: doc.data().createdAt?.toDate(),
-                    contractStart: doc.data().contractStart?.toDate()
-                }));
+    async function loadProperties() {
+        try {
+            const snapshot = await db.collection('properties').get();
+            properties = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                createdAt: doc.data().createdAt?.toDate(),
+                contractStart: doc.data().contractStart?.toDate()
+            }));
 
-                currentPropertyFilter = 'rented';
-                displayProperties();
-                generateCalendar();
-                updateListView();
-                updateOverdueView();
-            } catch (error) {
-                console.error('Error loading properties:', error);
+            currentPropertyFilter = 'rented';
+            displayProperties();
+            generateCalendar();
+            updateListView();
+            updateOverdueView();
+            updatePropertyCounters(); // <-- Añadir esta línea
+        } catch (error) {
+            console.error('Error loading properties:', error);
                 // Use mock data for demo
                 properties = [
                     {
@@ -3594,4 +3626,4 @@
 
 </html>
 
-<!-- 4.2 -->
+<!-- 4.4 -->

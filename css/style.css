@@ -161,7 +161,10 @@
      }
  }
 
-
+.count {
+    color: #60a5ff;
+    font-weight: bold;
+}
  /* Estilos para el visor de imágenes */
 
  #contract-image-viewer.zoomed {
@@ -1631,9 +1634,9 @@
          justify-content: space-between;
          margin-bottom: 10px;
      }
-
+ 
      .property-status-tab {
-         padding: 10px 12px;
+         padding: 10px 7px;
          font-size: 12px;
      }
 
