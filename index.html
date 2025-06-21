@@ -1608,7 +1608,7 @@
     <div class="btn-factura-content">
         <button class="btn" onclick="showEditPaymentModal('${p.id}')" style="background: #145b4e;">✏️</button>
         <button class="btn btn-danger" onclick="deletePaymentFromHistory('${p.id}', '${propertyId}')" style="display: none;">🗑️</button>
-        <button class="btn" onclick="downloadInvoice('${p.id}')" style="background: #2266bd;">📄</button>
+        <button class="btn" onclick="downloadInvoice('${p.id}')" style="background: #2266bd;">📥</button>
     </div>
 </div>
                 `).join('')}
@@ -2818,12 +2818,12 @@
         <h3>📊 Transacciones del Mes</h3>
         ${allTransactions.map(transaction => `
             <div class="expense-item ${transaction.type}">
-                <div>
+                <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
                     <strong>${transaction.description}</strong>
                     <br><small>${transaction.date.toLocaleDateString('es-ES')}</small>
                 </div>
-                <div>
-                    <strong style="color: ${transaction.type === 'income' ? '#16a34a' : '#b91c1c'}">
+                <div style="min-width: fit-content;margin-left: 5px;">
+                    <strong style="color: ${transaction.type === 'income' ? '#9cffc1' : '#ffc8c8'}">
                         ${transaction.type === 'income' ? '+' : '-'}${transaction.amount.toLocaleString()}
                     </strong>
                     <button class="btn btn-${transaction.type === 'income' ? 'success' : 'danger'}" 
