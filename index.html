@@ -164,9 +164,6 @@
 
 
         /* Estilos para el visor de imágenes */
-        #contract-image-viewer {
-            transition: transform 0.25s ease;
-        }
 
         #contract-image-viewer.zoomed {
             transform: scale(1.5);
@@ -179,6 +176,34 @@
             margin-top: 10px;
             justify-content: center;
         }
+
+
+
+
+        #contract-image-modal .modal-content {
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+#contract-image-modal .Modal-Body {
+    flex: 1;
+    overflow: auto;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    background-color: #1d1f27;
+}
+
+#contract-image-viewer {
+    transform-origin: center center;
+    transition: transform 0.3s ease;
+    max-width: none;
+    max-height: none;
+}
+
     </style>
 </head>
 
@@ -3239,27 +3264,81 @@
         });
 
 
-        // Función para ver la imagen del contrato
-        function viewContractImage() {
-            const propertyId = document.getElementById('edit-property-id').value;
-            const property = properties.find(p => p.id === propertyId);
+      // Función para ver la imagen del contrato con zoom y desplazamiento mejorado
+function viewContractImage() {
+    const propertyId = document.getElementById('edit-property-id').value;
+    const property = properties.find(p => p.id === propertyId);
 
-            if (!property || !property.imageContrato) {
-                alert('No hay imagen del contrato para mostrar');
-                return;
-            }
+    if (!property || !property.imageContrato) {
+        alert('No hay imagen del contrato para mostrar');
+        return;
+    }
 
-            const viewer = document.getElementById('contract-image-viewer');
-            viewer.src = property.imageContrato;
-            viewer.classList.remove('zoomed');
+    const viewer = document.getElementById('contract-image-viewer');
+    const container = document.querySelector('#contract-image-modal .Modal-Body');
 
-            // Configurar zoom al hacer clic
-            viewer.onclick = function () {
-                this.classList.toggle('zoomed');
-            };
+    viewer.src = property.imageContrato;
+    viewer.style.transform = 'scale(1)';
+    viewer.style.cursor = 'zoom-in';
+    zoomLevel = 1;
 
-            openModal('contract-image-modal');
-        }
+    openModal('contract-image-modal');
+}
+
+// Variables globales para el zoom y desplazamiento
+let zoomLevel = 1;
+const viewer = document.getElementById('contract-image-viewer');
+const container = document.querySelector('#contract-image-modal .Modal-Body');
+
+// Zoom con rueda del mouse
+viewer.addEventListener('wheel', function (e) {
+    e.preventDefault();
+
+    if (e.deltaY < 0) {
+        zoomLevel = Math.min(zoomLevel + 0.1, 5);
+    } else {
+        zoomLevel = Math.max(zoomLevel - 0.1, 1);
+    }
+
+    this.style.transform = `scale(${zoomLevel})`;
+    this.style.cursor = zoomLevel > 1 ? 'grab' : 'zoom-in';
+});
+
+// Arrastrar la imagen cuando hay zoom
+let isDragging = false;
+let startX, startY, scrollLeft, scrollTop;
+
+container.addEventListener('mousedown', (e) => {
+    if (zoomLevel <= 1) return;
+    isDragging = true;
+    startX = e.pageX - container.offsetLeft;
+    startY = e.pageY - container.offsetTop;
+    scrollLeft = container.scrollLeft;
+    scrollTop = container.scrollTop;
+    container.style.cursor = 'grabbing';
+});
+
+container.addEventListener('mouseleave', () => {
+    isDragging = false;
+    container.style.cursor = 'grab';
+});
+
+container.addEventListener('mouseup', () => {
+    isDragging = false;
+    container.style.cursor = 'grab';
+});
+
+container.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - container.offsetLeft;
+    const y = e.pageY - container.offsetTop;
+    const walkX = (x - startX);
+    const walkY = (y - startY);
+    container.scrollLeft = scrollLeft - walkX;
+    container.scrollTop = scrollTop - walkY;
+});
+
 
         // Función para descargar la imagen del contrato
         function downloadContractImage() {
@@ -3463,4 +3542,4 @@ function setupContractImagePreview() {
 
 </html>
 
-<!-- 2 -->
+<!-- 3 -->
