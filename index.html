@@ -170,13 +170,13 @@
             cursor: zoom-out;
         }
 
-#contract-image-viewer.zoomed {
-    /* transform: scale(1.2); */
-    transform: scale(150%) translate(17%, 17%);
-    /* transform: translate(10px, 10px); */
-    cursor: zoom-out;
-    /* padding: 32px; */
-}
+        #contract-image-viewer.zoomed {
+            /* transform: scale(1.2); */
+            transform: scale(150%) translate(17%, 17%);
+            /* transform: translate(10px, 10px); */
+            cursor: zoom-out;
+            /* padding: 32px; */
+        }
 
         .image-actions {
             display: flex;
@@ -189,29 +189,28 @@
 
 
         #contract-image-modal .modal-content {
-    max-width: 90vw;
-    max-height: 90vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
 
-#contract-image-modal .Modal-Body {
-    flex: 1;
-    overflow: auto;
-    padding: 0;
-    margin: 0;
-    text-align: center;
-    background-color: #1d1f27;
-}
+        #contract-image-modal .Modal-Body {
+            flex: 1;
+            overflow: auto;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+            background-color: #1d1f27;
+        }
 
-#contract-image-viewer {
-    transform-origin: center center;
-    transition: transform 0.3s ease;
-    max-width: none;
-    max-height: none;
-}
-
+        #contract-image-viewer {
+            transform-origin: center center;
+            transition: transform 0.3s ease;
+            max-width: none;
+            max-height: none;
+        }
     </style>
 </head>
 
@@ -565,22 +564,35 @@
 
 
 
-<div class="form-group">
-    <label for="edit-contract-image">Imagen del Contrato</label>
-    <input type="file" id="edit-contract-image" accept="image/*">
-</div>
-<div class="contract-image-container" id="edit-current-image-container">
-    <p>Imagen actual del contrato:</p>
-    <div id="edit-current-image-wrapper">
-        <img id="edit-current-image" class="contract-image" src="" style="max-width: 100%; display: none;">
-        <p class="no-image-message" style="color: #777; font-style: italic; display: none;">Sin imagen del contrato</p>
-    </div>
-    <div class="image-actions" id="edit-image-actions" style="display: none;">
-        <button type="button" class="btn" onclick="viewContractImage()">👁️ Ver</button>
-        <button type="button" class="btn" onclick="downloadContractImage()">📥 Descargar</button>
-        <button type="button" class="btn btn-danger" onclick="deleteContractImage()">🗑️ Eliminar</button>
-    </div>
-</div>
+                    <div class="form-group"
+                        style="position: relative;display: flex;align-items: center;width: 100%;margin-top: 7px;background: #22252c;border-radius: 14px;">
+                        <label for="edit-contract-image" class="custom-imagen-upload">
+                            <img src="./img/subir-imagen-1.png" alt="Añadir" class="icono-añadir">Añadir imagen
+                        </label>
+
+                        <div class="outputs">
+                            <p id="imageCountOutput">4MB Máximo</p>
+                        </div>
+
+                        <input type="file" id="edit-contract-image" accept="image/*" style="display: none;">
+                    </div>
+
+                    <div class="contract-image-container" id="edit-current-image-container">
+                        <p>Imagen actual del contrato:</p>
+                        <div id="edit-current-image-wrapper">
+                            <img id="edit-current-image" class="contract-image" src=""
+                                style="max-width: 100%; display: none; cursor: pointer;" onclick="viewContractImage()">
+                            <p class="no-image-message" style="color: #777; font-style: italic; display: none;">Sin
+                                imagen del contrato</p>
+                        </div>
+                        <div class="image-actions" id="edit-image-actions" style="display: none;">
+                            <button type="button" class="btn EDC btn-danger" onclick="deleteContractImage()">🗑️ Eliminar</button>
+                            <button type="button" class="btn EDC" onclick="downloadContractImage()">📥 Descargar</button>
+                            <button type="button" class="btn EDC" onclick="shareContractImage()"
+                                style="background: #4a82cb;">📤 Compartir</button>
+                            
+                        </div>
+                    </div>
 
             </div>
 
@@ -744,11 +756,11 @@
                         </div>
                     </div>
 
-<div class="form-group">
-    <label for="contract-image">Imagen del Contrato</label>
-    <input type="file" id="contract-image" accept="image/*">
-    <div id="add-image-preview-container" style="margin-top: 10px;"></div>
-</div>
+                    <div class="form-group">
+                        <label for="contract-image">Imagen del Contrato</label>
+                        <input type="file" id="contract-image" accept="image/*">
+                        <div id="add-image-preview-container" style="margin-top: 10px;"></div>
+                    </div>
             </div>
 
             <div class="Modal-Footer">
@@ -3389,6 +3401,7 @@
                 // Mostrar imagen existente
                 imageElement.src = property.imageContrato;
                 imageElement.style.display = 'block';
+                imageElement.onclick = function () { viewContractImage(); }; // Asegurar el evento click
                 imageActions.style.display = 'flex';
 
                 // Ocultar mensaje de no imagen si existe
@@ -3427,73 +3440,150 @@
 
 
         // Función para mostrar previsualización de la imagen del contrato
-function setupContractImagePreview() {
-    const imageInput = document.getElementById('edit-contract-image');
-    if (imageInput) {
-        imageInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            if (file.size > 4 * 1024 * 1024) {
-                alert('La imagen es demasiado grande (máximo 4MB). Se comprimirá automáticamente.');
+        function setupContractImagePreview() {
+            const imageInput = document.getElementById('edit-contract-image');
+            if (imageInput) {
+                imageInput.addEventListener('change', function (e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    if (file.size > 4 * 1024 * 1024) {
+                        alert('La imagen es demasiado grande (máximo 4MB). Se comprimirá automáticamente.');
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        const previewImage = document.getElementById('edit-current-image');
+                        previewImage.src = event.target.result;
+                        previewImage.style.display = 'block';
+                        previewImage.onclick = function () { viewContractImage(); }; // Asegurar el evento click
+
+                        const imageActions = document.getElementById('edit-image-actions');
+                        imageActions.style.display = 'flex';
+
+                        const noImageMessage = document.querySelector('.no-image-message');
+                        if (noImageMessage) {
+                            noImageMessage.style.display = 'none';
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                });
             }
-            
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                // Mostrar previsualización
-                const previewImage = document.getElementById('edit-current-image');
-                previewImage.src = event.target.result;
-                previewImage.style.display = 'block';
-                
-                // Mostrar botones de acción
-                const imageActions = document.getElementById('edit-image-actions');
-                imageActions.style.display = 'flex';
-                
-                // Ocultar mensaje de "Sin imagen" si existe
-                const noImageMessage = document.querySelector('.no-image-message');
-                if (noImageMessage) {
-                    noImageMessage.style.display = 'none';
-                }
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-    
-    // También para el modal de agregar propiedad
-    const addImageInput = document.getElementById('contract-image');
-    if (addImageInput) {
-        addImageInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            if (file.size > 4 * 1024 * 1024) {
-                alert('La imagen es demasiado grande (máximo 4MB). Se comprimirá automáticamente.');
-            }
-            
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                // Crear contenedor de previsualización si no existe
-                let previewContainer = document.getElementById('add-current-image-container');
-                if (!previewContainer) {
-                    previewContainer = document.createElement('div');
-                    previewContainer.id = 'add-current-image-container';
-                    previewContainer.style.marginTop = '10px';
-                    addImageInput.parentNode.appendChild(previewContainer);
-                }
-                
-                // Mostrar previsualización
-                previewContainer.innerHTML = `
+
+            // Para el modal de agregar propiedad
+            const addImageInput = document.getElementById('contract-image');
+            if (addImageInput) {
+                addImageInput.addEventListener('change', function (e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    if (file.size > 4 * 1024 * 1024) {
+                        alert('La imagen es demasiado grande (máximo 4MB). Se comprimirá automáticamente.');
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        let previewContainer = document.getElementById('add-current-image-container');
+                        if (!previewContainer) {
+                            previewContainer = document.createElement('div');
+                            previewContainer.id = 'add-current-image-container';
+                            previewContainer.style.marginTop = '10px';
+                            addImageInput.parentNode.appendChild(previewContainer);
+                        }
+
+                        previewContainer.innerHTML = `
                     <p>Previsualización:</p>
-                    <img src="${event.target.result}" style="max-width: 100%; max-height: 200px;">
+                    <img src="${event.target.result}" style="max-width: 100%; max-height: 200px; cursor: pointer;" onclick="viewContractImage()">
                 `;
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-}
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+        }
+
+
+
+
+
+
+        // Función para compartir la imagen del contrato
+        function shareContractImage() {
+            const propertyId = document.getElementById('edit-property-id').value;
+            const property = properties.find(p => p.id === propertyId);
+
+            if (!property || !property.imageContrato) {
+                alert('No hay imagen del contrato para compartir');
+                return;
+            }
+
+            // Convertir base64 a Blob
+            const byteString = atob(property.imageContrato.split(',')[1]);
+            const mimeString = property.imageContrato.split(',')[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            const blob = new Blob([ab], { type: mimeString });
+
+            // Crear archivo para compartir
+            const file = new File([blob], `contrato_${property.address.replace(/\s+/g, '_')}.jpg`, { type: mimeString });
+
+            // Verificar si la API de Web Share está disponible (móviles)
+            if (navigator.share) {
+                navigator.share({
+                    title: `Contrato de ${property.address}`,
+                    text: `Contrato de alquiler para ${property.address}`,
+                    files: [file]
+                }).catch(error => {
+                    console.log('Error al compartir:', error);
+                    fallbackShare(property.imageContrato, property.address);
+                });
+            } else {
+                // Fallback para escritorios
+                fallbackShare(property.imageContrato, property.address);
+            }
+        }
+
+        // Fallback para navegadores que no soportan Web Share API
+        function fallbackShare(imageData, address) {
+            // Crear un elemento temporal para copiar al portapapeles
+            const tempInput = document.createElement('input');
+            document.body.appendChild(tempInput);
+            tempInput.value = `Contrato de alquiler para ${address}`;
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            // Abrir en nueva pestaña como opción alternativa
+            const newWindow = window.open();
+            newWindow.document.write(`
+        <html>
+            <head>
+                <title>Contrato de ${address}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 20px; }
+                    img { max-width: 100%; height: auto; margin-top: 20px; }
+                    .instructions { margin: 20px 0; padding: 10px; background: #f0f0f0; border-radius: 5px; }
+                </style>
+            </head>
+            <body>
+                <h1>Contrato de ${address}</h1>
+                <div class="instructions">
+                    <p>El texto descriptivo ha sido copiado al portapapeles.</p>
+                    <p>Puedes descargar la imagen haciendo clic derecho sobre ella y seleccionando "Guardar imagen como..."</p>
+                </div>
+                <img src="${imageData}" alt="Contrato de ${address}">
+            </body>
+        </html>
+    `);
+            newWindow.document.close();
+
+            alert('El enlace a la imagen ha sido copiado al portapeles. Puedes pegarlo donde quieras compartirlo.');
+        }
     </script>
 </body>
 
 </html>
 
-<!-- 3 -->
+<!-- 1 -->

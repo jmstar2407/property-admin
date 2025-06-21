@@ -896,11 +896,9 @@
      text-align: center;
  }
 
- .contract-image {
-     max-width: 100%;
-     max-height: 200px;
-     border-radius: 10px;
-     border: 2px solid #e2e8f0;
+ .contract-image-container p {
+     font-size: 17px;
+     color: #b7bec9;
  }
 
  .image-upload-btn {
@@ -915,6 +913,32 @@
 
  .image-upload-btn:hover {
      background: #5a6fd8;
+ }
+
+
+
+ .custom-imagen-upload {
+     display: inline-flex !important;
+     align-items: center;
+     background-color: #007bff;
+     color: white !important;
+     padding: 4px 7px;
+     border-radius: 5px;
+     cursor: pointer;
+     font-weight: bold;
+     margin: 10px 20px;
+     transition: 0.3s;
+ }
+
+#imageCountOutput {
+    color: #3de1ff;
+}
+
+ .icono-añadir {
+     margin-right: 8px;
+     width: 32px;
+     height: 32px;
+     filter: invert(1);
  }
 
  /* Payment History */
@@ -1167,17 +1191,16 @@
  .contract-image {
      max-width: 100%;
      max-height: 200px;
-     border: 1px solid #ddd;
-     border-radius: 4px;
+     border-radius: 12px;
      margin-top: 10px;
+     box-shadow: 0px 0px 0px 2px rgb(255 255 255), 7px 7px 14px -1px rgb(0 0 0 / 49%);
  }
 
- .image-actions {
-     display: flex;
-     gap: 10px;
-     justify-content: center;
-     margin-top: 10px;
+ #edit-current-image-wrapper {
+     display: inline-flex;
  }
+
+
 
  .btn-view {
      background-color: #4a82cb;
@@ -1460,6 +1483,9 @@
          padding: 5px;
      }
 
+     .EDC{
+        font-size: 12px;
+     }
 
  }
 
