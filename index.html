@@ -10,6 +10,9 @@
 
     <link rel="stylesheet" href="./css/style.css" />
 
+    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+
+
     <!-- intl-tel-input CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
     <!-- intl-tel-input JS -->
@@ -164,21 +167,41 @@
 
 
         /* Estilos para el visor de imágenes */
-#contract-image-viewer {
-    transition: transform 0.25s ease;
-}
+        #contract-image-viewer {
+            transition: transform 0.25s ease;
+        }
 
-#contract-image-viewer.zoomed {
-    transform: scale(1.5);
-    cursor: zoom-out;
-}
+        #contract-image-viewer.zoomed {
+            transform: scale(1.5);
+            cursor: zoom-out;
+        }
 
-.image-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-    justify-content: center;
-}
+        .image-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+
+
+
+
+
+            /* Estilos adicionales para mejorar la experiencia táctil */
+    #contract-image-viewer {
+        touch-action: none;
+        user-select: none;
+        transition: transform 0.1s ease-out;
+    }
+    
+    #image-container {
+        touch-action: none;
+        cursor: grab;
+    }
+    
+    #image-container:active {
+        cursor: grabbing;
+    }
     </style>
 </head>
 
@@ -537,15 +560,16 @@
     <input type="file" id="edit-contract-image" accept="image/*">
 </div>
 <div class="contract-image-container" id="edit-current-image-container">
-    <p>Imagen del contrato:</p>
+    <p>Imagen actual del contrato:</p>
     <div id="edit-current-image-wrapper">
-        <img id="edit-current-image" class="contract-image" src="" style="max-width: 100%;">
+        <img id="edit-current-image" class="contract-image" src="" style="max-width: 100%; display: none;">
+        <p class="no-image-message" style="color: #777; font-style: italic; display: none;">Sin imagen del contrato</p>
     </div>
-<div class="image-actions" id="edit-image-actions" style="display: none;">
-    <button type="button" class="btn" onclick="viewContractImage()">👁️ Ver</button>
-    <button type="button" class="btn" onclick="downloadContractImage()">📥 Descargar</button>
-    <button type="button" class="btn btn-danger" onclick="deleteContractImage()">🗑️ Eliminar</button>
-</div>
+    <div class="image-actions" id="edit-image-actions" style="display: none;">
+        <button type="button" class="btn" onclick="viewContractImage()">👁️ Ver</button>
+        <button type="button" class="btn" onclick="downloadContractImage()">📥 Descargar</button>
+        <button type="button" class="btn btn-danger" onclick="deleteContractImage()">🗑️ Eliminar</button>
+    </div>
 </div>
 
             </div>
@@ -710,10 +734,11 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="contract-image">Imagen del Contrato</label>
-                        <input type="file" id="contract-image" accept="image/*">
-                    </div>
+<div class="form-group">
+    <label for="contract-image">Imagen del Contrato</label>
+    <input type="file" id="contract-image" accept="image/*">
+    <div id="add-image-preview-container" style="margin-top: 10px;"></div>
+</div>
             </div>
 
             <div class="Modal-Footer">
@@ -833,43 +858,43 @@
             </div>
 
             <div class="Modal-Body">
-            <form id="edit-payment-form">
-                <input type="hidden" id="edit-payment-id">
-                <div class="form-group">
-                    <label for="edit-payment-type">Tipo de Pago</label>
-                    <select id="edit-payment-type" required>
-                        <option value="complete">Pago Completo</option>
-                        <option value="partial">Pago Parcial</option>
-                        <option value="late">Pago con Mora (+ 5%)</option>
-                        <option value="custom">Pago Personalizado</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="edit-payment-amount">Monto Pagado ($)</label>
-                    <input type="number" id="edit-payment-amount" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-payment-method">Método de Pago</label>
-                    <select id="edit-payment-method" required>
-                        <option value="Efectivo">Efectivo</option>
-                        <option value="Transferencia">Transferencia</option>
-                        <option value="Deposito">Depósito Bancario</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="edit-payment-date">Fecha de Pago</label>
-                    <input type="date" id="edit-payment-date" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-payment-notes">Notas</label>
-                    <textarea id="edit-payment-notes" rows="3"></textarea>
-                </div>
-                </div>
+                <form id="edit-payment-form">
+                    <input type="hidden" id="edit-payment-id">
+                    <div class="form-group">
+                        <label for="edit-payment-type">Tipo de Pago</label>
+                        <select id="edit-payment-type" required>
+                            <option value="complete">Pago Completo</option>
+                            <option value="partial">Pago Parcial</option>
+                            <option value="late">Pago con Mora (+ 5%)</option>
+                            <option value="custom">Pago Personalizado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-payment-amount">Monto Pagado ($)</label>
+                        <input type="number" id="edit-payment-amount" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-payment-method">Método de Pago</label>
+                        <select id="edit-payment-method" required>
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Transferencia">Transferencia</option>
+                            <option value="Deposito">Depósito Bancario</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-payment-date">Fecha de Pago</label>
+                        <input type="date" id="edit-payment-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-payment-notes">Notas</label>
+                        <textarea id="edit-payment-notes" rows="3"></textarea>
+                    </div>
+            </div>
 
-                <div class="Modal-Footer">
+            <div class="Modal-Footer">
                 <button type="button" class="btn btn-danger" onclick="deletePayment()">🗑️ Eliminar Factura</button>
-           <button type="submit" class="btn">💾 Guardar Cambios</button>
-            </form>
+                <button type="submit" class="btn">💾 Guardar Cambios</button>
+                </form>
             </div>
 
         </div>
@@ -878,18 +903,19 @@
 
 
 
-<!-- Modal para ver imagen del contrato -->
+<!-- Reemplaza el div del modal de imagen del contrato con esto -->
 <div id="contract-image-modal" class="modal">
-    <div class="modal-content">
+    <div class="modal-content" style="height: 90vh; display: flex; flex-direction: column;">
         <div class="Modal-Title">
             <h2>Imagen del contrato</h2>
             <span class="close" onclick="closeModal('contract-image-modal')">&times;</span>
         </div>
-        <div class="Modal-Body" style="text-align: center; overflow: auto;">
-            <img id="contract-image-viewer" src="" style="max-width: 100%; max-height: 80vh; cursor: zoom-in;">
+        <div class="Modal-Body" style="flex: 1; overflow: hidden; position: relative;">
+            <div id="image-container" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+                <img id="contract-image-viewer" src="" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+            </div>
         </div>
     </div>
-</div>
 
 
     <script>
@@ -957,6 +983,7 @@
 
                 // Inicializar componentes
                 initializePhoneInputs();
+                setupContractImagePreview(); // <-- Añade esta línea
 
                 // Cargar datos en paralelo
                 await Promise.all([
@@ -1298,181 +1325,181 @@
             }
         }
 
-      // Add new property
-async function addProperty(e) {
-    e.preventDefault();
+        // Add new property
+        async function addProperty(e) {
+            e.preventDefault();
 
-    const contractImage = document.getElementById('contract-image').files[0];
-    let imageBase64 = '';
+            const contractImage = document.getElementById('contract-image').files[0];
+            let imageBase64 = '';
 
-    if (contractImage) {
-        try {
-            imageBase64 = await convertImageToBase64(contractImage);
-        } catch (error) {
-            alert(error.message || 'Error al procesar la imagen');
-            return;
-        }
-    }
-
-    // Obtener números de teléfono formateados
-    const ownerPhone = document.getElementById('owner-phone').iti.getNumber();
-    const tenantPhone = document.getElementById('tenant-phone')?.iti?.getNumber() || '';
-    const guarantorPhone = document.getElementById('guarantor-phone')?.iti?.getNumber() || '';
-
-    const newProperty = {
-        ownerName: document.getElementById('owner-name').value,
-        ownerPhone: ownerPhone,
-        ownerAddress: document.getElementById('owner-address').value,
-        propertyType: document.getElementById('property-type').value,
-        bedrooms: parseInt(document.getElementById('bedrooms').value),
-        bathrooms: parseInt(document.getElementById('bathrooms').value),
-        parkingSpaces: parseInt(document.getElementById('parking-spaces').value),
-        address: document.getElementById('property-address').value,
-        rentAmount: parseFloat(document.getElementById('rent-amount').value),
-        status: document.getElementById('property-status').value,
-        notes: document.getElementById('property-notes').value,
-        imageContrato: imageBase64,
-        createdAt: new Date()
-    };
-
-    // Solo agregar datos de inquilino si está rentado
-    if (newProperty.status === 'rented') {
-        newProperty.tenantName = document.getElementById('tenant-name').value;
-        newProperty.tenantPhone = tenantPhone;
-        newProperty.tenantIdType = document.getElementById('tenant-id-type').value;
-        newProperty.tenantId = document.getElementById('tenant-id').value;
-        newProperty.paymentDay = parseInt(document.getElementById('payment-day').value);
-        newProperty.contractStart = new Date(document.getElementById('contract-date').value);
-        newProperty.contractDuration = parseInt(document.getElementById('contract-duration').value);
-        newProperty.tenantNotes = document.getElementById('tenant-notes').value;
-        newProperty.guarantorName = document.getElementById('guarantor-name').value;
-        newProperty.guarantorPhone = guarantorPhone;
-        newProperty.guarantorAddress = document.getElementById('guarantor-address').value;
-        newProperty.guarantorIdType = document.getElementById('guarantor-id-type').value;
-        newProperty.guarantorId = document.getElementById('guarantor-id').value;
-        newProperty.guarantorNotes = document.getElementById('guarantor-notes').value;
-    }
-
-    try {
-        const docRef = await db.collection('properties').add(newProperty);
-        newProperty.id = docRef.id;
-        properties.push(newProperty);
-
-        document.getElementById('property-form').reset();
-        closeModal('add-property-modal');
-        displayProperties();
-        generateCalendar();
-        updateListView();
-
-        alert('✅ Propiedad agregada exitosamente');
-    } catch (error) {
-        console.error('Error adding property:', error);
-        // Demo mode - add to local array
-        newProperty.id = Date.now().toString();
-        properties.push(newProperty);
-        document.getElementById('property-form').reset();
-        closeModal('add-property-modal');
-        displayProperties();
-        generateCalendar();
-        updateListView();
-        alert('✅ Propiedad agregada (modo demo)');
-    }
-}
-
-
-
-
-
-// Función para optimizar y comprimir imágenes
-async function optimizeImage(file) {
-    return new Promise((resolve, reject) => {
-        // Verificar tamaño máximo (4MB)
-        if (file.size > 4 * 1024 * 1024) {
-            reject(new Error('La imagen es demasiado grande (máximo 4MB)'));
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const img = new Image();
-            img.onload = function() {
-                // Crear canvas para redimensionar
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                
-                // Tamaño máximo deseado (ancho o alto)
-                const MAX_WIDTH = 1920;
-                const MAX_HEIGHT = 1920;
-                
-                let width = img.width;
-                let height = img.height;
-                
-                // Redimensionar si es necesario
-                if (width > height) {
-                    if (width > MAX_WIDTH) {
-                        height *= MAX_WIDTH / width;
-                        width = MAX_WIDTH;
-                    }
-                } else {
-                    if (height > MAX_HEIGHT) {
-                        width *= MAX_HEIGHT / height;
-                        height = MAX_HEIGHT;
-                    }
+            if (contractImage) {
+                try {
+                    imageBase64 = await convertImageToBase64(contractImage);
+                } catch (error) {
+                    alert(error.message || 'Error al procesar la imagen');
+                    return;
                 }
-                
-                canvas.width = width;
-                canvas.height = height;
-                
-                // Dibujar imagen redimensionada
-                ctx.drawImage(img, 0, 0, width, height);
-                
-                // Comprimir a JPEG con calidad del 70%
-                canvas.toBlob((blob) => {
-                    if (blob.size > 1920 * 1920) { // Si aún es mayor a 1MB
-                        // Intentar con más compresión
-                        canvas.toBlob((smallerBlob) => {
-                            resolve(smallerBlob);
-                        }, 'image/jpeg', 0.7); // Calidad del 70%
-                    } else {
-                        resolve(blob);
-                    }
-                }, 'image/jpeg', 0.7); // Calidad inicial del 70%
+            }
+
+            // Obtener números de teléfono formateados
+            const ownerPhone = document.getElementById('owner-phone').iti.getNumber();
+            const tenantPhone = document.getElementById('tenant-phone')?.iti?.getNumber() || '';
+            const guarantorPhone = document.getElementById('guarantor-phone')?.iti?.getNumber() || '';
+
+            const newProperty = {
+                ownerName: document.getElementById('owner-name').value,
+                ownerPhone: ownerPhone,
+                ownerAddress: document.getElementById('owner-address').value,
+                propertyType: document.getElementById('property-type').value,
+                bedrooms: parseInt(document.getElementById('bedrooms').value),
+                bathrooms: parseInt(document.getElementById('bathrooms').value),
+                parkingSpaces: parseInt(document.getElementById('parking-spaces').value),
+                address: document.getElementById('property-address').value,
+                rentAmount: parseFloat(document.getElementById('rent-amount').value),
+                status: document.getElementById('property-status').value,
+                notes: document.getElementById('property-notes').value,
+                imageContrato: imageBase64,
+                createdAt: new Date()
             };
-            
-            img.onerror = function() {
-                reject(new Error('Error al cargar la imagen'));
-            };
-            
-            img.src = event.target.result;
-        };
-        
-        reader.onerror = function() {
-            reject(new Error('Error al leer el archivo'));
-        };
-        
-        reader.readAsDataURL(file);
-    });
-}
 
+            // Solo agregar datos de inquilino si está rentado
+            if (newProperty.status === 'rented') {
+                newProperty.tenantName = document.getElementById('tenant-name').value;
+                newProperty.tenantPhone = tenantPhone;
+                newProperty.tenantIdType = document.getElementById('tenant-id-type').value;
+                newProperty.tenantId = document.getElementById('tenant-id').value;
+                newProperty.paymentDay = parseInt(document.getElementById('payment-day').value);
+                newProperty.contractStart = new Date(document.getElementById('contract-date').value);
+                newProperty.contractDuration = parseInt(document.getElementById('contract-duration').value);
+                newProperty.tenantNotes = document.getElementById('tenant-notes').value;
+                newProperty.guarantorName = document.getElementById('guarantor-name').value;
+                newProperty.guarantorPhone = guarantorPhone;
+                newProperty.guarantorAddress = document.getElementById('guarantor-address').value;
+                newProperty.guarantorIdType = document.getElementById('guarantor-id-type').value;
+                newProperty.guarantorId = document.getElementById('guarantor-id').value;
+                newProperty.guarantorNotes = document.getElementById('guarantor-notes').value;
+            }
 
+            try {
+                const docRef = await db.collection('properties').add(newProperty);
+                newProperty.id = docRef.id;
+                properties.push(newProperty);
 
-// Convert image to Base64 con optimización
-function convertImageToBase64(file) {
-    return new Promise(async (resolve, reject) => {
-        try {
-            // Optimizar la imagen primero
-            const optimizedBlob = await optimizeImage(file);
-            
-            const reader = new FileReader();
-            reader.readAsDataURL(optimizedBlob);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        } catch (error) {
-            console.error('Error al optimizar la imagen:', error);
-            reject(error);
+                document.getElementById('property-form').reset();
+                closeModal('add-property-modal');
+                displayProperties();
+                generateCalendar();
+                updateListView();
+
+                alert('✅ Propiedad agregada exitosamente');
+            } catch (error) {
+                console.error('Error adding property:', error);
+                // Demo mode - add to local array
+                newProperty.id = Date.now().toString();
+                properties.push(newProperty);
+                document.getElementById('property-form').reset();
+                closeModal('add-property-modal');
+                displayProperties();
+                generateCalendar();
+                updateListView();
+                alert('✅ Propiedad agregada (modo demo)');
+            }
         }
-    });
-}
+
+
+
+
+
+        // Función para optimizar y comprimir imágenes
+        async function optimizeImage(file) {
+            return new Promise((resolve, reject) => {
+                // Verificar tamaño máximo (4MB)
+                if (file.size > 4 * 1024 * 1024) {
+                    reject(new Error('La imagen es demasiado grande (máximo 4MB)'));
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const img = new Image();
+                    img.onload = function () {
+                        // Crear canvas para redimensionar
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+
+                        // Tamaño máximo deseado (ancho o alto)
+                        const MAX_WIDTH = 1920;
+                        const MAX_HEIGHT = 1920;
+
+                        let width = img.width;
+                        let height = img.height;
+
+                        // Redimensionar si es necesario
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        // Dibujar imagen redimensionada
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Comprimir a JPEG con calidad del 70%
+                        canvas.toBlob((blob) => {
+                            if (blob.size > 1920 * 1920) { // Si aún es mayor a 1MB
+                                // Intentar con más compresión
+                                canvas.toBlob((smallerBlob) => {
+                                    resolve(smallerBlob);
+                                }, 'image/jpeg', 0.7); // Calidad del 70%
+                            } else {
+                                resolve(blob);
+                            }
+                        }, 'image/jpeg', 0.7); // Calidad inicial del 70%
+                    };
+
+                    img.onerror = function () {
+                        reject(new Error('Error al cargar la imagen'));
+                    };
+
+                    img.src = event.target.result;
+                };
+
+                reader.onerror = function () {
+                    reject(new Error('Error al leer el archivo'));
+                };
+
+                reader.readAsDataURL(file);
+            });
+        }
+
+
+
+        // Convert image to Base64 con optimización
+        function convertImageToBase64(file) {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    // Optimizar la imagen primero
+                    const optimizedBlob = await optimizeImage(file);
+
+                    const reader = new FileReader();
+                    reader.readAsDataURL(optimizedBlob);
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = error => reject(error);
+                } catch (error) {
+                    console.error('Error al optimizar la imagen:', error);
+                    reject(error);
+                }
+            });
+        }
 
 
 
@@ -1635,18 +1662,18 @@ function convertImageToBase64(file) {
             }
         }
 
-// Show property detail modal for editing
-function showPropertyDetailModal(propertyId) {
-    const property = properties.find(p => p.id === propertyId);
-    if (!property) return;
+        // Show property detail modal for editing
+        function showPropertyDetailModal(propertyId) {
+            const property = properties.find(p => p.id === propertyId);
+            if (!property) return;
 
-    // Mostrar mensaje sobre el tamaño de la imagen
-    const imageInput = document.getElementById('edit-contract-image');
-    imageInput.onchange = function() {
-        if (this.files[0].size > 4 * 1024 * 1024) {
-            alert('La imagen es demasiado grande (máximo 4MB). Se comprimirá automáticamente.');
-        }
-    };
+            // Mostrar mensaje sobre el tamaño de la imagen
+            const imageInput = document.getElementById('edit-contract-image');
+            imageInput.onchange = function () {
+                if (this.files[0].size > 4 * 1024 * 1024) {
+                    alert('La imagen es demasiado grande (máximo 4MB). Se comprimirá automáticamente.');
+                }
+            };
 
             // Llenar formulario con datos de la propiedad
             document.getElementById('edit-property-id').value = property.id;
@@ -1701,7 +1728,7 @@ function showPropertyDetailModal(propertyId) {
             }
 
             // Mostrar imagen actual si existe
-updateImageDisplay();
+            updateImageDisplay();
 
             // Asegurarse de que los campos de inquilino se muestren correctamente
             toggleTenantFields();
@@ -1709,97 +1736,97 @@ updateImageDisplay();
             openModal('property-edit-modal');
         }
 
-      // Update property
-async function updateProperty(e) {
-    e.preventDefault();
+        // Update property
+        async function updateProperty(e) {
+            e.preventDefault();
 
-    const propertyId = document.getElementById('edit-property-id').value;
-    const propertyIndex = properties.findIndex(p => p.id === propertyId);
-    if (propertyIndex === -1) return;
+            const propertyId = document.getElementById('edit-property-id').value;
+            const propertyIndex = properties.findIndex(p => p.id === propertyId);
+            if (propertyIndex === -1) return;
 
-    const contractImage = document.getElementById('edit-contract-image').files[0];
-    let imageBase64 = properties[propertyIndex].imageContrato;
+            const contractImage = document.getElementById('edit-contract-image').files[0];
+            let imageBase64 = properties[propertyIndex].imageContrato;
 
-    if (contractImage) {
-        try {
-            imageBase64 = await convertImageToBase64(contractImage);
-        } catch (error) {
-            alert(error.message || 'Error al procesar la imagen');
-            return;
+            if (contractImage) {
+                try {
+                    imageBase64 = await convertImageToBase64(contractImage);
+                } catch (error) {
+                    alert(error.message || 'Error al procesar la imagen');
+                    return;
+                }
+            }
+
+            // Obtener números de teléfono formateados
+            const ownerPhone = document.getElementById('edit-owner-phone').iti.getNumber();
+            const tenantPhone = document.getElementById('edit-tenant-phone')?.iti?.getNumber() || '';
+            const guarantorPhone = document.getElementById('edit-guarantor-phone')?.iti?.getNumber() || '';
+
+            const updatedProperty = {
+                ownerName: document.getElementById('edit-owner-name').value,
+                ownerPhone: ownerPhone,
+                ownerAddress: document.getElementById('edit-owner-address').value,
+                propertyType: document.getElementById('edit-property-type').value,
+                bedrooms: parseInt(document.getElementById('edit-bedrooms').value),
+                bathrooms: parseInt(document.getElementById('edit-bathrooms').value),
+                parkingSpaces: parseInt(document.getElementById('edit-parking-spaces').value),
+                address: document.getElementById('edit-property-address').value,
+                rentAmount: parseFloat(document.getElementById('edit-rent-amount').value),
+                status: document.getElementById('edit-property-status').value,
+                notes: document.getElementById('edit-property-notes').value,
+                imageContrato: imageBase64
+            };
+
+            // Solo actualizar datos de inquilino si está rentado
+            if (updatedProperty.status === 'rented') {
+                updatedProperty.tenantName = document.getElementById('edit-tenant-name').value;
+                updatedProperty.tenantPhone = tenantPhone;
+                updatedProperty.tenantId = document.getElementById('edit-tenant-id').value;
+                updatedProperty.paymentDay = parseInt(document.getElementById('edit-payment-day').value);
+                updatedProperty.contractStart = new Date(document.getElementById('edit-contract-date').value);
+                updatedProperty.contractDuration = parseInt(document.getElementById('edit-contract-duration').value);
+                updatedProperty.tenantNotes = document.getElementById('edit-tenant-notes').value;
+                updatedProperty.guarantorName = document.getElementById('edit-guarantor-name').value;
+                updatedProperty.guarantorPhone = guarantorPhone;
+                updatedProperty.guarantorAddress = document.getElementById('edit-guarantor-address').value;
+                updatedProperty.guarantorId = document.getElementById('edit-guarantor-id').value;
+                updatedProperty.guarantorNotes = document.getElementById('edit-guarantor-notes').value;
+            } else {
+                // Limpiar datos de inquilino si ya no está rentado
+                updatedProperty.tenantName = '';
+                updatedProperty.tenantPhone = '';
+                updatedProperty.tenantId = '';
+                updatedProperty.paymentDay = null;
+                updatedProperty.contractStart = null;
+                updatedProperty.contractDuration = null;
+                updatedProperty.tenantNotes = '';
+                updatedProperty.guarantorName = '';
+                updatedProperty.guarantorPhone = '';
+                updatedProperty.guarantorAddress = '';
+                updatedProperty.guarantorId = '';
+                updatedProperty.guarantorNotes = '';
+            }
+
+            try {
+                await db.collection('properties').doc(propertyId).update(updatedProperty);
+                properties[propertyIndex] = { ...properties[propertyIndex], ...updatedProperty };
+
+                closeModal('property-edit-modal');
+                displayProperties();
+                generateCalendar();
+                updateListView();
+
+                alert('✅ Propiedad actualizada exitosamente');
+            } catch (error) {
+                console.error('Error updating property:', error);
+                // Demo mode
+                properties[propertyIndex] = { ...properties[propertyIndex], ...updatedProperty };
+                closeModal('property-edit-modal');
+                displayProperties();
+                generateCalendar();
+                updateListView();
+                alert('✅ Propiedad actualizada (modo demo)');
+            }
         }
-    }
-
-    // Obtener números de teléfono formateados
-    const ownerPhone = document.getElementById('edit-owner-phone').iti.getNumber();
-    const tenantPhone = document.getElementById('edit-tenant-phone')?.iti?.getNumber() || '';
-    const guarantorPhone = document.getElementById('edit-guarantor-phone')?.iti?.getNumber() || '';
-
-    const updatedProperty = {
-        ownerName: document.getElementById('edit-owner-name').value,
-        ownerPhone: ownerPhone,
-        ownerAddress: document.getElementById('edit-owner-address').value,
-        propertyType: document.getElementById('edit-property-type').value,
-        bedrooms: parseInt(document.getElementById('edit-bedrooms').value),
-        bathrooms: parseInt(document.getElementById('edit-bathrooms').value),
-        parkingSpaces: parseInt(document.getElementById('edit-parking-spaces').value),
-        address: document.getElementById('edit-property-address').value,
-        rentAmount: parseFloat(document.getElementById('edit-rent-amount').value),
-        status: document.getElementById('edit-property-status').value,
-        notes: document.getElementById('edit-property-notes').value,
-        imageContrato: imageBase64
-    };
-
-    // Solo actualizar datos de inquilino si está rentado
-    if (updatedProperty.status === 'rented') {
-        updatedProperty.tenantName = document.getElementById('edit-tenant-name').value;
-        updatedProperty.tenantPhone = tenantPhone;
-        updatedProperty.tenantId = document.getElementById('edit-tenant-id').value;
-        updatedProperty.paymentDay = parseInt(document.getElementById('edit-payment-day').value);
-        updatedProperty.contractStart = new Date(document.getElementById('edit-contract-date').value);
-        updatedProperty.contractDuration = parseInt(document.getElementById('edit-contract-duration').value);
-        updatedProperty.tenantNotes = document.getElementById('edit-tenant-notes').value;
-        updatedProperty.guarantorName = document.getElementById('edit-guarantor-name').value;
-        updatedProperty.guarantorPhone = guarantorPhone;
-        updatedProperty.guarantorAddress = document.getElementById('edit-guarantor-address').value;
-        updatedProperty.guarantorId = document.getElementById('edit-guarantor-id').value;
-        updatedProperty.guarantorNotes = document.getElementById('edit-guarantor-notes').value;
-    } else {
-        // Limpiar datos de inquilino si ya no está rentado
-        updatedProperty.tenantName = '';
-        updatedProperty.tenantPhone = '';
-        updatedProperty.tenantId = '';
-        updatedProperty.paymentDay = null;
-        updatedProperty.contractStart = null;
-        updatedProperty.contractDuration = null;
-        updatedProperty.tenantNotes = '';
-        updatedProperty.guarantorName = '';
-        updatedProperty.guarantorPhone = '';
-        updatedProperty.guarantorAddress = '';
-        updatedProperty.guarantorId = '';
-        updatedProperty.guarantorNotes = '';
-    }
-
-    try {
-        await db.collection('properties').doc(propertyId).update(updatedProperty);
-        properties[propertyIndex] = { ...properties[propertyIndex], ...updatedProperty };
-
-        closeModal('property-edit-modal');
-        displayProperties();
-        generateCalendar();
-        updateListView();
-
-        alert('✅ Propiedad actualizada exitosamente');
-    } catch (error) {
-        console.error('Error updating property:', error);
-        // Demo mode
-        properties[propertyIndex] = { ...properties[propertyIndex], ...updatedProperty };
-        closeModal('property-edit-modal');
-        displayProperties();
-        generateCalendar();
-        updateListView();
-        alert('✅ Propiedad actualizada (modo demo)');
-    }
-}
 
         // Delete property
         async function deleteProperty(propertyId) {
@@ -2376,6 +2403,11 @@ async function updateProperty(e) {
         function closeModal(modalId) {
             const modal = document.getElementById(modalId);
             modal.classList.add('closing');
+
+            // Resetear formularios si es necesario
+            if (modalId === 'property-edit-modal') {
+                // Aquí puedes agregar cualquier reset necesario
+            }
 
             // Esperar a que termine la animación antes de ocultar
             setTimeout(() => {
@@ -3218,143 +3250,314 @@ async function updateProperty(e) {
         });
 
 
-    // Actualizar el año del copyright automáticamente
-    document.addEventListener('DOMContentLoaded', function() {
-        const currentYear = new Date().getFullYear();
-        const copyrightElements = document.querySelectorAll('.footer2, .fixed-footer');
-        
-        copyrightElements.forEach(element => {
-            if (element.textContent.includes('Developed by José Polanco')) {
-                element.textContent = `© ${currentYear} - Developed by José Polanco`;
+        // Actualizar el año del copyright automáticamente
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentYear = new Date().getFullYear();
+            const copyrightElements = document.querySelectorAll('.footer2, .fixed-footer');
+
+            copyrightElements.forEach(element => {
+                if (element.textContent.includes('Developed by José Polanco')) {
+                    element.textContent = `© ${currentYear} - Developed by José Polanco`;
+                }
+            });
+        });
+
+
+        // Función para ver la imagen del contrato
+        function viewContractImage() {
+            const propertyId = document.getElementById('edit-property-id').value;
+            const property = properties.find(p => p.id === propertyId);
+
+            if (!property || !property.imageContrato) {
+                alert('No hay imagen del contrato para mostrar');
+                return;
             }
+
+            const viewer = document.getElementById('contract-image-viewer');
+            viewer.src = property.imageContrato;
+            viewer.classList.remove('zoomed');
+
+            // Configurar zoom al hacer clic
+            viewer.onclick = function () {
+                this.classList.toggle('zoomed');
+            };
+
+            openModal('contract-image-modal');
+        }
+
+        // Función para descargar la imagen del contrato
+        function downloadContractImage() {
+            const propertyId = document.getElementById('edit-property-id').value;
+            const property = properties.find(p => p.id === propertyId);
+
+            if (!property || !property.imageContrato) {
+                alert('No hay imagen del contrato para descargar');
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.href = property.imageContrato;
+            link.download = `contrato_${property.address.replace(/\s+/g, '_')}.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+
+
+
+        // Función para eliminar la imagen del contrato
+        async function deleteContractImage() {
+            if (!confirm('¿Estás seguro de que quieres eliminar la imagen del contrato?')) {
+                return;
+            }
+
+            const propertyId = document.getElementById('edit-property-id').value;
+            const propertyIndex = properties.findIndex(p => p.id === propertyId);
+
+            if (propertyIndex === -1) {
+                alert('No se encontró la propiedad');
+                return;
+            }
+
+            try {
+                // Mostrar loader
+                document.getElementById('loadingOverlay').style.display = 'flex';
+
+                // Eliminar de Firebase
+                await db.collection('properties').doc(propertyId).update({
+                    imageContrato: firebase.firestore.FieldValue.delete()
+                });
+
+                // Actualizar estado local
+                properties[propertyIndex].imageContrato = '';
+
+                // Actualizar visualización
+                updateImageDisplay();
+
+                // Ocultar loader
+                document.getElementById('loadingOverlay').style.display = 'none';
+
+                alert('✅ Imagen eliminada correctamente');
+            } catch (error) {
+                console.error('Error eliminando imagen:', error);
+                document.getElementById('loadingOverlay').style.display = 'none';
+
+                // Intento alternativo si falla el método delete
+                try {
+                    await db.collection('properties').doc(propertyId).update({
+                        imageContrato: null
+                    });
+
+                    properties[propertyIndex].imageContrato = '';
+                    updateImageDisplay();
+                    alert('✅ Imagen eliminada (segundo intento)');
+                } catch (secondError) {
+                    console.error('Error en segundo intento:', secondError);
+                    alert('❌ Error al eliminar la imagen. Intente nuevamente.');
+                }
+            }
+        }
+
+
+
+        // Función auxiliar para actualizar la visualización de la imagen
+        function updateImageDisplay() {
+            const propertyId = document.getElementById('edit-property-id').value;
+            const property = properties.find(p => p.id === propertyId);
+            const imageContainer = document.getElementById('edit-current-image-container');
+            const imageElement = document.getElementById('edit-current-image');
+            const imageActions = document.getElementById('edit-image-actions');
+            const noImageMessage = imageContainer.querySelector('.no-image-message');
+
+            // Resetear el input de archivo
+            const imageInput = document.getElementById('edit-contract-image');
+            if (imageInput) {
+                imageInput.value = '';
+            }
+
+            if (property && property.imageContrato) {
+                // Mostrar imagen existente
+                imageElement.src = property.imageContrato;
+                imageElement.style.display = 'block';
+                imageActions.style.display = 'flex';
+
+                // Ocultar mensaje de no imagen si existe
+                if (noImageMessage) {
+                    noImageMessage.style.display = 'none';
+                }
+            } else {
+                // No hay imagen - ocultar la imagen y mostrar mensaje
+                imageElement.style.display = 'none';
+                imageActions.style.display = 'none';
+
+                // Crear mensaje si no existe
+                if (!noImageMessage) {
+                    const message = document.createElement('p');
+                    message.className = 'no-image-message';
+                    message.style.color = '#777';
+                    message.style.fontStyle = 'italic';
+                    message.textContent = 'Sin imagen del contrato';
+                    imageContainer.appendChild(message);
+                } else {
+                    noImageMessage.style.display = 'block';
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Función para mostrar previsualización de la imagen del contrato
+function setupContractImagePreview() {
+    const imageInput = document.getElementById('edit-contract-image');
+    if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            if (file.size > 4 * 1024 * 1024) {
+                alert('La imagen es demasiado grande (máximo 4MB). Se comprimirá automáticamente.');
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                // Mostrar previsualización
+                const previewImage = document.getElementById('edit-current-image');
+                previewImage.src = event.target.result;
+                previewImage.style.display = 'block';
+                
+                // Mostrar botones de acción
+                const imageActions = document.getElementById('edit-image-actions');
+                imageActions.style.display = 'flex';
+                
+                // Ocultar mensaje de "Sin imagen" si existe
+                const noImageMessage = document.querySelector('.no-image-message');
+                if (noImageMessage) {
+                    noImageMessage.style.display = 'none';
+                }
+            };
+            reader.readAsDataURL(file);
         });
-    });
-
-
-// Función para ver la imagen del contrato
-function viewContractImage() {
-    const propertyId = document.getElementById('edit-property-id').value;
-    const property = properties.find(p => p.id === propertyId);
-    
-    if (!property || !property.imageContrato) {
-        alert('No hay imagen del contrato para mostrar');
-        return;
     }
-
-    const viewer = document.getElementById('contract-image-viewer');
-    viewer.src = property.imageContrato;
-    viewer.classList.remove('zoomed');
     
-    // Configurar zoom al hacer clic
-    viewer.onclick = function() {
-        this.classList.toggle('zoomed');
-    };
-
-    openModal('contract-image-modal');
+    // También para el modal de agregar propiedad
+    const addImageInput = document.getElementById('contract-image');
+    if (addImageInput) {
+        addImageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            if (file.size > 4 * 1024 * 1024) {
+                alert('La imagen es demasiado grande (máximo 4MB). Se comprimirá automáticamente.');
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                // Crear contenedor de previsualización si no existe
+                let previewContainer = document.getElementById('add-current-image-container');
+                if (!previewContainer) {
+                    previewContainer = document.createElement('div');
+                    previewContainer.id = 'add-current-image-container';
+                    previewContainer.style.marginTop = '10px';
+                    addImageInput.parentNode.appendChild(previewContainer);
+                }
+                
+                // Mostrar previsualización
+                previewContainer.innerHTML = `
+                    <p>Previsualización:</p>
+                    <img src="${event.target.result}" style="max-width: 100%; max-height: 200px;">
+                `;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 }
 
-// Función para descargar la imagen del contrato
-function downloadContractImage() {
-    const propertyId = document.getElementById('edit-property-id').value;
-    const property = properties.find(p => p.id === propertyId);
-    
-    if (!property || !property.imageContrato) {
-        alert('No hay imagen del contrato para descargar');
-        return;
-    }
 
-    const link = document.createElement('a');
-    link.href = property.imageContrato;
-    link.download = `contrato_${property.address.replace(/\s+/g, '_')}.jpg`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
 
-// Función para eliminar la imagen del contrato
-async function deleteContractImage() {
-    if (!confirm('¿Estás seguro de que quieres eliminar la imagen del contrato?')) {
-        return;
-    }
 
-    const propertyId = document.getElementById('edit-property-id').value;
-    const propertyIndex = properties.findIndex(p => p.id === propertyId);
-    
-    if (propertyIndex === -1) {
-        alert('No se encontró la propiedad');
-        return;
-    }
 
-    try {
-        // Mostrar loader
-        document.getElementById('loadingOverlay').style.display = 'flex';
+
+
+
+
+
+ let panzoomInstance = null;
+
+    function viewContractImage() {
+        const propertyId = document.getElementById('edit-property-id').value;
+        const property = properties.find(p => p.id === propertyId);
+
+        if (!property || !property.imageContrato) {
+            alert('No hay imagen del contrato para mostrar');
+            return;
+        }
+
+        const viewer = document.getElementById('contract-image-viewer');
+        viewer.src = property.imageContrato;
         
-        // Eliminar de Firebase
-        await db.collection('properties').doc(propertyId).update({
-            imageContrato: firebase.firestore.FieldValue.delete()
-        });
+        // Abrir el modal primero para que el contenedor tenga dimensiones
+        openModal('contract-image-modal');
         
-        // Actualizar estado local
-        properties[propertyIndex].imageContrato = '';
-        
-        // Actualizar visualización
-        updateImageDisplay();
-        
-        // Ocultar loader
-        document.getElementById('loadingOverlay').style.display = 'none';
-        
-        alert('✅ Imagen eliminada correctamente');
-    } catch (error) {
-        console.error('Error eliminando imagen:', error);
-        document.getElementById('loadingOverlay').style.display = 'none';
-        
-        // Intento alternativo si falla el método delete
-        try {
-            await db.collection('properties').doc(propertyId).update({
-                imageContrato: null
+        // Esperar un momento para que el modal se renderice completamente
+        setTimeout(() => {
+            // Destruir instancia anterior si existe
+            if (panzoomInstance) {
+                panzoomInstance.dispose();
+            }
+            
+            // Inicializar panzoom
+            const element = document.getElementById('contract-image-viewer');
+            const container = document.getElementById('image-container');
+            
+            panzoomInstance = panzoom(element, {
+                contain: 'outside',
+                maxScale: 5,
+                minScale: 1,
+                step: 0.2,
+                // Para móviles
+                touchAction: 'none',
+                // Configuración para mejor experiencia táctil
+                beforeWheel: (e) => {
+                    // Solo permitir zoom con rueda si no estamos en un dispositivo táctil
+                    return !e.ctrlKey;
+                }
             });
             
-            properties[propertyIndex].imageContrato = '';
-            updateImageDisplay();
-            alert('✅ Imagen eliminada (segundo intento)');
-        } catch (secondError) {
-            console.error('Error en segundo intento:', secondError);
-            alert('❌ Error al eliminar la imagen. Intente nuevamente.');
+            // Asegurarse de que la imagen se centre al abrir
+            panzoomInstance.moveTo(0, 0);
+            panzoomInstance.zoomAbs(0, 0, 1);
+            
+            // Manejar doble clic para resetear zoom
+            element.addEventListener('dblclick', (e) => {
+                panzoomInstance.zoomAbs(0, 0, 1);
+                panzoomInstance.moveTo(0, 0);
+            });
+            
+        }, 50);
+    }
+
+    // Limpiar al cerrar el modal
+    function closeImageModal() {
+        if (panzoomInstance) {
+            panzoomInstance.dispose();
+            panzoomInstance = null;
         }
+        closeModal('contract-image-modal');
     }
-}
-
-// Función auxiliar para actualizar la visualización de la imagen
-function updateImageDisplay() {
-    const propertyId = document.getElementById('edit-property-id').value;
-    const property = properties.find(p => p.id === propertyId);
-    const imageContainer = document.getElementById('edit-current-image-container');
-    const imageWrapper = document.getElementById('edit-current-image-wrapper');
-    const imageElement = document.getElementById('edit-current-image');
-    const imageActions = document.getElementById('edit-image-actions');
-    const imageInput = document.getElementById('edit-contract-image');
-
-    // Resetear el input de archivo
-    if (imageInput) {
-        imageInput.value = '';
-    }
-
-    if (property && property.imageContrato) {
-        // Mostrar imagen existente
-        imageElement.src = property.imageContrato;
-        imageWrapper.style.display = 'block';
-        imageActions.style.display = 'flex';
-        imageContainer.style.display = 'block';
-    } else {
-        // No hay imagen
-        imageWrapper.innerHTML = '<p style="color: #777; font-style: italic;">Sin imagen del contrato</p>';
-        imageActions.style.display = 'none';
-        imageContainer.style.display = 'block';
-    }
-}
     </script>
 </body>
 
 </html>
 
-<!-- 1 -->
+<!-- 3 -->
