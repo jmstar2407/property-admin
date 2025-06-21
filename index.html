@@ -10,9 +10,6 @@
 
     <link rel="stylesheet" href="./css/style.css" />
 
-    <script src="https://unpkg.com/@panzoom/panzoom@9.4.0/dist/panzoom.min.js"></script>
-
-
     <!-- intl-tel-input CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
     <!-- intl-tel-input JS -->
@@ -890,11 +887,9 @@
                 <h2>Imagen del contrato</h2>
                 <span class="close" onclick="closeModal('contract-image-modal')">&times;</span>
             </div>
-<div class="Modal-Body" style="text-align: center; overflow: hidden;">
-    <div id="panzoom-container" style="display: inline-block; max-width: 100%; max-height: 80vh; overflow: hidden;">
-        <img id="contract-image-viewer" src="" alt="Contrato" style="max-width: 100%; max-height: 80vh;">
-    </div>
-</div>
+            <div class="Modal-Body" style="text-align: center; overflow: auto;">
+                <img id="contract-image-viewer" src="" style="max-width: 100%; max-height: 100vh; cursor: zoom-in;">
+            </div>
         </div>
     </div>
 
@@ -3245,34 +3240,26 @@
 
 
         // Función para ver la imagen del contrato
-         // Inicializar Panzoom cuando se muestra la imagen del contrato
-    function viewContractImage() {
-        const imageSrc = document.getElementById("edit-current-image").src;
-        const viewer = document.getElementById("contract-image-viewer");
-        viewer.src = imageSrc;
+        function viewContractImage() {
+            const propertyId = document.getElementById('edit-property-id').value;
+            const property = properties.find(p => p.id === propertyId);
 
-        const container = document.getElementById("panzoom-container");
+            if (!property || !property.imageContrato) {
+                alert('No hay imagen del contrato para mostrar');
+                return;
+            }
 
-        // Eliminar cualquier instancia previa
-        if (container.panzoomInstance) {
-            container.panzoomInstance.destroy();
+            const viewer = document.getElementById('contract-image-viewer');
+            viewer.src = property.imageContrato;
+            viewer.classList.remove('zoomed');
+
+            // Configurar zoom al hacer clic
+            viewer.onclick = function () {
+                this.classList.toggle('zoomed');
+            };
+
+            openModal('contract-image-modal');
         }
-
-        // Crear una nueva instancia de Panzoom
-        const panzoomInstance = Panzoom(container, {
-            maxScale: 5,
-            minScale: 1,
-            contain: 'outside',
-        });
-
-        // Guardar referencia para destruirla luego si es necesario
-        container.panzoomInstance = panzoomInstance;
-
-        // Permitir zoom con la rueda del mouse
-        container.parentElement.addEventListener('wheel', panzoomInstance.zoomWithWheel);
-
-        openModal('contract-image-modal');
-    }
 
         // Función para descargar la imagen del contrato
         function downloadContractImage() {
