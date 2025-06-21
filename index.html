@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="./css/style.css" />
 
-    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+    <script src="https://unpkg.com/@panzoom/panzoom@9.4.0/dist/panzoom.min.js"></script>
 
 
     <!-- intl-tel-input CSS -->
@@ -182,26 +182,6 @@
             margin-top: 10px;
             justify-content: center;
         }
-
-
-
-
-
-            /* Estilos adicionales para mejorar la experiencia táctil */
-    #contract-image-viewer {
-        touch-action: none;
-        user-select: none;
-        transition: transform 0.1s ease-out;
-    }
-    
-    #image-container {
-        touch-action: none;
-        cursor: grab;
-    }
-    
-    #image-container:active {
-        cursor: grabbing;
-    }
     </style>
 </head>
 
@@ -903,17 +883,18 @@
 
 
 
-<!-- Reemplaza el div del modal de imagen del contrato con esto -->
-<div id="contract-image-modal" class="modal">
-    <div class="modal-content" style="height: 90vh; display: flex; flex-direction: column;">
-        <div class="Modal-Title">
-            <h2>Imagen del contrato</h2>
-            <span class="close" onclick="closeModal('contract-image-modal')">&times;</span>
-        </div>
-        <div class="Modal-Body" style="flex: 1; overflow: hidden; position: relative;">
-            <div id="image-container" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
-                <img id="contract-image-viewer" src="" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+    <!-- Modal para ver imagen del contrato -->
+    <div id="contract-image-modal" class="modal">
+        <div class="modal-content">
+            <div class="Modal-Title">
+                <h2>Imagen del contrato</h2>
+                <span class="close" onclick="closeModal('contract-image-modal')">&times;</span>
             </div>
+<div class="Modal-Body" style="text-align: center; overflow: hidden;">
+    <div id="panzoom-container" style="display: inline-block; max-width: 100%; max-height: 80vh; overflow: hidden;">
+        <img id="contract-image-viewer" src="" alt="Contrato" style="max-width: 100%; max-height: 80vh;">
+    </div>
+</div>
         </div>
     </div>
 
@@ -3267,6 +3248,7 @@
         function viewContractImage() {
             const propertyId = document.getElementById('edit-property-id').value;
             const property = properties.find(p => p.id === propertyId);
+            
 
             if (!property || !property.imageContrato) {
                 alert('No hay imagen del contrato para mostrar');
@@ -3277,10 +3259,31 @@
             viewer.src = property.imageContrato;
             viewer.classList.remove('zoomed');
 
-            // Configurar zoom al hacer clic
-            viewer.onclick = function () {
-                this.classList.toggle('zoomed');
-            };
+let panzoomInstance;
+
+function viewContractImage() {
+    const image = document.getElementById('contract-image-viewer');
+    const modal = document.getElementById('contract-image-modal');
+    modal.style.display = 'block';
+
+    // Destruye cualquier instancia anterior
+    if (panzoomInstance) {
+        panzoomInstance.destroy();
+    }
+
+    // Activa Panzoom
+    panzoomInstance = Panzoom(document.getElementById('panzoom-container'), {
+        maxScale: 5,
+        minScale: 1,
+        contain: 'outside',
+        startScale: 1
+    });
+
+    // Habilita interacción con rueda o touch
+    const parent = document.getElementById('panzoom-container');
+    parent.addEventListener('wheel', panzoomInstance.zoomWithWheel);
+}
+
 
             openModal('contract-image-modal');
         }
@@ -3482,82 +3485,9 @@ function setupContractImagePreview() {
         });
     }
 }
-
-
-
-
-
-
-
-
-
-
- let panzoomInstance = null;
-
-    function viewContractImage() {
-        const propertyId = document.getElementById('edit-property-id').value;
-        const property = properties.find(p => p.id === propertyId);
-
-        if (!property || !property.imageContrato) {
-            alert('No hay imagen del contrato para mostrar');
-            return;
-        }
-
-        const viewer = document.getElementById('contract-image-viewer');
-        viewer.src = property.imageContrato;
-        
-        // Abrir el modal primero para que el contenedor tenga dimensiones
-        openModal('contract-image-modal');
-        
-        // Esperar un momento para que el modal se renderice completamente
-        setTimeout(() => {
-            // Destruir instancia anterior si existe
-            if (panzoomInstance) {
-                panzoomInstance.dispose();
-            }
-            
-            // Inicializar panzoom
-            const element = document.getElementById('contract-image-viewer');
-            const container = document.getElementById('image-container');
-            
-            panzoomInstance = panzoom(element, {
-                contain: 'outside',
-                maxScale: 5,
-                minScale: 1,
-                step: 0.2,
-                // Para móviles
-                touchAction: 'none',
-                // Configuración para mejor experiencia táctil
-                beforeWheel: (e) => {
-                    // Solo permitir zoom con rueda si no estamos en un dispositivo táctil
-                    return !e.ctrlKey;
-                }
-            });
-            
-            // Asegurarse de que la imagen se centre al abrir
-            panzoomInstance.moveTo(0, 0);
-            panzoomInstance.zoomAbs(0, 0, 1);
-            
-            // Manejar doble clic para resetear zoom
-            element.addEventListener('dblclick', (e) => {
-                panzoomInstance.zoomAbs(0, 0, 1);
-                panzoomInstance.moveTo(0, 0);
-            });
-            
-        }, 50);
-    }
-
-    // Limpiar al cerrar el modal
-    function closeImageModal() {
-        if (panzoomInstance) {
-            panzoomInstance.dispose();
-            panzoomInstance = null;
-        }
-        closeModal('contract-image-modal');
-    }
     </script>
 </body>
 
 </html>
 
-<!-- 3 -->
+<!-- 2 -->
