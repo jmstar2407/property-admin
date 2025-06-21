@@ -29,172 +29,9 @@
     <!-- Date utilities -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/2.30.0/index.min.js"></script>
 
-    <style>
-        .whatsapp-btn {
-            color: white;
-            border: none;
-            border-radius: 9px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: bold;
-            height: 45px;
-            padding: 7px 6px;
-            background: #25D366;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .whatsapp-btn:hover {
-            background-color: #128C7E;
-        }
-
-
-
-
-
-        /* Efecto Destello Instantáneo */
-        /*span:active,
-    button:active {
-        animation: flash 0.2s;
-    }
-    
-    @keyframes flash {
-        0% { background-color: rgba(255, 255, 255, 0.7); }
-        100% { background-color: transparent; }
-    }*/
-
-
-
-        button,
-        span,
-        a {
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-
-        button:active,
-        span:active,
-        a:active {
-            transform: scale(0.95);
-        }
-
-        button:hover,
-        a:hover {
-            filter: brightness(1.1);
-        }
-
-
-
-
-
-
-        .password-container {
-            position: relative;
-            margin-bottom: 14px;
-            width: 100%;
-        }
-
-        .password-container input {
-            padding-right: 40px;
-            /* Espacio para el icono */
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 0px;
-            top: 50%;
-
-            cursor: pointer;
-            color: #777;
-            background: none;
-            border: none;
-            outline: none;
-            font-size: 16px;
-        }
-
-        .toggle-password:hover {
-            color: #333;
-        }
-
-
-
-
-
-
-
-
-        /* Loading Indicator */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            color: white;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #3498db;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-
-        /* Estilos para el visor de imágenes */
-
-        #contract-image-viewer.zoomed {
-            transform: scale(1.2);
-            cursor: zoom-out;
-        }
-
-        #contract-image-viewer.zoomed {
-            /* transform: scale(1.2); */
-            transform: scale(150%) translate(17%, 17%);
-            /* transform: translate(10px, 10px); */
-            cursor: zoom-out;
-            /* padding: 32px; */
-        }
-
-        .image-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            justify-content: center;
-        }
-
-
-    </style>
 </head>
 
 <body>
-
-
-
-
-
 
     <!-- Contenedor de login -->
     <div id="loginContainer" style="display: none;">
@@ -251,6 +88,7 @@
                         <h1>Bieneraigar</h1>
                         <p id="subtit">Sistema de Administración</p>
                     </div>
+                    <button id="setting-button"></button>
                 </div>
             </div>
 
@@ -561,11 +399,13 @@
                                 imagen del contrato</p>
                         </div>
                         <div class="image-actions" id="edit-image-actions" style="display: none;">
-                            <button type="button" class="btn EDC btn-danger" onclick="deleteContractImage()">🗑️ Eliminar</button>
-                            <button type="button" class="btn EDC" onclick="downloadContractImage()">📥 Descargar</button>
+                            <button type="button" class="btn EDC btn-danger" onclick="deleteContractImage()">🗑️
+                                Eliminar</button>
+                            <button type="button" class="btn EDC" onclick="downloadContractImage()">📥
+                                Descargar</button>
                             <button type="button" class="btn EDC" onclick="shareContractImage()"
                                 style="background: #4a82cb;">📤 Compartir</button>
-                            
+
                         </div>
                     </div>
 
@@ -912,6 +752,74 @@
             </div>
         </div>
     </div>
+
+
+
+
+    <!-- Configuracion Modal -->
+    <div id="config-modal" class="modal">
+        <div class="modal-content">
+            <div class="Modal-Title">
+                <h2>⚙️ Configuración</h2>
+                <span class="close" onclick="closeModal('config-modal')">&times;</span>
+            </div>
+
+            <div class="Modal-Body">
+                <form id="config-form">
+                    <!-- Mensaje de WhatsApp -->
+                    <div class="form-group">
+                        <label for="ws-message">📝 Mensaje predetermindado de <span
+                                style="color: #12b100;">WhatsApp</span> para recordatorios de
+                            pagos:</label>
+                        <textarea id="ws-message" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-divisor"></div>
+
+                    <!-- Porcentaje de comisión -->
+                    <div class="form-group">
+                        <label for="commission-percentage">📊 Porcentaje (%) de comisión para el calculo en la
+                            contabilidad:</label>
+                        <input type="number" id="commission-percentage" min="0" max="100" step="0.1" required>
+                    </div>
+
+                    <div class="form-divisor"></div>
+
+                    <!-- Imagen de firma -->
+                     <p style="color: #c0c4cb;margin-bottom: 10px;">✏️ Firma del administrativo que se muestra en los recibos de pagos:</p>
+                    <div class="form-group"
+                        style="position: relative;display: flex;align-items: center;width: 100%;margin-top: 7px;background: #22252c;border-radius: 14px;margin-bottom: 10px;">
+                        <label for="signature-image" class="custom-imagen-upload">
+                            <img src="./img/subir-imagen-1.png" alt="Añadir" class="icono-añadir">Añadir imagen
+                        </label>
+
+                        <div class="outputs">
+                            <p id="imageCountOutput">2MB Máximo</p>
+                        </div>
+
+                        <input type="file" id="signature-image" accept="image/*" style="display: none;">
+
+                    </div>
+                    <div id="signature-preview-container">
+                        <p style="color: #999999;margin-block-end: 13px;">Firma actual:</p>
+                        <img id="signature-preview" src="" style="max-width: 200px; max-height: 100px; display: none;">
+                        <p id="no-signature-message" style="color: #777; font-style: italic;">No hay imagen de firma
+                            configurada</p>
+                    </div>
+
+
+                </form>
+            </div>
+
+            <div class="Modal-Footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('config-modal')">Cancelar</button>
+                <button type="button" class="btn" onclick="saveConfig()">💾 Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+
+
+
 
 
     <script>
@@ -2708,8 +2616,8 @@
             // Texto final
             doc.setFontSize(10);
             doc.setTextColor(100, 100, 100);
-            doc.text('Este recibo certifica que el inquilino ha pagado satisfactoriamente el monto', 105, 270, { align: 'center' });
-            doc.text('correspondiente al alquiler del mes indicado.', 105, 275, { align: 'center' });
+            doc.text('Este recibo certifica que el inquilino ha pagado satisfactoriamente el monto', 105, 280, { align: 'center' });
+            doc.text('correspondiente al alquiler del mes indicado.', 105, 285, { align: 'center' });
 
             // Save PDF
             const fileName = `factura_${payment.tenantName.replace(/\s+/g, '_')}_${payment.mesPagado.replace(/\s+/g, '_')}_${payment.year}.pdf`;
@@ -2730,13 +2638,24 @@
             updateAccountingView();
         }
 
-        function updateAccountingView() {
+        async function updateAccountingView() {
             const month = currentAccountingDate.getMonth();
             const year = currentAccountingDate.getFullYear();
 
             const monthYear = currentAccountingDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
             document.getElementById('accounting-month-title').textContent =
                 monthYear.charAt(0).toUpperCase() + monthYear.slice(1);
+
+            // Obtener el porcentaje de comisión desde Firebase
+            let commissionPercentage = 10; // Valor por defecto
+            try {
+                const configDoc = await db.collection('config').doc('configuracion').get();
+                if (configDoc.exists && configDoc.data().porcientoComision) {
+                    commissionPercentage = parseFloat(configDoc.data().porcientoComision);
+                }
+            } catch (error) {
+                console.error('Error obteniendo porcentaje de comisión:', error);
+            }
 
             // Calculate totals
             const monthPayments = payments.filter(p =>
@@ -2746,7 +2665,7 @@
             );
 
             const totalCollected = monthPayments.reduce((sum, p) => sum + p.amount, 0);
-            const commission = totalCollected * 0.10;
+            const commission = totalCollected * (commissionPercentage / 100);
 
             const monthExpenses = expenses.filter(e =>
                 e.date &&
@@ -2767,34 +2686,29 @@
             // Update summary cards
             const summaryContainer = document.getElementById('accounting-summary');
             summaryContainer.innerHTML = `
-
-                <div class="summary-card">
-                    <h3>Total Cobrado</h3>
-                    <div class="amount">${totalCollected.toLocaleString()}</div>
-                </div>
-                <div class="summary-card" style="background: linear-gradient(135deg, #2585a9 0%, #00bd4c 100%);">
-                    <h3>Comisión (10%)</h3>
-                    <div class="amount">${commission.toLocaleString()}</div>
-                </div>
-
-
-                <div class="summary-card" style="background: #ffffff00;box-shadow: 0 10px 25px rgb(102 126 234 / 0%);padding: 0px;display: inline-flex;gap: 4px;flex-direction: column;">
-                     <div id="ingr-gas" style="background: linear-gradient(135deg, #2585a9 0%, #00bd4c 100%);">
-                    <h3>Ingresos Extra</h3>
-                    <div class="amount">${totalIncomes.toLocaleString()}</div>
-</div>
-                    <div id="ingr-gas" style="background: linear-gradient(135deg, #7b1111, #c71212, #771414);">
-                        <h3>Gastos del Mes</h3>
-                       <div class="amount">${totalExpenses.toLocaleString()}</div>
-                    </div>
-                </div>
-
-
-                <div class="summary-card" style="background: linear-gradient(135deg, #46e0ef 0%, #00398f 100%);">
-                    <h3>Ganancia Neta</h3>
-                    <div class="amount">${netProfit.toLocaleString()}</div>
-                </div>
-            `;
+        <div class="summary-card">
+            <h3>Total Cobrado</h3>
+            <div class="amount">${totalCollected.toLocaleString()}</div>
+        </div>
+        <div class="summary-card" style="background: linear-gradient(135deg, #2585a9 0%, #00bd4c 100%);">
+            <h3>Comisión (${commissionPercentage}%)</h3>
+            <div class="amount">${commission.toLocaleString()}</div>
+        </div>
+        <div class="summary-card" style="background: #ffffff00;box-shadow: 0 10px 25px rgb(102 126 234 / 0%);padding: 0px;display: inline-flex;gap: 4px;flex-direction: column;">
+             <div id="ingr-gas" style="background: linear-gradient(135deg, #2585a9 0%, #00bd4c 100%);">
+                <h3>Ingresos Extra</h3>
+                <div class="amount">${totalIncomes.toLocaleString()}</div>
+            </div>
+            <div id="ingr-gas" style="background: linear-gradient(135deg, #7b1111, #c71212, #771414);">
+                <h3>Gastos del Mes</h3>
+               <div class="amount">${totalExpenses.toLocaleString()}</div>
+            </div>
+        </div>
+        <div class="summary-card" style="background: linear-gradient(135deg, #46e0ef 0%, #00398f 100%);">
+            <h3>Ganancia Neta</h3>
+            <div class="amount">${netProfit.toLocaleString()}</div>
+        </div>
+    `;
 
             // Update transactions list
             displayTransactions(monthExpenses, monthIncomes);
@@ -3556,9 +3470,128 @@
 
             alert('El enlace a la imagen ha sido copiado al portapeles. Puedes pegarlo donde quieras compartirlo.');
         }
+
+
+
+
+
+
+
+
+
+
+        // Función para abrir el modal de configuración
+        function openConfigModal() {
+            // Obtener la configuración de Firebase
+            db.collection('config').doc('configuracion').get().then(doc => {
+                if (doc.exists) {
+                    const config = doc.data();
+
+                    document.getElementById('ws-message').value = config.WSmensaje || '';
+                    document.getElementById('commission-percentage').value = config.porcientoComision || 10;
+
+                    const signaturePreview = document.getElementById('signature-preview');
+                    const noSignatureMessage = document.getElementById('no-signature-message');
+
+                    if (config.imagenFirma) {
+                        signaturePreview.src = config.imagenFirma;
+                        signaturePreview.style.display = 'block';
+                        noSignatureMessage.style.display = 'none';
+                    } else {
+                        signaturePreview.style.display = 'none';
+                        noSignatureMessage.style.display = 'block';
+                    }
+                } else {
+                    document.getElementById('ws-message').value = 'Saludos, te recuerdo que toca el pago de la renta. Avísame cualquier cosa. ¡Gracias!';
+                    document.getElementById('commission-percentage').value = 10;
+                    document.getElementById('signature-preview').style.display = 'none';
+                    document.getElementById('no-signature-message').style.display = 'block';
+                }
+
+                openModal('config-modal');
+            }).catch(error => {
+                console.error('Error obteniendo configuración:', error);
+                alert('Error al cargar la configuración');
+            });
+
+            // Configurar previsualización de imagen manteniendo PNG con transparencia
+            document.getElementById('signature-image').addEventListener('change', function (e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                // Validar tipo y tamaño
+                if (file.type !== 'image/png') {
+                    alert('Por favor sube una imagen PNG con transparencia');
+                    this.value = '';
+                    return;
+                }
+
+                // Validar tamaño máximo (2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('La imagen es demasiado grande (máximo 2MB)');
+                    this.value = '';
+                    return;
+                }
+
+                // Mostrar previsualización
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const preview = document.getElementById('signature-preview');
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                    document.getElementById('no-signature-message').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Función para guardar la configuración (versión optimizada)
+        async function saveConfig() {
+            try {
+                const signatureFile = document.getElementById('signature-image').files[0];
+
+                // Validar tamaño si hay nueva imagen
+                if (signatureFile && signatureFile.size > 2 * 1024 * 1024) {
+                    alert('La imagen de firma es demasiado grande (máximo 2MB)');
+                    return;
+                }
+
+                // Resto del código de guardado...
+                const wsMessage = document.getElementById('ws-message').value;
+                const commissionPercentage = parseFloat(document.getElementById('commission-percentage').value);
+
+                const configData = {
+                    WSmensaje: wsMessage,
+                    porcientoComision: commissionPercentage,
+                    lastUpdated: new Date()
+                };
+
+                if (signatureFile) {
+                    const imageBase64 = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(signatureFile);
+                    });
+                    configData.imagenFirma = imageBase64;
+                }
+
+                await db.collection('config').doc('configuracion').set(configData, { merge: true });
+
+                closeModal('config-modal');
+                alert('✅ Configuración guardada exitosamente');
+                updateAccountingView();
+            } catch (error) {
+                console.error('Error guardando configuración:', error);
+                alert('Error al guardar la configuración');
+            }
+        }
+
+        // Asignar evento al botón de configuración
+        document.getElementById('setting-button').addEventListener('click', openConfigModal);
     </script>
 </body>
 
 </html>
 
-<!-- 1 -->
+<!-- 4.2 -->
