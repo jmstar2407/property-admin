@@ -154,14 +154,17 @@
                     <button class="btn add-property-btn" onclick="showAddPropertyModal()">🏠 Agregar Nueva Propiedad
                         (+)</button>
 
-<div class="property-status-tabs">
-    <button class="property-status-tab active" onclick="filterProperties('rented')">Rentadas <span class="count">0</span>
-    </button>
-    <button class="property-status-tab" onclick="filterProperties('available')">Disponibles <span class="count">0</span>
-    </button>
-    <button class="property-status-tab" onclick="filterProperties('maintenance')">En Mantenimiento <span class="count">0</span>
-    </button>
-</div>
+                    <div class="property-status-tabs">
+                        <button class="property-status-tab active" onclick="filterProperties('rented')">Rentadas <span
+                                class="count">0</span>
+                        </button>
+                        <button class="property-status-tab" onclick="filterProperties('available')">Disponibles <span
+                                class="count">0</span>
+                        </button>
+                        <button class="property-status-tab" onclick="filterProperties('maintenance')">En Mantenimiento
+                            <span class="count">0</span>
+                        </button>
+                    </div>
 
                     <div id="properties-list">
                         <div class="loading">Cargando propiedades...</div>
@@ -240,15 +243,15 @@
                     <div class="section-title">👤 Propietario:</div>
                     <div class="form-section">
                         <div class="form-group">
-                            <label for="edit-owner-name">Nombre del Propietario</label>
+                            <label for="edit-owner-name">Nombre del Propietario:</label>
                             <input type="text" id="edit-owner-name" required placeholder="Nombre y Apellido">
                         </div>
                         <div class="form-group">
-                            <label for="edit-owner-phone">📞 Teléfono del Propietario</label>
+                            <label for="edit-owner-phone">📞 Teléfono del Propietario:</label>
                             <input type="tel" id="edit-owner-phone" required>
                         </div>
                         <div class="form-group">
-                            <label for="edit-owner-address">📍 Dirección del Propietario</label>
+                            <label for="edit-owner-address">📍 Dirección del Propietario:</label>
                             <input type="text" id="edit-owner-address">
                         </div>
                     </div>
@@ -257,7 +260,7 @@
                     <div class="section-title">🏠 Propiedad:</div>
                     <div class="form-section">
                         <div class="form-group">
-                            <label for="edit-property-type">🏠 Tipo de Propiedad</label>
+                            <label for="edit-property-type">🏠 Tipo de Propiedad:</label>
                             <select id="edit-property-type" required>
                                 <option value="casa">Casa</option>
                                 <option value="apartamento">Apartamento</option>
@@ -267,30 +270,30 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="edit-bedrooms">🛏️ Cantidad de Habitaciones</label>
+                            <label for="edit-bedrooms">🛏️ Cantidad de Habitaciones:</label>
                             <input type="number" id="edit-bedrooms" min="0" required>
                         </div>
                         <div class="form-group">
-                            <label for="edit-bathrooms">🛁 Cantidad de Baños</label>
+                            <label for="edit-bathrooms">🛁 Cantidad de Baños:</label>
                             <input type="number" id="edit-bathrooms" min="0" required>
                         </div>
                         <div class="form-group">
-                            <label for="edit-parking-spaces">🚘 Cantidad de Parqueos</label>
+                            <label for="edit-parking-spaces">🚘 Cantidad de Parqueos:</label>
                             <input type="number" id="edit-parking-spaces" min="0" required>
                         </div>
 
 
 
                         <div class="form-group">
-                            <label for="edit-property-address">📍🏠 Dirección de la Propiedad</label>
+                            <label for="edit-property-address">📍🏠 Dirección de la Propiedad:</label>
                             <input type="text" id="edit-property-address" required>
                         </div>
                         <div class="form-group">
-                            <label for="edit-rent-amount">Monto de la Renta (💲)</label>
+                            <label for="edit-rent-amount">Monto de la Renta (💲):</label>
                             <input type="number" id="edit-rent-amount" required>
                         </div>
                         <div class="form-group">
-                            <label for="edit-property-status">✅ Estado</label>
+                            <label for="edit-property-status">✅ Estado:</label>
                             <select id="edit-property-status" required onchange="toggleTenantFields()">
                                 <option value="available">Disponible</option>
                                 <option value="rented">Rentado</option>
@@ -298,7 +301,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="edit-property-notes">🗒️ Notas sobre la propiedad</label>
+                            <label for="edit-property-notes">🗒️ Notas sobre la propiedad:</label>
                             <textarea id="edit-property-notes" rows="3"></textarea>
                         </div>
                     </div>
@@ -307,40 +310,40 @@
                     <div id="tenant-section" class="form-section">
                         <div class="section-title">👥 Inquilino:</div>
                         <div class="form-group">
-                            <label for="edit-tenant-name">Nombre del Inquilino</label>
+                            <label for="edit-tenant-name">Nombre del Inquilino:</label>
                             <input type="text" id="edit-tenant-name" placeholder="Nombre y Apellido">
                         </div>
                         <div class="form-group">
-                            <label for="edit-tenant-phone">📞 Teléfono del Inquilino</label>
+                            <label for="edit-tenant-phone">📞 Teléfono del Inquilino:</label>
                             <input type="tel" id="edit-tenant-phone">
                         </div>
                         <!-- Para el inquilino -->
                         <div class="form-group">
-                            <label for="edit-tenant-id-type">🪪 Tipo de Identificación</label>
+                            <label for="edit-tenant-id-type">🪪 Tipo de Identificación:</label>
                             <select id="edit-tenant-id-type">
                                 <option value="cedula">Cédula</option>
                                 <option value="pasaporte">Pasaporte</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="edit-tenant-id">Número de Identificación</label>
+                            <label for="edit-tenant-id">Número de Identificación:</label>
                             <input type="text" id="edit-tenant-id" placeholder="000-0000000-0 / 000000000">
                         </div>
                         <div class="form-group">
-                            <label for="edit-contract-date">📑Fecha de Inicio de Contrato</label>
+                            <label for="edit-contract-date">📑Fecha de Inicio de Contrato:</label>
                             <input type="date" id="edit-contract-date">
                         </div>
                         <div class="form-group">
-                            <label for="edit-payment-day">📅 Día de Cobro (1-31)</label>
+                            <label for="edit-payment-day">📅 Día de Cobro (1-31):</label>
                             <input type="number" id="edit-payment-day" min="1" max="31">
                         </div>
 
                         <div class="form-group">
-                            <label for="edit-contract-duration">⏳ Duración del Contrato (Meses)</label>
+                            <label for="edit-contract-duration">⏳ Duración del Contrato (Meses):</label>
                             <input type="number" id="edit-contract-duration" min="1">
                         </div>
                         <div class="form-group">
-                            <label for="edit-tenant-notes">🗒️ Notas sobre el inquilino</label>
+                            <label for="edit-tenant-notes">🗒️ Notas sobre el inquilino:</label>
                             <textarea id="edit-tenant-notes" rows="2"></textarea>
                         </div>
 
@@ -351,33 +354,33 @@
                             <input type="text" id="edit-guarantor-name" placeholder="Nombre y Apellido">
                         </div>
                         <div class="form-group">
-                            <label for="edit-guarantor-phone">📞 Teléfono del Garante</label>
+                            <label for="edit-guarantor-phone">📞 Teléfono del Garante:</label>
                             <input type="tel" id="edit-guarantor-phone">
                         </div>
                         <div class="form-group">
-                            <label for="edit-guarantor-address">Dirección del Garante</label>
+                            <label for="edit-guarantor-address">📍 Dirección del Garante:</label>
                             <input type="text" id="edit-guarantor-address">
                         </div>
                         <!-- Para el garante -->
                         <div class="form-group">
-                            <label for="edit-guarantor-id-type">🪪 Tipo de Identificación</label>
+                            <label for="edit-guarantor-id-type">🪪 Tipo de Identificación:</label>
                             <select id="edit-guarantor-id-type">
                                 <option value="cedula">Cédula</option>
                                 <option value="pasaporte">Pasaporte</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="edit-guarantor-id">Número de Identificación</label>
+                            <label for="edit-guarantor-id">Número de Identificación:</label>
                             <input type="text" id="edit-guarantor-id" placeholder="000-0000000-0 / 000000000">
                         </div>
                         <div class="form-group">
-                            <label for="edit-guarantor-notes">🗒️ Notas sobre el garante</label>
+                            <label for="edit-guarantor-notes">🗒️ Notas sobre el garante:</label>
                             <textarea id="edit-guarantor-notes" rows="2"></textarea>
                         </div>
                     </div>
 
 
-
+                    <p id="contraImg">📷 Imagen del Contrato:</p>
                     <div class="form-group"
                         style="position: relative;display: flex;align-items: center;width: 100%;margin-top: 7px;background: #22252c;border-radius: 14px;">
                         <label for="edit-contract-image" class="custom-imagen-upload">
@@ -437,15 +440,15 @@
                     <div class="section-title">👤 Propietario:</div>
                     <div class="form-section">
                         <div class="form-group">
-                            <label for="owner-name">Nombre del Propietario</label>
+                            <label for="owner-name">Nombre del Propietario:</label>
                             <input type="text" id="owner-name" required placeholder="Nombre y Apellido">
                         </div>
                         <div class="form-group">
-                            <label for="owner-phone">📞 Teléfono del Propietario</label>
+                            <label for="owner-phone">📞 Teléfono del Propietario:</label>
                             <input type="tel" id="owner-phone" required>
                         </div>
                         <div class="form-group">
-                            <label for="owner-address">📍 Dirección del Propietario</label>
+                            <label for="owner-address">📍 Dirección del Propietario:</label>
                             <input type="text" id="owner-address">
                         </div>
                     </div>
@@ -454,7 +457,7 @@
                     <div class="section-title">🏠 Propiedad:</div>
                     <div class="form-section">
                         <div class="form-group">
-                            <label for="property-type">🏠 Tipo de Propiedad</label>
+                            <label for="property-type">🏠 Tipo de Propiedad:</label>
                             <select id="property-type" required>
                                 <option value="casa">Casa</option>
                                 <option value="apartamento">Apartamento</option>
@@ -464,29 +467,29 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="bedrooms">🛏️ Cantidad de Habitaciones</label>
+                            <label for="bedrooms">🛏️ Cantidad de Habitaciones:</label>
                             <input type="number" id="bedrooms" min="0" placeholder="0" required>
                         </div>
                         <div class="form-group">
-                            <label for="bathrooms">🛁 Cantidad de Baños</label>
+                            <label for="bathrooms">🛁 Cantidad de Baños:</label>
                             <input type="number" id="bathrooms" min="0" placeholder="0" required>
                         </div>
                         <div class="form-group">
-                            <label for="parking-spaces">🚘 Cantidad de Parqueos</label>
+                            <label for="parking-spaces">🚘 Cantidad de Parqueos:</label>
                             <input type="number" id="parking-spaces" min="0" placeholder="0" required>
                         </div>
 
 
                         <div class="form-group">
-                            <label for="property-address">📍🏠 Dirección de la Propiedad</label>
+                            <label for="property-address">📍🏠 Dirección de la Propiedad:</label>
                             <input type="text" id="property-address" required>
                         </div>
                         <div class="form-group">
-                            <label for="rent-amount">Monto de la Renta (💲)</label>
+                            <label for="rent-amount">Monto de la Renta (💲):</label>
                             <input type="number" id="rent-amount" required>
                         </div>
                         <div class="form-group">
-                            <label for="property-status">✅ Estado</label>
+                            <label for="property-status">✅ Estado:</label>
                             <select id="property-status" required onchange="toggleTenantFields('add')">
 
                                 <option value="available">Disponible</option>
@@ -495,7 +498,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="property-notes">🗒️ Notas sobre la propiedad</label>
+                            <label for="property-notes">🗒️ Notas sobre la propiedad:</label>
                             <textarea id="property-notes" rows="3"></textarea>
                         </div>
                     </div>
@@ -504,79 +507,89 @@
                     <div id="tenant-section-add" class="form-section">
                         <div class="section-title">👥 Inquilino:</div>
                         <div class="form-group">
-                            <label for="tenant-name">Nombre del Inquilino</label>
+                            <label for="tenant-name">Nombre del Inquilino:</label>
                             <input type="text" id="tenant-name" placeholder="Nombre y Apellido">
                         </div>
                         <div class="form-group">
-                            <label for="tenant-phone">📞 Teléfono del Inquilino</label>
+                            <label for="tenant-phone">📞 Teléfono del Inquilino:</label>
                             <input type="tel" id="tenant-phone">
                         </div>
                         <!-- Para el inquilino -->
                         <div class="form-group">
-                            <label for="tenant-id-type">🪪 Tipo de Identificación</label>
+                            <label for="tenant-id-type">🪪 Tipo de Identificación:</label>
                             <select id="tenant-id-type">
                                 <option value="cedula">Cédula</option>
                                 <option value="pasaporte">Pasaporte</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="tenant-id">Número de Identificación</label>
+                            <label for="tenant-id">Número de Identificación:</label>
                             <input type="text" id="tenant-id" placeholder="000-0000000-0 / 000000000">
                         </div>
                         <div class="form-group">
-                            <label for="contract-date">📑 Fecha de Inicio de Contrato</label>
+                            <label for="contract-date">📑 Fecha de Inicio de Contrato:</label>
                             <input type="date" id="contract-date">
                         </div>
                         <div class="form-group">
-                            <label for="payment-day">📅 Día de Cobro (1-31)</label>
+                            <label for="payment-day">📅 Día de Cobro (1-31):</label>
                             <input type="number" id="payment-day" min="1" max="31">
                         </div>
                         <div class="form-group">
-                            <label for="contract-duration">⏳ Duración del Contrato (Meses)</label>
+                            <label for="contract-duration">⏳ Duración del Contrato (Meses):</label>
                             <input type="number" id="contract-duration" min="1">
                         </div>
                         <div class="form-group">
-                            <label for="tenant-notes">🗒️Notas sobre el inquilino</label>
+                            <label for="tenant-notes">🗒️Notas sobre el inquilino:</label>
                             <textarea id="tenant-notes" rows="2"></textarea>
                         </div>
 
                         <!-- Sección Garante -->
                         <div class="section-title">🪪 Garante:</div>
                         <div class="form-group">
-                            <label for="guarantor-name">Nombre del Garante</label>
+                            <label for="guarantor-name">Nombre del Garante:</label>
                             <input type="text" id="guarantor-name" placeholder="Nombre y Apellido">
                         </div>
                         <div class="form-group">
-                            <label for="guarantor-phone">📞 Teléfono del Garante</label>
+                            <label for="guarantor-phone">📞 Teléfono del Garante:</label>
                             <input type="tel" id="guarantor-phone">
                         </div>
                         <div class="form-group">
-                            <label for="guarantor-address">📍 Dirección del Garante</label>
+                            <label for="guarantor-address">📍 Dirección del Garante:</label>
                             <input type="text" id="guarantor-address">
                         </div>
                         <!-- Para el garante -->
                         <div class="form-group">
-                            <label for="guarantor-id-type">🪪 Tipo de Identificación</label>
+                            <label for="guarantor-id-type">🪪 Tipo de Identificación:</label>
                             <select id="guarantor-id-type">
                                 <option value="cedula">Cédula</option>
                                 <option value="pasaporte">Pasaporte</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="guarantor-id">Número de Identificación</label>
+                            <label for="guarantor-id">Número de Identificación:</label>
                             <input type="text" id="guarantor-id" placeholder="000-0000000-0 / 000000000">
                         </div>
                         <div class="form-group">
-                            <label for="guarantor-notes">🗒️ Notas sobre el garante</label>
+                            <label for="guarantor-notes">🗒️ Notas sobre el garante:</label>
                             <textarea id="guarantor-notes" rows="2"></textarea>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="contract-image">Imagen del Contrato</label>
-                        <input type="file" id="contract-image" accept="image/*">
-                        <div id="add-image-preview-container" style="margin-top: 10px;"></div>
+
+                    <p id="contraImg">📷 Imagen del Contrato:</p>
+                    <div class="form-group"
+                        style="position: relative;display: flex;align-items: center;width: 100%;margin-top: 7px;background: #22252c;border-radius: 14px;margin-bottom: 0px;">
+                        <label for="contract-image" class="custom-imagen-upload">
+                            <img src="./img/subir-imagen-1.png" alt="Añadir" class="icono-añadir">Añadir imagen
+                        </label>
+
+                        <div class="outputs">
+                            <p id="imageCountOutput">4MB Máximo</p>
+                        </div>
+
+                       
                     </div>
+                     <input type="file" id="contract-image" accept="image/*" style="display: none;">
             </div>
 
             <div class="Modal-Footer">
@@ -787,7 +800,8 @@
                     <div class="form-divisor"></div>
 
                     <!-- Imagen de firma -->
-                     <p style="color: #c0c4cb;margin-bottom: 10px;">✏️ Firma del administrativo que se muestra en los recibos de pagos:</p>
+                    <p style="color: #c0c4cb;margin-bottom: 10px;">✏️ Firma del administrativo que se muestra en los
+                        recibos de pagos:</p>
                     <div class="form-group"
                         style="position: relative;display: flex;align-items: center;width: 100%;margin-top: 7px;background: #22252c;border-radius: 14px;margin-bottom: 10px;">
                         <label for="signature-image" class="custom-imagen-upload">
@@ -1067,47 +1081,47 @@
             }
         }
 
-       // Filtrar propiedades por estado
-    function filterProperties(status) {
-        currentPropertyFilter = status;
-        displayProperties();
+        // Filtrar propiedades por estado
+        function filterProperties(status) {
+            currentPropertyFilter = status;
+            displayProperties();
 
-        // Actualizar pestañas activas
-        document.querySelectorAll('.property-status-tab').forEach(tab => {
-            tab.classList.remove('active');
-        });
-        event.target.classList.add('active');
+            // Actualizar pestañas activas
+            document.querySelectorAll('.property-status-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
 
-        // Actualizar contadores (no requiere nueva lectura de Firebase)
-        updatePropertyCounters();
-    }
-
-    // Función para actualizar los contadores de propiedades
-function updatePropertyCounters() {
-    if (!properties || properties.length === 0) return;
-
-    // Contar propiedades por estado
-    const counts = {
-        rented: 0,
-        available: 0,
-        maintenance: 0
-    };
-
-    properties.forEach(property => {
-        if (property.status && counts.hasOwnProperty(property.status)) {
-            counts[property.status]++;
+            // Actualizar contadores (no requiere nueva lectura de Firebase)
+            updatePropertyCounters();
         }
-    });
 
-    // Actualizar los contadores
-    document.querySelectorAll('.property-status-tab').forEach(tab => {
-        const status = tab.getAttribute('onclick').match(/'(.*?)'/)[1];
-        const countSpan = tab.querySelector('.count');
-        if (countSpan) {
-            countSpan.textContent = `${counts[status] || 0}`;
+        // Función para actualizar los contadores de propiedades
+        function updatePropertyCounters() {
+            if (!properties || properties.length === 0) return;
+
+            // Contar propiedades por estado
+            const counts = {
+                rented: 0,
+                available: 0,
+                maintenance: 0
+            };
+
+            properties.forEach(property => {
+                if (property.status && counts.hasOwnProperty(property.status)) {
+                    counts[property.status]++;
+                }
+            });
+
+            // Actualizar los contadores
+            document.querySelectorAll('.property-status-tab').forEach(tab => {
+                const status = tab.getAttribute('onclick').match(/'(.*?)'/)[1];
+                const countSpan = tab.querySelector('.count');
+                if (countSpan) {
+                    countSpan.textContent = `${counts[status] || 0}`;
+                }
+            });
         }
-    });
-}
 
         // Tab navigation
         function showTab(tabName) {
@@ -1161,24 +1175,24 @@ function updatePropertyCounters() {
 
 
         // Load data from Firebase
-    async function loadProperties() {
-        try {
-            const snapshot = await db.collection('properties').get();
-            properties = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data(),
-                createdAt: doc.data().createdAt?.toDate(),
-                contractStart: doc.data().contractStart?.toDate()
-            }));
+        async function loadProperties() {
+            try {
+                const snapshot = await db.collection('properties').get();
+                properties = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                    createdAt: doc.data().createdAt?.toDate(),
+                    contractStart: doc.data().contractStart?.toDate()
+                }));
 
-            currentPropertyFilter = 'rented';
-            displayProperties();
-            generateCalendar();
-            updateListView();
-            updateOverdueView();
-            updatePropertyCounters(); // <-- Añadir esta línea
-        } catch (error) {
-            console.error('Error loading properties:', error);
+                currentPropertyFilter = 'rented';
+                displayProperties();
+                generateCalendar();
+                updateListView();
+                updateOverdueView();
+                updatePropertyCounters(); // <-- Añadir esta línea
+            } catch (error) {
+                console.error('Error loading properties:', error);
                 // Use mock data for demo
                 properties = [
                     {
@@ -3413,7 +3427,7 @@ function updatePropertyCounters() {
                         }
 
                         previewContainer.innerHTML = `
-                    <p>Previsualización:</p>
+                    <p>Imagen del contrato:</p>
                     <img src="${event.target.result}" style="max-width: 100%; max-height: 200px; cursor: pointer;" onclick="viewContractImage()">
                 `;
                     };

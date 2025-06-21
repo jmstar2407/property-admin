@@ -161,10 +161,11 @@
      }
  }
 
-.count {
-    color: #60a5ff;
-    font-weight: bold;
-}
+ .count {
+     color: #60a5ff;
+     font-weight: bold;
+ }
+
  /* Estilos para el visor de imágenes */
 
  #contract-image-viewer.zoomed {
@@ -270,6 +271,25 @@
      flex-direction: column;
      align-items: center;
  }
+
+ #add-current-image-container {
+     display: inline-flex;
+     flex-direction: column;
+     width: 100%;
+     align-items: center;
+ }
+
+  #add-current-image-container p {
+color: #d4d5d5;
+    margin-bottom: 10px;
+}
+
+#contraImg {
+margin-bottom: 8px;
+    font-weight: 600;
+    color: #c0c4cb;
+    padding: 0px 15px;
+}
 
 
  /*LOGIN*/
@@ -1634,7 +1654,7 @@
          justify-content: space-between;
          margin-bottom: 10px;
      }
- 
+
      .property-status-tab {
          padding: 10px 7px;
          font-size: 12px;
