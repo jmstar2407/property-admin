@@ -11,9 +11,9 @@
     <link rel="stylesheet" href="./css/style.css" />
 
     <!-- intl-tel-input CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/css/intlTelInput.css" />
     <!-- intl-tel-input JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/intlTelInput.min.js"></script>
 
     <!-- Font Awesome para el icono del ojo -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -587,9 +587,9 @@
                             <p id="imageCountOutput">20MB Máximo</p>
                         </div>
 
-                       
+
                     </div>
-                     <input type="file" id="contract-image" accept="image/*" style="display: none;">
+                    <input type="file" id="contract-image" accept="image/*" style="display: none;">
             </div>
 
             <div class="Modal-Footer">
@@ -620,14 +620,27 @@
 
     <!-- Payment Success Modal -->
     <div id="payment-success-modal" class="modal">
+
+
         <div class="modal-content">
-            <span class="close" onclick="closeModal('payment-success-modal')">&times;</span>
-            <h2>✅ Pago Registrado Exitosamente</h2>
-            <div id="payment-success-content"></div>
-            <button class="btn" onclick="downloadInvoice(document.getElementById('payment-success-id').value)">📄
-                Descargar Factura</button>
-            <button class="btn btn-secondary" onclick="closeModal('payment-success-modal')">Cerrar</button>
-            <input type="hidden" id="payment-success-id">
+
+            <div class="Modal-Title">
+                <span class="close" onclick="closeModal('payment-success-modal')">&times;</span>
+                <h2>✅ Pago Registrado Exitosamente</h2>
+            </div>
+
+
+            <div class="Modal-Body">
+                <div id="payment-success-content"></div>
+
+                <div id="pagCompletoBtn">
+                    <button class="btn btn-secondary" onclick="closeModal('payment-success-modal')">Cerrar</button>
+                                        <button class="btn"
+                        onclick="downloadInvoice(document.getElementById('payment-success-id').value)">📄
+                        Descargar Factura</button>
+                    <input type="hidden" id="payment-success-id">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -715,7 +728,7 @@
                         <label for="edit-payment-type">Tipo de Pago</label>
                         <select id="edit-payment-type" required>
                             <option value="complete">Pago Completo</option>
-                            <option value="partial">Pago Parcial</option>
+                            <option value="partial">Pago Parcial (Por días)</option>
                             <option value="late">Pago con Mora (+ 5%)</option>
                             <option value="custom">Pago Personalizado</option>
                         </select>
@@ -1014,15 +1027,24 @@
 
 
         // Inicializar inputs de teléfono
-        function initializePhoneInputs() {
-            const phoneInputs = document.querySelectorAll('input[type="tel"]');
+function initializePhoneInputs() {
+    const phoneInputs = document.querySelectorAll('input[type="tel"]');
 
-            phoneInputs.forEach(input => {
-                const iti = window.intlTelInput(input, {
-                    initialCountry: "do", // República Dominicana por defecto
-                    separateDialCode: true,
-                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
-                });
+    phoneInputs.forEach(input => {
+        const iti = window.intlTelInput(input, {
+            initialCountry: "do",
+            separateDialCode: true,
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+        });
+
+        // Añadir manejo de eventos táctiles
+        const selectedDialCode = input.closest('.iti').querySelector('.iti__selected-dial-code');
+        if (selectedDialCode) {
+            selectedDialCode.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                this.click(); // Disparar el evento click
+            }, {passive: false});
+        }
 
                 // Formatear mientras se escribe
                 input.addEventListener('input', function () {
@@ -2219,7 +2241,7 @@
         <h2>🏠 ${property.tenantName}</h2>
         <span class="close" onclick="closeModal('property-detail-modal')">&times;</span>
         </div>
-        <div class="Modal-Body">
+        <div class="Modal-Body" style="padding-bottom: 24px;">
         <div class="property-details" style="padding: 5px;">
             <p><strong>📍 Dirección:</strong> ${property.address}</p>
             <p><strong>💰 Renta Mensual:</strong> <span style="color: #4a82cb;font-weight: bold;">$${property.rentAmount.toLocaleString()}</span></p>
@@ -2268,75 +2290,86 @@
     </div>
 
 
-            <div class="form-container" style="margin-top: 10px;">
-                <h3 style="color: white;margin-bottom: 10px;text-align: center;">💳 Registrar Pago 💲</h3>
-                ${isFirstMonth ?
-                        `<p style="color: #e67e22; font-weight: bold;">
-                    ⚠️ Este es el primer mes del contrato. Debe cobrar solo los días proporcionales
-                </p>` :
-                        ''
-                    }
-                <form id="payment-form">
-                    <input type="hidden" id="payment-property-id" value="${property.id}">
-                    <input type="hidden" id="payment-due-date" value="${dateStr}">
-                    
-                    <div class="form-group">
-                        <label for="payment-type">Tipo de Pago</label>
-                        <select id="payment-type" required onchange="updatePaymentAmount(${property.rentAmount}, ${isFirstMonth})">
-                            ${isFirstMonth ?
-                        '<option value="partial" selected>Pago Proporcional (primer mes)</option>' :
-                        '<option value="complete">Pago Completo</option>'
-                    }
-                            ${isFirstMonth ? '' : '<option value="partial">Pago Parcial</option>'}
-                            ${isFirstMonth ? '' : '<option value="late">Pago con Mora (+ 5%)</option>'}
-                            <option value="custom">Pago Personalizado</option>
-                        </select>
-                    </div>
-                    
-                    <div id="partial-days-container" ${isFirstMonth ? '' : 'style="display: none;"'}>
-                        <div class="form-group">
-                            <label for="partial-days">
-                                ${isFirstMonth ?
-                        'Días a pagar (desde inicio de contrato)' :
-                        'Días a pagar'
-                    }
-                            </label>
-                            <input type="number" id="partial-days" min="1" max="30" 
-                                   value="${daysToPay}" ${isFirstMonth ? 'readonly' : ''}>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="payment-amount">Monto a Pagar ($)</label>
-                        <input type="number" id="payment-amount" step="0.01" 
-                               value="${(property.rentAmount / 30 * daysToPay).toFixed(2)}" readonly>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="payment-method">Método de Pago</label>
-                        <select id="payment-method" required>
-                            <option value="Efectivo">Efectivo</option>
-                            <option value="Transferencia">Transferencia</option>
-                            <option value="Deposito">Depósito Bancario</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="payment-notes">Notas (opcional)</label>
-                        <textarea id="payment-notes" rows="2" placeholder="Ej: Referencia bancaria, etc."></textarea>
-                    </div>
-                            </div>
-                             </div>
-                    <div class="Modal-Footer">
-                        <button type="button" class="btn btn-secondary" onclick="closeModal('property-detail-modal')">Cancelar</button>
-                        <button type="submit" class="btn btn-success">✅ Registrar Pago</button>
-                    </form>
-                    </div>
+         <div class="form-container" style="margin-top: 10px;">
+    <h3 style="color: white;margin-bottom: 10px;text-align: center;">💳 Registrar Pago 💲</h3>
+    ${isFirstMonth ? `<p style="color: #e67e22; font-weight: bold;">⚠️ Este es el primer mes del contrato. Debe cobrar solo los días proporcionales</p>` : ''}
+    <form id="payment-form">
+        <input type="hidden" id="payment-property-id" value="${property.id}">
+        <input type="hidden" id="payment-due-date" value="${dateStr}">
+        
+        <div class="form-group">
+            <label for="payment-type">Tipo de Pago:</label>
+            <select id="payment-type" required onchange="updatePaymentAmount(${property.rentAmount}, ${isFirstMonth})">
+                ${isFirstMonth ? '<option value="partial" selected>Pago Proporcional (primer mes)</option>' : '<option value="complete">Pago Completo</option>'}
+                ${isFirstMonth ? '' : '<option value="partial">Pago Parcial (Por días)</option>'}
+                ${isFirstMonth ? '' : '<option value="late">Pago con Mora (+ 5%)</option>'}
+                <option value="custom">Pago Personalizado</option>
+            </select>
+        </div>
+        
+        <div id="partial-days-container" ${isFirstMonth ? '' : 'style="display: none;"'}>
+            <div class="form-group">
+                <label for="partial-days">${isFirstMonth ? 'Días a pagar (desde inicio de contrato)' : 'Días a pagar'}</label>
+                <input type="number" id="partial-days" min="1" max="30" value="${daysToPay}" ${isFirstMonth ? 'readonly' : ''}>
             </div>
+        </div>
+
+                <div class="form-group">
+            <label for="payment-amount">Monto a Pagar (💲):</label>
+            <input type="number" id="payment-amount" step="0.01" value="${(property.rentAmount / 30 * daysToPay).toFixed(2)}" readonly>
+        </div>
+        
+        <div class="form-group">
+                    <label for="payment-commission">Porciento (%) de comisión 💰:</label>
+                    <select id="payment-commission" required onchange="updateCommissionField(this.value, ${isFirstMonth ? (property.rentAmount / 30 * daysToPay).toFixed(2) : property.rentAmount})">
+                        <option value="default">Usar porcentaje predeterminado (<span id="default-percentage-text">Cargando...</span>)</option>
+                        <option value="custom">Porciento Personalizado</option>
+                    </select>
+                </div>
+
+                <div id="custom-commission-container" style="display: none;">
+                    <div class="form-group">
+                        <label for="custom-commission-value">Porciento Personalizado (%)</label>
+                        <input type="number" id="custom-commission-value" min="0" max="100" step="0.1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="commission-amount">Comisión de este pago (💲):</label>
+                    <input type="number" id="commission-amount" readonly>
+                </div>
+
+        
+        <div class="form-group">
+            <label for="payment-method">Método de Pago:</label>
+            <select id="payment-method" required>
+                <option value="Efectivo">Efectivo</option>
+                <option value="Transferencia">Transferencia</option>
+                <option value="Deposito">Depósito Bancario</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="payment-notes">Notas (opcional):</label>
+            <textarea id="payment-notes" rows="2" placeholder="Ej: Referencia bancaria, etc."></textarea>
+        </div>
+        
+        <div class="Modal-Footer" style="padding-top: 10px;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('property-detail-modal')">Cancelar</button>
+            <button type="submit" class="btn btn-success">✅ Registrar Pago</button>
+        </div>
+    </form>
+</div>
         `;
             }
 
             content.innerHTML = html;
+
+                    // Cargar el porcentaje predeterminado de Firebase
+       loadDefaultCommission();
+
+           document.getElementById('payment-amount').addEventListener('input', updateCommission);
+
 
             // Add form listener if payment form exists
             const paymentForm = document.getElementById('payment-form');
@@ -2377,85 +2410,184 @@
 
 
 
+
+        // Nueva función para cargar la comisión predeterminada
+async function loadDefaultCommission() {
+    try {
+        const configDoc = await db.collection('config').doc('configuracion').get();
+        const defaultPercentage = configDoc.exists && configDoc.data().porcientoComision ? 
+                                parseFloat(configDoc.data().porcientoComision) : 10;
+        
+        // Actualizar el texto que muestra el porcentaje
+        document.getElementById('default-percentage-text').textContent = `${defaultPercentage}%`;
+        
+        // Configurar el evento para cuando cambie a custom
+        document.getElementById('payment-commission').addEventListener('change', function() {
+            if (this.value === 'custom') {
+                document.getElementById('custom-commission-container').style.display = 'block';
+                document.getElementById('custom-commission-value').addEventListener('input', updateCommission);
+            } else {
+                document.getElementById('custom-commission-container').style.display = 'none';
+            }
+            updateCommission();
+        });
+        
+        // Actualizar comisión inicial
+        updateCommission();
+    } catch (error) {
+        console.error('Error obteniendo porcentaje de comisión:', error);
+        document.getElementById('default-percentage-text').textContent = '10% (predet.)';
+        updateCommission();
+    }
+}
+
+
+
         // Actualiza la función updatePaymentAmount:
-        function updatePaymentAmount(rentAmount) {
-            const paymentType = document.getElementById('payment-type').value;
-            const amountInput = document.getElementById('payment-amount');
-            const daysContainer = document.getElementById('partial-days-container');
+function updatePaymentAmount(rentAmount) {
+    const paymentType = document.getElementById('payment-type').value;
+    const amountInput = document.getElementById('payment-amount');
+    const daysContainer = document.getElementById('partial-days-container');
 
-            if (paymentType === 'complete') {
-                daysContainer.style.display = 'none';
-                amountInput.value = rentAmount;
-                amountInput.readOnly = true;
-            } else if (paymentType === 'partial') {
-                daysContainer.style.display = 'block';
-                const daysInput = document.getElementById('partial-days');
-                const dailyRate = rentAmount / 30;
-                amountInput.value = (dailyRate * daysInput.value).toFixed(2);
-                amountInput.readOnly = true;
+    if (paymentType === 'complete') {
+        daysContainer.style.display = 'none';
+        amountInput.value = rentAmount;
+        amountInput.readOnly = true;
+    } else if (paymentType === 'partial') {
+        daysContainer.style.display = 'block';
+        const daysInput = document.getElementById('partial-days');
+        const dailyRate = rentAmount / 30;
+        amountInput.value = (dailyRate * daysInput.value).toFixed(2);
+        amountInput.readOnly = true;
 
-                daysInput.addEventListener('input', () => {
-                    amountInput.value = (dailyRate * daysInput.value).toFixed(2);
-                });
-            } else if (paymentType === 'late') {
-                daysContainer.style.display = 'none';
-                const lateFee = rentAmount * 0.05;
-                amountInput.value = (rentAmount + lateFee).toFixed(2);
-                amountInput.readOnly = true;
-            } else if (paymentType === 'custom') {
-                daysContainer.style.display = 'none';
-                amountInput.value = '';
-                amountInput.readOnly = false;
-                amountInput.focus();
-            }
+        daysInput.addEventListener('input', () => {
+            amountInput.value = (dailyRate * daysInput.value).toFixed(2);
+            updateCommission(); // Actualizar comisión cuando cambian los días
+        });
+    } else if (paymentType === 'late') {
+        daysContainer.style.display = 'none';
+        const lateFee = rentAmount * 0.05;
+        amountInput.value = (rentAmount + lateFee).toFixed(2);
+        amountInput.readOnly = true;
+    } else if (paymentType === 'custom') {
+        daysContainer.style.display = 'none';
+        amountInput.value = '';
+        amountInput.readOnly = false;
+        amountInput.focus();
+    }
+    
+    // Actualizar comisión cuando cambia el tipo de pago
+    updateCommission();
+}
+
+// Nueva función para actualizar la comisión
+function updateCommission() {
+    const paymentAmount = parseFloat(document.getElementById('payment-amount').value) || 0;
+    const commissionType = document.getElementById('payment-commission').value;
+    
+    if (commissionType === 'default') {
+        // Obtener el porcentaje predeterminado y calcular
+        const defaultPercentage = parseFloat(document.getElementById('default-percentage-text').textContent) || 10;
+        document.getElementById('commission-amount').value = (paymentAmount * (defaultPercentage / 100)).toFixed(2);
+    } else {
+        // Usar el valor personalizado
+        const customValue = parseFloat(document.getElementById('custom-commission-value').value) || 0;
+        document.getElementById('commission-amount').value = (paymentAmount * (customValue / 100)).toFixed(2);
+    }
+}
+
+
+
+     // Función para actualizar el campo de comisión
+async function updateCommissionField(selectedOption, rentAmount) {
+    const customContainer = document.getElementById('custom-commission-container');
+    const commissionAmountInput = document.getElementById('commission-amount');
+    
+    if (selectedOption === 'custom') {
+        customContainer.style.display = 'block';
+        document.getElementById('custom-commission-value').addEventListener('input', function() {
+            const customValue = parseFloat(this.value) || 0;
+            commissionAmountInput.value = (rentAmount * (customValue / 100)).toFixed(2);
+        });
+    } else {
+        customContainer.style.display = 'none';
+        // Obtener el porcentaje predeterminado de Firebase
+        try {
+            const configDoc = await db.collection('config').doc('configuracion').get();
+            const defaultPercentage = configDoc.exists && configDoc.data().porcientoComision ? 
+                                    parseFloat(configDoc.data().porcientoComision) : 10;
+            
+            commissionAmountInput.value = (rentAmount * (defaultPercentage / 100)).toFixed(2);
+        } catch (error) {
+            console.error('Error obteniendo porcentaje de comisión:', error);
+            commissionAmountInput.value = (rentAmount * 0.10).toFixed(2); // 10% por defecto
         }
+    }
+}
 
+// Modificación en processPayment
+async function processPayment(e) {
+    e.preventDefault();
 
+    const propertyId = document.getElementById('payment-property-id').value;
+    const dateStr = document.getElementById('payment-due-date').value;
 
-        // Payment functions
-        async function processPayment(e) {
-            e.preventDefault();
+    if (!propertyId || !dateStr) return;
 
-            const propertyId = document.getElementById('payment-property-id').value;
-            const dateStr = document.getElementById('payment-due-date').value;
+    const property = properties.find(p => p.id === propertyId);
+    const date = new Date(dateStr);
+    const paymentMethod = document.getElementById('payment-method').value;
+    const notes = document.getElementById('payment-notes').value;
+    const overdueDays = calculateOverdueDays(property, date);
+    const paymentType = document.getElementById('payment-type').value;
+    let amount = parseFloat(document.getElementById('payment-amount').value);
+    
+    // Obtener comisión
+    let commissionPercentage;
+    const commissionAmount = parseFloat(document.getElementById('commission-amount').value);
+    
+    if (document.getElementById('payment-commission').value === 'custom') {
+        commissionPercentage = parseFloat(document.getElementById('custom-commission-value').value);
+    } else {
+        try {
+            const configDoc = await db.collection('config').doc('configuracion').get();
+            commissionPercentage = configDoc.exists && configDoc.data().porcientoComision ? 
+                                parseFloat(configDoc.data().porcientoComision) : 10;
+        } catch (error) {
+            console.error('Error obteniendo porcentaje de comisión:', error);
+            commissionPercentage = 10; // 10% por defecto
+        }
+    }
 
-            if (!propertyId || !dateStr) return;
+    let paymentNotes = notes;
+    if (paymentType === 'partial') {
+        const partialDays = document.getElementById('partial-days').value;
+        paymentNotes = `Pago parcial por ${partialDays} días. ${notes}`;
+    } else if (paymentType === 'late') {
+        paymentNotes = `Pago con mora del 5%. ${notes}`;
+    } else if (paymentType === 'custom') {
+        paymentNotes = `Pago personalizado. ${notes}`;
+    }
 
-            const property = properties.find(p => p.id === propertyId);
-            const date = new Date(dateStr);
-            const paymentMethod = document.getElementById('payment-method').value;
-            const notes = document.getElementById('payment-notes').value;
-            const overdueDays = calculateOverdueDays(property, date);
-            const paymentType = document.getElementById('payment-type').value;
-            let amount = parseFloat(document.getElementById('payment-amount').value);
+    const payment = {
+        propertyId: property.id,
+        tenantName: property.tenantName,
+        address: property.address,
+        amount: amount,
+        rentAmount: property.rentAmount,
+        paymentMethod: paymentMethod,
+        paymentDate: new Date(),
+        dueDate: date,
+        overdueDays: Math.max(0, overdueDays),
+        month: date.getMonth(),
+        year: date.getFullYear(),
+        notes: paymentNotes,
+        paymentType: paymentType,
+        mesPagado: new Date(date.getFullYear(), date.getMonth() - 1, 1).toLocaleDateString('es-ES', { month: 'long' }).replace(/^\w/, c => c.toUpperCase()),
+        commission: commissionAmount,
+        commissionPercentage: commissionPercentage
+    };
 
-            // En la función processPayment, actualiza la parte de paymentNotes:
-            let paymentNotes = notes;
-            if (paymentType === 'partial') {
-                const partialDays = document.getElementById('partial-days').value;
-                paymentNotes = `Pago parcial por ${partialDays} días. ${notes}`;
-            } else if (paymentType === 'late') {
-                paymentNotes = `Pago con mora del 5%. ${notes}`;
-            } else if (paymentType === 'custom') {
-                paymentNotes = `Pago personalizado. ${notes}`;
-            }
-
-            const payment = {
-                propertyId: property.id,
-                tenantName: property.tenantName,
-                address: property.address,
-                amount: amount, // Monto recibido en este pago
-                rentAmount: property.rentAmount, // Monto original de la renta
-                paymentMethod: paymentMethod,
-                paymentDate: new Date(),
-                dueDate: date,
-                overdueDays: Math.max(0, overdueDays),
-                month: date.getMonth(),
-                year: date.getFullYear(),
-                notes: paymentNotes,
-                paymentType: paymentType,
-                mesPagado: new Date(date.getFullYear(), date.getMonth() - 1, 1).toLocaleDateString('es-ES', { month: 'long' }).replace(/^\w/, c => c.toUpperCase())
-            };
 
             try {
                 const docRef = await db.collection('payments').add(payment);
@@ -2483,11 +2615,11 @@
                 // Mostrar modal de éxito
                 document.getElementById('payment-success-id').value = payment.id;
                 document.getElementById('payment-success-content').innerHTML = `
-            <p><strong>Inquilino:</strong> ${payment.tenantName}</p>
-            <p><strong>Tipo de Pago:</strong> ${paymentType === 'complete' ? 'Completo' : paymentType === 'partial' ? 'Parcial' : 'Con Mora'}</p>
-            <p><strong>Monto:</strong> $${payment.amount.toLocaleString()}</p>
-            <p><strong>Método:</strong> ${payment.paymentMethod}</p>
-            <p><strong>Fecha de pago:</strong> ${payment.paymentDate.toLocaleDateString('es-ES')}</p>
+            <p><strong>👥 Inquilino:</strong> ${payment.tenantName}</p>
+            <p><strong>📠 Tipo de Pago:</strong> ${paymentType === 'complete' ? 'Completo' : paymentType === 'partial' ? 'Parcial' : 'Con Mora'}</p>
+            <p><strong>💲 Monto:</strong> $${payment.amount.toLocaleString()}</p>
+            <p><strong>💳 Método:</strong> ${payment.paymentMethod}</p>
+            <p><strong>📆 Fecha de pago:</strong> ${payment.paymentDate.toLocaleDateString('es-ES')}</p>
         `;
 
                 closeModal('property-detail-modal');
@@ -2684,70 +2816,59 @@
             updateAccountingView();
         }
 
-        async function updateAccountingView() {
-            const month = currentAccountingDate.getMonth();
-            const year = currentAccountingDate.getFullYear();
+     async function updateAccountingView() {
+    const month = currentAccountingDate.getMonth();
+    const year = currentAccountingDate.getFullYear();
 
-            const monthYear = currentAccountingDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
-            document.getElementById('accounting-month-title').textContent =
-                monthYear.charAt(0).toUpperCase() + monthYear.slice(1);
+    const monthYear = currentAccountingDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+    document.getElementById('accounting-month-title').textContent =
+        monthYear.charAt(0).toUpperCase() + monthYear.slice(1);
 
-            // Obtener el porcentaje de comisión desde Firebase
-            let commissionPercentage = 10; // Valor por defecto
-            try {
-                const configDoc = await db.collection('config').doc('configuracion').get();
-                if (configDoc.exists && configDoc.data().porcientoComision) {
-                    commissionPercentage = parseFloat(configDoc.data().porcientoComision);
-                }
-            } catch (error) {
-                console.error('Error obteniendo porcentaje de comisión:', error);
-            }
+    // Calculate totals
+    const monthPayments = payments.filter(p =>
+        p.paymentDate &&
+        p.paymentDate.getMonth() === month &&
+        p.paymentDate.getFullYear() === year
+    );
 
-            // Calculate totals
-            const monthPayments = payments.filter(p =>
-                p.paymentDate &&
-                p.paymentDate.getMonth() === month &&
-                p.paymentDate.getFullYear() === year
-            );
+    const totalCollected = monthPayments.reduce((sum, p) => sum + p.amount, 0);
+    const totalCommission = monthPayments.reduce((sum, p) => sum + (p.commission || 0), 0);
 
-            const totalCollected = monthPayments.reduce((sum, p) => sum + p.amount, 0);
-            const commission = totalCollected * (commissionPercentage / 100);
+    const monthExpenses = expenses.filter(e =>
+        e.date &&
+        e.date.getMonth() === month &&
+        e.date.getFullYear() === year
+    );
 
-            const monthExpenses = expenses.filter(e =>
-                e.date &&
-                e.date.getMonth() === month &&
-                e.date.getFullYear() === year
-            );
+    const monthIncomes = incomes.filter(i =>
+        i.date &&
+        i.date.getMonth() === month &&
+        i.date.getFullYear() === year
+    );
 
-            const monthIncomes = incomes.filter(i =>
-                i.date &&
-                i.date.getMonth() === month &&
-                i.date.getFullYear() === year
-            );
+    const totalExpenses = monthExpenses.reduce((sum, e) => sum + e.amount, 0);
+    const totalIncomes = monthIncomes.reduce((sum, i) => sum + i.amount, 0);
+    const netProfit = totalCommission + totalIncomes - totalExpenses;
 
-            const totalExpenses = monthExpenses.reduce((sum, e) => sum + e.amount, 0);
-            const totalIncomes = monthIncomes.reduce((sum, i) => sum + i.amount, 0);
-            const netProfit = commission + totalIncomes - totalExpenses;
-
-            // Update summary cards
-            const summaryContainer = document.getElementById('accounting-summary');
-            summaryContainer.innerHTML = `
+    // Update summary cards
+    const summaryContainer = document.getElementById('accounting-summary');
+    summaryContainer.innerHTML = `
         <div class="summary-card">
             <h3>Total Cobrado</h3>
             <div class="amount">${totalCollected.toLocaleString()}</div>
         </div>
         <div class="summary-card" style="background: linear-gradient(135deg, #2585a9 0%, #00bd4c 100%);">
-            <h3>Comisión (${commissionPercentage}%)</h3>
-            <div class="amount">${commission.toLocaleString()}</div>
+            <h3>Comisión Total</h3>
+            <div class="amount">${totalCommission.toLocaleString()}</div>
         </div>
         <div class="summary-card" style="background: #ffffff00;box-shadow: 0 10px 25px rgb(102 126 234 / 0%);padding: 0px;display: inline-flex;gap: 4px;flex-direction: column;">
-             <div id="ingr-gas" style="background: linear-gradient(135deg, #2585a9 0%, #00bd4c 100%);">
+            <div id="ingr-gas" style="background: linear-gradient(135deg, #2585a9 0%, #00bd4c 100%);">
                 <h3>Ingresos Extra</h3>
                 <div class="amount">${totalIncomes.toLocaleString()}</div>
             </div>
             <div id="ingr-gas" style="background: linear-gradient(135deg, #7b1111, #c71212, #771414);">
                 <h3>Gastos del Mes</h3>
-               <div class="amount">${totalExpenses.toLocaleString()}</div>
+                <div class="amount">${totalExpenses.toLocaleString()}</div>
             </div>
         </div>
         <div class="summary-card" style="background: linear-gradient(135deg, #46e0ef 0%, #00398f 100%);">
@@ -2756,9 +2877,9 @@
         </div>
     `;
 
-            // Update transactions list
-            displayTransactions(monthExpenses, monthIncomes);
-        }
+    // Update transactions list
+    displayTransactions(monthExpenses, monthIncomes);
+}
 
         function displayTransactions(expenses, incomes) {
             const container = document.getElementById('expenses-list');
@@ -3640,4 +3761,4 @@
 
 </html>
 
-<!-- 4.4 -->
+<!-- 1 -->
