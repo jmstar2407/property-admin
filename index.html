@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Bieneraigar | Sistema de Administración</title>
     <link rel="icon" href="./img/logo_1.png" type="image/png">
 
@@ -515,15 +514,6 @@
                             <label for="tenant-phone">📞 Teléfono del Inquilino:</label>
                             <input type="tel" id="tenant-phone">
                         </div>
-                        <select id="country-code-select" style="display:none;">
-  <option value="+1">🇺🇸 EE.UU. (+1)</option>
-  <option value="+1">🇩🇴 R.D. (+1)</option>
-  <option value="+34">🇪🇸 España (+34)</option>
-  <option value="+31">🇳🇱 Holanda (+31)</option>
-  <!-- puedes agregar más países -->
-</select>
-<input type="tel" id="mobile-phone-input">
-
                         <!-- Para el inquilino -->
                         <div class="form-group">
                             <label for="tenant-id-type">🪪 Tipo de Identificación:</label>
@@ -645,7 +635,7 @@
 
                 <div id="pagCompletoBtn">
                     <button class="btn btn-secondary" onclick="closeModal('payment-success-modal')">Cerrar</button>
-                    <button class="btn"
+                                        <button class="btn"
                         onclick="downloadInvoice(document.getElementById('payment-success-id').value)">📄
                         Descargar Factura</button>
                     <input type="hidden" id="payment-success-id">
@@ -1037,73 +1027,46 @@
 
 
         // Inicializar inputs de teléfono
-        function initializePhoneInputs() {
-            const phoneInputs = document.querySelectorAll('input[type="tel"]');
+       function initializePhoneInputs() {
+    const phoneInputs = document.querySelectorAll('input[type="tel"]');
 
-            phoneInputs.forEach(input => {
-                const iti = window.intlTelInput(input, {
-                    initialCountry: "do", // República Dominicana por defecto
-                    preferredCountries: ["do", "nl", "us", "es"], // Añadir "nl" (Países Bajos)
-                    separateDialCode: true,
-                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
-                });
+    phoneInputs.forEach(input => {
+        const iti = window.intlTelInput(input, {
+            initialCountry: "do", // República Dominicana por defecto
+            preferredCountries: ["do", "nl", "us", "es"], // Añadir "nl" (Países Bajos)
+            separateDialCode: true,
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+        });
 
-                // Formateo condicional basado en el país seleccionado
-                input.addEventListener('input', function () {
-                    const countryCode = iti.getSelectedCountryData().iso2;
-                    let value = this.value.replace(/\D/g, '');
-
-                    if (countryCode === 'nl') {
-                        // Formato holandés: 6 12345678 (sin guiones)
-                        if (value.length > 0) {
-                            let formatted = value;
-                            if (value.length > 1) {
-                                formatted = `${value.slice(0, 1)} ${value.slice(1)}`;
-                            }
-                            if (value.length > 2) {
-                                formatted = `${value.slice(0, 1)} ${value.slice(1, 4)} ${value.slice(4)}`;
-                            }
-                            this.value = formatted;
-                        }
-                    } else {
-                        // Formato con guiones para otros países (000-000-0000)
-                        if (value.length > 3 && value.length <= 6) {
-                            this.value = `${value.slice(0, 3)}-${value.slice(3)}`;
-                        } else if (value.length > 6) {
-                            this.value = `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(6, 10)}`;
-                        }
+        // Formateo condicional basado en el país seleccionado
+        input.addEventListener('input', function() {
+            const countryCode = iti.getSelectedCountryData().iso2;
+            let value = this.value.replace(/\D/g, '');
+            
+            if (countryCode === 'nl') {
+                // Formato holandés: 6 12345678 (sin guiones)
+                if (value.length > 0) {
+                    let formatted = value;
+                    if (value.length > 1) {
+                        formatted = `${value.slice(0, 1)} ${value.slice(1)}`;
                     }
-                });
+                    if (value.length > 2) {
+                        formatted = `${value.slice(0, 1)} ${value.slice(1, 4)} ${value.slice(4)}`;
+                    }
+                    this.value = formatted;
+                }
+            } else {
+                // Formato con guiones para otros países (000-000-0000)
+                if (value.length > 3 && value.length <= 6) {
+                    this.value = `${value.slice(0, 3)}-${value.slice(3)}`;
+                } else if (value.length > 6) {
+                    this.value = `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(6, 10)}`;
+                }
+            }
+        });
 
-                input.iti = iti;
-            });
-        }
-
-
-        function isMobileDevice() {
-  return /Mobi|Android/i.test(navigator.userAgent);
-}
-
-if (isMobileDevice()) {
-  document.getElementById('country-code-select').style.display = 'inline-block';
-
-  // Cuando se seleccione un país, anteponemos el código al input
-  document.getElementById('country-code-select').addEventListener('change', function () {
-    const code = this.value;
-    const phoneInput = document.getElementById('mobile-phone-input');
-    if (!phoneInput.value.startsWith(code)) {
-      phoneInput.value = code + ' ';
-    }
-  });
-} else {
-  // Si no es móvil, usa intl-tel-input normalmente
-  const input = document.getElementById('mobile-phone-input');
-  window.intlTelInput(input, {
-    initialCountry: "do",
-    preferredCountries: ["do", "nl", "us", "es"],
-    separateDialCode: true,
-    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
-  });
+        input.iti = iti;
+    });
 }
 
 
@@ -1359,13 +1322,13 @@ if (isMobileDevice()) {
             }
 
             // Obtener números de teléfono formateados
-            // En las funciones addProperty y updateProperty
-            const ownerPhone = document.getElementById('owner-phone').iti.getNumber();
-            const tenantPhone = document.getElementById('tenant-phone')?.iti?.getNumber() || '';
-            const guarantorPhone = document.getElementById('guarantor-phone')?.iti?.getNumber() || '';
+// En las funciones addProperty y updateProperty
+const ownerPhone = document.getElementById('owner-phone').iti.getNumber();
+const tenantPhone = document.getElementById('tenant-phone')?.iti?.getNumber() || '';
+const guarantorPhone = document.getElementById('guarantor-phone')?.iti?.getNumber() || '';
 
-            // Limpiar formato antes de guardar
-            newProperty.ownerPhone = ownerPhone.replace(/\s/g, ''); // Elimina espacios para Holanda
+// Limpiar formato antes de guardar
+newProperty.ownerPhone = ownerPhone.replace(/\s/g, ''); // Elimina espacios para Holanda
 
             const newProperty = {
                 ownerName: document.getElementById('owner-name').value,
@@ -1778,15 +1741,15 @@ if (isMobileDevice()) {
             }
 
             // Obtener números de teléfono formateados
-            // En la función updateProperty (dentro del objeto updatedProperty)
-            const ownerPhone = document.getElementById('edit-owner-phone').iti.getNumber();
-            const tenantPhone = document.getElementById('edit-tenant-phone')?.iti?.getNumber() || '';
-            const guarantorPhone = document.getElementById('edit-guarantor-phone')?.iti?.getNumber() || '';
+// En la función updateProperty (dentro del objeto updatedProperty)
+const ownerPhone = document.getElementById('edit-owner-phone').iti.getNumber();
+const tenantPhone = document.getElementById('edit-tenant-phone')?.iti?.getNumber() || '';
+const guarantorPhone = document.getElementById('edit-guarantor-phone')?.iti?.getNumber() || '';
 
-            // Limpiar formato antes de guardar
-            updatedProperty.ownerPhone = ownerPhone.replace(/\s/g, '').replace(/-/g, ''); // Elimina espacios y guiones
-            updatedProperty.tenantPhone = tenantPhone.replace(/\s/g, '').replace(/-/g, '');
-            updatedProperty.guarantorPhone = guarantorPhone.replace(/\s/g, '').replace(/-/g, '');
+// Limpiar formato antes de guardar
+updatedProperty.ownerPhone = ownerPhone.replace(/\s/g, '').replace(/-/g, ''); // Elimina espacios y guiones
+updatedProperty.tenantPhone = tenantPhone.replace(/\s/g, '').replace(/-/g, '');
+updatedProperty.guarantorPhone = guarantorPhone.replace(/\s/g, '').replace(/-/g, '');
 
             const updatedProperty = {
                 ownerName: document.getElementById('edit-owner-name').value,
@@ -2420,10 +2383,10 @@ if (isMobileDevice()) {
 
             content.innerHTML = html;
 
-            // Cargar el porcentaje predeterminado de Firebase
-            loadDefaultCommission();
+                    // Cargar el porcentaje predeterminado de Firebase
+       loadDefaultCommission();
 
-            document.getElementById('payment-amount').addEventListener('input', updateCommission);
+           document.getElementById('payment-amount').addEventListener('input', updateCommission);
 
 
             // Add form listener if payment form exists
@@ -2467,181 +2430,181 @@ if (isMobileDevice()) {
 
 
         // Nueva función para cargar la comisión predeterminada
-        async function loadDefaultCommission() {
-            try {
-                const configDoc = await db.collection('config').doc('configuracion').get();
-                const defaultPercentage = configDoc.exists && configDoc.data().porcientoComision ?
-                    parseFloat(configDoc.data().porcientoComision) : 10;
-
-                // Actualizar el texto que muestra el porcentaje
-                document.getElementById('default-percentage-text').textContent = `${defaultPercentage}%`;
-
-                // Configurar el evento para cuando cambie a custom
-                document.getElementById('payment-commission').addEventListener('change', function () {
-                    if (this.value === 'custom') {
-                        document.getElementById('custom-commission-container').style.display = 'block';
-                        document.getElementById('custom-commission-value').addEventListener('input', updateCommission);
-                    } else {
-                        document.getElementById('custom-commission-container').style.display = 'none';
-                    }
-                    updateCommission();
-                });
-
-                // Actualizar comisión inicial
-                updateCommission();
-            } catch (error) {
-                console.error('Error obteniendo porcentaje de comisión:', error);
-                document.getElementById('default-percentage-text').textContent = '10% (predet.)';
-                updateCommission();
+async function loadDefaultCommission() {
+    try {
+        const configDoc = await db.collection('config').doc('configuracion').get();
+        const defaultPercentage = configDoc.exists && configDoc.data().porcientoComision ? 
+                                parseFloat(configDoc.data().porcientoComision) : 10;
+        
+        // Actualizar el texto que muestra el porcentaje
+        document.getElementById('default-percentage-text').textContent = `${defaultPercentage}%`;
+        
+        // Configurar el evento para cuando cambie a custom
+        document.getElementById('payment-commission').addEventListener('change', function() {
+            if (this.value === 'custom') {
+                document.getElementById('custom-commission-container').style.display = 'block';
+                document.getElementById('custom-commission-value').addEventListener('input', updateCommission);
+            } else {
+                document.getElementById('custom-commission-container').style.display = 'none';
             }
-        }
+            updateCommission();
+        });
+        
+        // Actualizar comisión inicial
+        updateCommission();
+    } catch (error) {
+        console.error('Error obteniendo porcentaje de comisión:', error);
+        document.getElementById('default-percentage-text').textContent = '10% (predet.)';
+        updateCommission();
+    }
+}
 
 
 
         // Actualiza la función updatePaymentAmount:
-        function updatePaymentAmount(rentAmount) {
-            const paymentType = document.getElementById('payment-type').value;
-            const amountInput = document.getElementById('payment-amount');
-            const daysContainer = document.getElementById('partial-days-container');
+function updatePaymentAmount(rentAmount) {
+    const paymentType = document.getElementById('payment-type').value;
+    const amountInput = document.getElementById('payment-amount');
+    const daysContainer = document.getElementById('partial-days-container');
 
-            if (paymentType === 'complete') {
-                daysContainer.style.display = 'none';
-                amountInput.value = rentAmount;
-                amountInput.readOnly = true;
-            } else if (paymentType === 'partial') {
-                daysContainer.style.display = 'block';
-                const daysInput = document.getElementById('partial-days');
-                const dailyRate = rentAmount / 30;
-                amountInput.value = (dailyRate * daysInput.value).toFixed(2);
-                amountInput.readOnly = true;
+    if (paymentType === 'complete') {
+        daysContainer.style.display = 'none';
+        amountInput.value = rentAmount;
+        amountInput.readOnly = true;
+    } else if (paymentType === 'partial') {
+        daysContainer.style.display = 'block';
+        const daysInput = document.getElementById('partial-days');
+        const dailyRate = rentAmount / 30;
+        amountInput.value = (dailyRate * daysInput.value).toFixed(2);
+        amountInput.readOnly = true;
 
-                daysInput.addEventListener('input', () => {
-                    amountInput.value = (dailyRate * daysInput.value).toFixed(2);
-                    updateCommission(); // Actualizar comisión cuando cambian los días
-                });
-            } else if (paymentType === 'late') {
-                daysContainer.style.display = 'none';
-                const lateFee = rentAmount * 0.05;
-                amountInput.value = (rentAmount + lateFee).toFixed(2);
-                amountInput.readOnly = true;
-            } else if (paymentType === 'custom') {
-                daysContainer.style.display = 'none';
-                amountInput.value = '';
-                amountInput.readOnly = false;
-                amountInput.focus();
-            }
+        daysInput.addEventListener('input', () => {
+            amountInput.value = (dailyRate * daysInput.value).toFixed(2);
+            updateCommission(); // Actualizar comisión cuando cambian los días
+        });
+    } else if (paymentType === 'late') {
+        daysContainer.style.display = 'none';
+        const lateFee = rentAmount * 0.05;
+        amountInput.value = (rentAmount + lateFee).toFixed(2);
+        amountInput.readOnly = true;
+    } else if (paymentType === 'custom') {
+        daysContainer.style.display = 'none';
+        amountInput.value = '';
+        amountInput.readOnly = false;
+        amountInput.focus();
+    }
+    
+    // Actualizar comisión cuando cambia el tipo de pago
+    updateCommission();
+}
 
-            // Actualizar comisión cuando cambia el tipo de pago
-            updateCommission();
+// Nueva función para actualizar la comisión
+function updateCommission() {
+    const paymentAmount = parseFloat(document.getElementById('payment-amount').value) || 0;
+    const commissionType = document.getElementById('payment-commission').value;
+    
+    if (commissionType === 'default') {
+        // Obtener el porcentaje predeterminado y calcular
+        const defaultPercentage = parseFloat(document.getElementById('default-percentage-text').textContent) || 10;
+        document.getElementById('commission-amount').value = (paymentAmount * (defaultPercentage / 100)).toFixed(2);
+    } else {
+        // Usar el valor personalizado
+        const customValue = parseFloat(document.getElementById('custom-commission-value').value) || 0;
+        document.getElementById('commission-amount').value = (paymentAmount * (customValue / 100)).toFixed(2);
+    }
+}
+
+
+
+     // Función para actualizar el campo de comisión
+async function updateCommissionField(selectedOption, rentAmount) {
+    const customContainer = document.getElementById('custom-commission-container');
+    const commissionAmountInput = document.getElementById('commission-amount');
+    
+    if (selectedOption === 'custom') {
+        customContainer.style.display = 'block';
+        document.getElementById('custom-commission-value').addEventListener('input', function() {
+            const customValue = parseFloat(this.value) || 0;
+            commissionAmountInput.value = (rentAmount * (customValue / 100)).toFixed(2);
+        });
+    } else {
+        customContainer.style.display = 'none';
+        // Obtener el porcentaje predeterminado de Firebase
+        try {
+            const configDoc = await db.collection('config').doc('configuracion').get();
+            const defaultPercentage = configDoc.exists && configDoc.data().porcientoComision ? 
+                                    parseFloat(configDoc.data().porcientoComision) : 10;
+            
+            commissionAmountInput.value = (rentAmount * (defaultPercentage / 100)).toFixed(2);
+        } catch (error) {
+            console.error('Error obteniendo porcentaje de comisión:', error);
+            commissionAmountInput.value = (rentAmount * 0.10).toFixed(2); // 10% por defecto
         }
+    }
+}
 
-        // Nueva función para actualizar la comisión
-        function updateCommission() {
-            const paymentAmount = parseFloat(document.getElementById('payment-amount').value) || 0;
-            const commissionType = document.getElementById('payment-commission').value;
+// Modificación en processPayment
+async function processPayment(e) {
+    e.preventDefault();
 
-            if (commissionType === 'default') {
-                // Obtener el porcentaje predeterminado y calcular
-                const defaultPercentage = parseFloat(document.getElementById('default-percentage-text').textContent) || 10;
-                document.getElementById('commission-amount').value = (paymentAmount * (defaultPercentage / 100)).toFixed(2);
-            } else {
-                // Usar el valor personalizado
-                const customValue = parseFloat(document.getElementById('custom-commission-value').value) || 0;
-                document.getElementById('commission-amount').value = (paymentAmount * (customValue / 100)).toFixed(2);
-            }
+    const propertyId = document.getElementById('payment-property-id').value;
+    const dateStr = document.getElementById('payment-due-date').value;
+
+    if (!propertyId || !dateStr) return;
+
+    const property = properties.find(p => p.id === propertyId);
+    const date = new Date(dateStr);
+    const paymentMethod = document.getElementById('payment-method').value;
+    const notes = document.getElementById('payment-notes').value;
+    const overdueDays = calculateOverdueDays(property, date);
+    const paymentType = document.getElementById('payment-type').value;
+    let amount = parseFloat(document.getElementById('payment-amount').value);
+    
+    // Obtener comisión
+    let commissionPercentage;
+    const commissionAmount = parseFloat(document.getElementById('commission-amount').value);
+    
+    if (document.getElementById('payment-commission').value === 'custom') {
+        commissionPercentage = parseFloat(document.getElementById('custom-commission-value').value);
+    } else {
+        try {
+            const configDoc = await db.collection('config').doc('configuracion').get();
+            commissionPercentage = configDoc.exists && configDoc.data().porcientoComision ? 
+                                parseFloat(configDoc.data().porcientoComision) : 10;
+        } catch (error) {
+            console.error('Error obteniendo porcentaje de comisión:', error);
+            commissionPercentage = 10; // 10% por defecto
         }
+    }
 
+    let paymentNotes = notes;
+    if (paymentType === 'partial') {
+        const partialDays = document.getElementById('partial-days').value;
+        paymentNotes = `Pago parcial por ${partialDays} días. ${notes}`;
+    } else if (paymentType === 'late') {
+        paymentNotes = `Pago con mora del 5%. ${notes}`;
+    } else if (paymentType === 'custom') {
+        paymentNotes = `Pago personalizado. ${notes}`;
+    }
 
-
-        // Función para actualizar el campo de comisión
-        async function updateCommissionField(selectedOption, rentAmount) {
-            const customContainer = document.getElementById('custom-commission-container');
-            const commissionAmountInput = document.getElementById('commission-amount');
-
-            if (selectedOption === 'custom') {
-                customContainer.style.display = 'block';
-                document.getElementById('custom-commission-value').addEventListener('input', function () {
-                    const customValue = parseFloat(this.value) || 0;
-                    commissionAmountInput.value = (rentAmount * (customValue / 100)).toFixed(2);
-                });
-            } else {
-                customContainer.style.display = 'none';
-                // Obtener el porcentaje predeterminado de Firebase
-                try {
-                    const configDoc = await db.collection('config').doc('configuracion').get();
-                    const defaultPercentage = configDoc.exists && configDoc.data().porcientoComision ?
-                        parseFloat(configDoc.data().porcientoComision) : 10;
-
-                    commissionAmountInput.value = (rentAmount * (defaultPercentage / 100)).toFixed(2);
-                } catch (error) {
-                    console.error('Error obteniendo porcentaje de comisión:', error);
-                    commissionAmountInput.value = (rentAmount * 0.10).toFixed(2); // 10% por defecto
-                }
-            }
-        }
-
-        // Modificación en processPayment
-        async function processPayment(e) {
-            e.preventDefault();
-
-            const propertyId = document.getElementById('payment-property-id').value;
-            const dateStr = document.getElementById('payment-due-date').value;
-
-            if (!propertyId || !dateStr) return;
-
-            const property = properties.find(p => p.id === propertyId);
-            const date = new Date(dateStr);
-            const paymentMethod = document.getElementById('payment-method').value;
-            const notes = document.getElementById('payment-notes').value;
-            const overdueDays = calculateOverdueDays(property, date);
-            const paymentType = document.getElementById('payment-type').value;
-            let amount = parseFloat(document.getElementById('payment-amount').value);
-
-            // Obtener comisión
-            let commissionPercentage;
-            const commissionAmount = parseFloat(document.getElementById('commission-amount').value);
-
-            if (document.getElementById('payment-commission').value === 'custom') {
-                commissionPercentage = parseFloat(document.getElementById('custom-commission-value').value);
-            } else {
-                try {
-                    const configDoc = await db.collection('config').doc('configuracion').get();
-                    commissionPercentage = configDoc.exists && configDoc.data().porcientoComision ?
-                        parseFloat(configDoc.data().porcientoComision) : 10;
-                } catch (error) {
-                    console.error('Error obteniendo porcentaje de comisión:', error);
-                    commissionPercentage = 10; // 10% por defecto
-                }
-            }
-
-            let paymentNotes = notes;
-            if (paymentType === 'partial') {
-                const partialDays = document.getElementById('partial-days').value;
-                paymentNotes = `Pago parcial por ${partialDays} días. ${notes}`;
-            } else if (paymentType === 'late') {
-                paymentNotes = `Pago con mora del 5%. ${notes}`;
-            } else if (paymentType === 'custom') {
-                paymentNotes = `Pago personalizado. ${notes}`;
-            }
-
-            const payment = {
-                propertyId: property.id,
-                tenantName: property.tenantName,
-                address: property.address,
-                amount: amount,
-                rentAmount: property.rentAmount,
-                paymentMethod: paymentMethod,
-                paymentDate: new Date(),
-                dueDate: date,
-                overdueDays: Math.max(0, overdueDays),
-                month: date.getMonth(),
-                year: date.getFullYear(),
-                notes: paymentNotes,
-                paymentType: paymentType,
-                mesPagado: new Date(date.getFullYear(), date.getMonth() - 1, 1).toLocaleDateString('es-ES', { month: 'long' }).replace(/^\w/, c => c.toUpperCase()),
-                commission: commissionAmount,
-                commissionPercentage: commissionPercentage
-            };
+    const payment = {
+        propertyId: property.id,
+        tenantName: property.tenantName,
+        address: property.address,
+        amount: amount,
+        rentAmount: property.rentAmount,
+        paymentMethod: paymentMethod,
+        paymentDate: new Date(),
+        dueDate: date,
+        overdueDays: Math.max(0, overdueDays),
+        month: date.getMonth(),
+        year: date.getFullYear(),
+        notes: paymentNotes,
+        paymentType: paymentType,
+        mesPagado: new Date(date.getFullYear(), date.getMonth() - 1, 1).toLocaleDateString('es-ES', { month: 'long' }).replace(/^\w/, c => c.toUpperCase()),
+        commission: commissionAmount,
+        commissionPercentage: commissionPercentage
+    };
 
 
             try {
@@ -2871,43 +2834,43 @@ if (isMobileDevice()) {
             updateAccountingView();
         }
 
-        async function updateAccountingView() {
-            const month = currentAccountingDate.getMonth();
-            const year = currentAccountingDate.getFullYear();
+     async function updateAccountingView() {
+    const month = currentAccountingDate.getMonth();
+    const year = currentAccountingDate.getFullYear();
 
-            const monthYear = currentAccountingDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
-            document.getElementById('accounting-month-title').textContent =
-                monthYear.charAt(0).toUpperCase() + monthYear.slice(1);
+    const monthYear = currentAccountingDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+    document.getElementById('accounting-month-title').textContent =
+        monthYear.charAt(0).toUpperCase() + monthYear.slice(1);
 
-            // Calculate totals
-            const monthPayments = payments.filter(p =>
-                p.paymentDate &&
-                p.paymentDate.getMonth() === month &&
-                p.paymentDate.getFullYear() === year
-            );
+    // Calculate totals
+    const monthPayments = payments.filter(p =>
+        p.paymentDate &&
+        p.paymentDate.getMonth() === month &&
+        p.paymentDate.getFullYear() === year
+    );
 
-            const totalCollected = monthPayments.reduce((sum, p) => sum + p.amount, 0);
-            const totalCommission = monthPayments.reduce((sum, p) => sum + (p.commission || 0), 0);
+    const totalCollected = monthPayments.reduce((sum, p) => sum + p.amount, 0);
+    const totalCommission = monthPayments.reduce((sum, p) => sum + (p.commission || 0), 0);
 
-            const monthExpenses = expenses.filter(e =>
-                e.date &&
-                e.date.getMonth() === month &&
-                e.date.getFullYear() === year
-            );
+    const monthExpenses = expenses.filter(e =>
+        e.date &&
+        e.date.getMonth() === month &&
+        e.date.getFullYear() === year
+    );
 
-            const monthIncomes = incomes.filter(i =>
-                i.date &&
-                i.date.getMonth() === month &&
-                i.date.getFullYear() === year
-            );
+    const monthIncomes = incomes.filter(i =>
+        i.date &&
+        i.date.getMonth() === month &&
+        i.date.getFullYear() === year
+    );
 
-            const totalExpenses = monthExpenses.reduce((sum, e) => sum + e.amount, 0);
-            const totalIncomes = monthIncomes.reduce((sum, i) => sum + i.amount, 0);
-            const netProfit = totalCommission + totalIncomes - totalExpenses;
+    const totalExpenses = monthExpenses.reduce((sum, e) => sum + e.amount, 0);
+    const totalIncomes = monthIncomes.reduce((sum, i) => sum + i.amount, 0);
+    const netProfit = totalCommission + totalIncomes - totalExpenses;
 
-            // Update summary cards
-            const summaryContainer = document.getElementById('accounting-summary');
-            summaryContainer.innerHTML = `
+    // Update summary cards
+    const summaryContainer = document.getElementById('accounting-summary');
+    summaryContainer.innerHTML = `
         <div class="summary-card">
             <h3>Total Cobrado</h3>
             <div class="amount">${totalCollected.toLocaleString()}</div>
@@ -2932,9 +2895,9 @@ if (isMobileDevice()) {
         </div>
     `;
 
-            // Update transactions list
-            displayTransactions(monthExpenses, monthIncomes);
-        }
+    // Update transactions list
+    displayTransactions(monthExpenses, monthIncomes);
+}
 
         function displayTransactions(expenses, incomes) {
             const container = document.getElementById('expenses-list');
@@ -3816,4 +3779,4 @@ if (isMobileDevice()) {
 
 </html>
 
-<!-- 1 -->
+<!-- 2 -->
