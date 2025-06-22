@@ -1027,39 +1027,44 @@
 
 
         // Inicializar inputs de teléfono
-function initializePhoneInputs() {
-    const phoneInputs = document.querySelectorAll('input[type="tel"]');
-
+function initializePhoneInputs(inputElement = null) {
+    const phoneInputs = inputElement ? [inputElement] : document.querySelectorAll('input[type="tel"]');
+    
     phoneInputs.forEach(input => {
+        // Si ya está inicializado, destruirlo primero
+        if (input.iti) {
+            input.iti.destroy();
+        }
+        
         const iti = window.intlTelInput(input, {
             initialCountry: "do",
             separateDialCode: true,
             utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
         });
 
-        // Añadir manejo de eventos táctiles
-        const selectedDialCode = input.closest('.iti').querySelector('.iti__selected-dial-code');
+        // Manejo de eventos táctiles
+        const selectedDialCode = input.closest('.iti')?.querySelector('.iti__selected-dial-code');
         if (selectedDialCode) {
             selectedDialCode.addEventListener('touchstart', function(e) {
                 e.preventDefault();
-                this.click(); // Disparar el evento click
+                this.click();
             }, {passive: false});
         }
 
-                // Formatear mientras se escribe
-                input.addEventListener('input', function () {
-                    const value = this.value.replace(/\D/g, '');
-                    if (value.length > 3 && value.length <= 6) {
-                        this.value = `${value.slice(0, 3)}-${value.slice(3)}`;
-                    } else if (value.length > 6) {
-                        this.value = `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(6, 10)}`;
-                    }
-                });
+        // Formatear mientras se escribe
+        input.addEventListener('input', function() {
+            const value = this.value.replace(/\D/g, '');
+            if (value.length > 3 && value.length <= 6) {
+                this.value = `${value.slice(0, 3)}-${value.slice(3)}`;
+            } else if (value.length > 6) {
+                this.value = `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(6, 10)}`;
+            }
+        });
 
-                // Guardar referencia al plugin para usarlo después
-                input.iti = iti;
-            });
-        }
+        // Guardar referencia al plugin
+        input.iti = iti;
+    });
+}
 
 
 
