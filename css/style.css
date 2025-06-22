@@ -1879,8 +1879,15 @@
 
 
 
-.iti__dropdown {
+/* Asegurar que el dropdown sea visible */
+.iti__country-list {
     z-index: 9999 !important;
+}
+
+/* Estilo para el input */
+.intl-tel-input {
+    width: 100%;
+    margin-bottom: 15px;
 }
 
  .contract-images-container {
