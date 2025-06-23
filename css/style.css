@@ -1741,9 +1741,7 @@ box-shadow: 0 0 0 2px rgb(23 107 203);
      }
 
       .iti__country-list {
-     width: 100px !important;
-     max-width: 100px !important;
-     margin: 250px 0px !important;
+     width: 300px !important;
  }
 
  }
