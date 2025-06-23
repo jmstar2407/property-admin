@@ -3756,6 +3756,57 @@ async function processPayment(e) {
 
         // Asignar evento al botón de configuración
         document.getElementById('setting-button').addEventListener('click', openConfigModal);
+
+
+
+
+
+
+
+        // Asegurar que el dropdown de países aparezca por encima de todo en móviles
+function adjustCountryListPosition() {
+    const countryList = document.querySelector('.iti__country-list');
+    if (countryList) {
+        if (window.innerWidth <= 560) {
+            countryList.style.zIndex = '999999';
+            countryList.style.position = 'fixed';
+            countryList.style.top = '50%';
+            countryList.style.left = '50%';
+            countryList.style.transform = 'translate(-50%, -50%)';
+            countryList.style.maxHeight = '70vh';
+            countryList.style.overflowY = 'auto';
+        } else {
+            // Restaurar estilos por defecto para pantallas grandes
+            countryList.style.zIndex = '';
+            countryList.style.position = '';
+            countryList.style.top = '';
+            countryList.style.left = '';
+            countryList.style.transform = '';
+            countryList.style.maxHeight = '';
+            countryList.style.overflowY = '';
+        }
+    }
+}
+
+// Ejecutar al cargar y al cambiar tamaño de pantalla
+window.addEventListener('load', adjustCountryListPosition);
+window.addEventListener('resize', adjustCountryListPosition);
+
+// También podemos observar cambios en el DOM por si el plugin carga dinámicamente
+const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        if (mutation.addedNodes.length) {
+            adjustCountryListPosition();
+        }
+    });
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true
+});
+
+
     </script>
 </body>
 
