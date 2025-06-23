@@ -914,7 +914,6 @@
                 // Los loaders ya se muestran en onAuthStateChanged
 
                 // Inicializar componentes
-                initializePhoneInputs();
                 setupContractImagePreview(); // <-- Añade esta línea
 
                 // Cargar datos en paralelo
@@ -1074,6 +1073,11 @@
             document.getElementById('guarantor-phone').iti.setNumber('');
 
             openModal('add-property-modal');
+            
+                // Inicializa después de que el modal está visible
+    setTimeout(() => {
+        initializePhoneInputs();
+    }, 300);
         }
 
         // Toggle tenant fields based on property status
@@ -1705,7 +1709,11 @@
             // Asegurarse de que los campos de inquilino se muestren correctamente
             toggleTenantFields();
 
-            openModal('property-edit-modal');
+                openModal('property-edit-modal');
+
+    setTimeout(() => {
+        initializePhoneInputs();
+    }, 300);
         }
 
         // Update property
@@ -3761,4 +3769,4 @@ async function processPayment(e) {
 
 </html>
 
-<!-- 1 -->
+<!-- 2 -->
