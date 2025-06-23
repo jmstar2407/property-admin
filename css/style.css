@@ -1885,6 +1885,6 @@
 
 
 .iti {
-    position: relative !important;
-    z-index: auto;
+
+    z-index: 999999 !important;
 }
