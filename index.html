@@ -243,16 +243,22 @@
                     <div class="section-title">👤 Propietario:</div>
                     <div class="form-section">
                         <div class="form-group">
-                            <label for="edit-owner-name">Nombre del Propietario:</label>
+                            <label for="edit-owner-name">Nombre del Propietario: <span id="obligatorio">*</span></label>
                             <input type="text" id="edit-owner-name" required placeholder="Nombre y Apellido">
                         </div>
                         <div class="form-group">
-                            <label for="edit-owner-phone">📞 Teléfono del Propietario:</label>
+                            <label for="edit-owner-phone">📞 Teléfono del Propietario: <span
+                                    id="obligatorio">*</span></label>
                             <input type="tel" id="edit-owner-phone" required>
                         </div>
                         <div class="form-group">
                             <label for="edit-owner-address">📍 Dirección del Propietario:</label>
                             <input type="text" id="edit-owner-address">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-owner-notes">📝👤 Notas sobre el propietario:</label>
+                            <textarea id="edit-owner-notes" rows="2"
+                                placeholder="Ejemplo: detalles relevantes sobre el propietario."></textarea>
                         </div>
                     </div>
 
@@ -260,7 +266,8 @@
                     <div class="section-title">🏠 Propiedad:</div>
                     <div class="form-section">
                         <div class="form-group">
-                            <label for="edit-property-type">🏠 Tipo de Propiedad:</label>
+                            <label for="edit-property-type">🏠 Tipo de Propiedad: <span
+                                    id="obligatorio">*</span></label>
                             <select id="edit-property-type" required>
                                 <option value="casa">Casa</option>
                                 <option value="apartamento">Apartamento</option>
@@ -270,30 +277,34 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="edit-bedrooms">🛏️ Cantidad de Habitaciones:</label>
+                            <label for="edit-bedrooms">🛏️ Cantidad de Habitaciones: <span
+                                    id="obligatorio">*</span></label>
                             <input type="number" id="edit-bedrooms" min="0" required>
                         </div>
                         <div class="form-group">
-                            <label for="edit-bathrooms">🛁 Cantidad de Baños:</label>
+                            <label for="edit-bathrooms">🛁 Cantidad de Baños: <span id="obligatorio">*</span></label>
                             <input type="number" id="edit-bathrooms" min="0" required>
                         </div>
                         <div class="form-group">
-                            <label for="edit-parking-spaces">🚘 Cantidad de Parqueos:</label>
+                            <label for="edit-parking-spaces">🚘 Cantidad de Parqueos: <span
+                                    id="obligatorio">*</span></label>
                             <input type="number" id="edit-parking-spaces" min="0" required>
                         </div>
 
 
 
                         <div class="form-group">
-                            <label for="edit-property-address">📍🏠 Dirección de la Propiedad:</label>
+                            <label for="edit-property-address">📍🏠 Dirección de la Propiedad: <span
+                                    id="obligatorio">*</span></label>
                             <input type="text" id="edit-property-address" required>
                         </div>
                         <div class="form-group">
-                            <label for="edit-rent-amount">Monto de la Renta (💲):</label>
+                            <label for="edit-rent-amount">Monto de la Renta (💲): <span
+                                    id="obligatorio">*</span></label>
                             <input type="number" id="edit-rent-amount" required>
                         </div>
                         <div class="form-group">
-                            <label for="edit-property-status">✅ Estado:</label>
+                            <label for="edit-property-status">✅ Estado: <span id="obligatorio">*</span></label>
                             <select id="edit-property-status" required onchange="toggleTenantFields()">
                                 <option value="available">Disponible</option>
                                 <option value="rented">Rentado</option>
@@ -301,8 +312,9 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="edit-property-notes">🗒️ Notas sobre la propiedad:</label>
-                            <textarea id="edit-property-notes" rows="3"></textarea>
+                            <label for="edit-property-notes">📝🏠 Notas sobre la propiedad:</label>
+                            <textarea id="edit-property-notes" rows="3"
+                                placeholder="Ejemplo: detalles relevantes sobre la propiedad."></textarea>
                         </div>
                     </div>
 
@@ -310,11 +322,12 @@
                     <div id="tenant-section" class="form-section">
                         <div class="section-title">👥 Inquilino:</div>
                         <div class="form-group">
-                            <label for="edit-tenant-name">Nombre del Inquilino:</label>
+                            <label for="edit-tenant-name">Nombre del Inquilino: <span id="obligatorio">*</span></label>
                             <input type="text" id="edit-tenant-name" placeholder="Nombre y Apellido">
                         </div>
                         <div class="form-group">
-                            <label for="edit-tenant-phone">📞 Teléfono del Inquilino:</label>
+                            <label for="edit-tenant-phone">📞 Teléfono del Inquilino: <span
+                                    id="obligatorio">*</span></label>
                             <input type="tel" id="edit-tenant-phone">
                         </div>
                         <!-- Para el inquilino -->
@@ -330,27 +343,31 @@
                             <input type="text" id="edit-tenant-id" placeholder="000-0000000-0 / 000000000">
                         </div>
                         <div class="form-group">
-                            <label for="edit-contract-date">📑Fecha de Inicio de Contrato:</label>
+                            <label for="edit-contract-date">📑Fecha de Inicio de Contrato: <span
+                                    id="obligatorio">*</span></label>
                             <input type="date" id="edit-contract-date">
                         </div>
                         <div class="form-group">
-                            <label for="edit-payment-day">📅 Día de Cobro (1-31):</label>
-                            <input type="number" id="edit-payment-day" min="1" max="31">
+                            <label for="edit-contract-duration">⏳ Duración del Contrato (Meses): <span
+                                    id="obligatorio">*</span></label>
+                            <input type="number" id="edit-contract-duration" min="1">
                         </div>
 
                         <div class="form-group">
-                            <label for="edit-contract-duration">⏳ Duración del Contrato (Meses):</label>
-                            <input type="number" id="edit-contract-duration" min="1">
+                            <label for="edit-payment-day">📅 Día de Cobro (1-30): <span
+                                    id="obligatorio">*</span></label>
+                            <input type="number" id="edit-payment-day" min="1" max="30">
                         </div>
                         <div class="form-group">
-                            <label for="edit-tenant-notes">🗒️ Notas sobre el inquilino:</label>
-                            <textarea id="edit-tenant-notes" rows="2"></textarea>
+                            <label for="edit-tenant-notes">📝👥 Notas sobre el inquilino:</label>
+                            <textarea id="edit-tenant-notes" rows="2"
+                                placeholder="Ejemplo: detalles relevantes sobre el inquilino."></textarea>
                         </div>
 
                         <!-- Sección Garante -->
                         <div class="section-title">🪪 Garante:</div>
                         <div class="form-group">
-                            <label for="edit-guarantor-name">Nombre del Garante</label>
+                            <label for="edit-guarantor-name">Nombre del Garante: <span id="obligatorio">*</span></label>
                             <input type="text" id="edit-guarantor-name" placeholder="Nombre y Apellido">
                         </div>
                         <div class="form-group">
@@ -374,8 +391,9 @@
                             <input type="text" id="edit-guarantor-id" placeholder="000-0000000-0 / 000000000">
                         </div>
                         <div class="form-group">
-                            <label for="edit-guarantor-notes">🗒️ Notas sobre el garante:</label>
-                            <textarea id="edit-guarantor-notes" rows="2"></textarea>
+                            <label for="edit-guarantor-notes">📝🪪 Notas sobre el garante:</label>
+                            <textarea id="edit-guarantor-notes" rows="2"
+                                placeholder="Ejemplo: detalles relevantes sobre el garante."></textarea>
                         </div>
                     </div>
 
@@ -440,16 +458,22 @@
                     <div class="section-title">👤 Propietario:</div>
                     <div class="form-section">
                         <div class="form-group">
-                            <label for="owner-name">Nombre del Propietario:</label>
+                            <label for="owner-name">Nombre del Propietario: <span id="obligatorio">*</span></label>
                             <input type="text" id="owner-name" required placeholder="Nombre y Apellido">
                         </div>
                         <div class="form-group">
-                            <label for="owner-phone">📞 Teléfono del Propietario:</label>
+                            <label for="owner-phone">📞 Teléfono del Propietario: <span
+                                    id="obligatorio">*</span></label>
                             <input type="tel" id="owner-phone" required>
                         </div>
                         <div class="form-group">
                             <label for="owner-address">📍 Dirección del Propietario:</label>
                             <input type="text" id="owner-address">
+                        </div>
+                        <div class="form-group">
+                            <label for="owner-notes">📝👤 Notas sobre el propietario:</label>
+                            <textarea id="owner-notes" rows="2"
+                                placeholder="Ejemplo: detalles relevantes sobre el propietario."></textarea>
                         </div>
                     </div>
 
@@ -457,7 +481,7 @@
                     <div class="section-title">🏠 Propiedad:</div>
                     <div class="form-section">
                         <div class="form-group">
-                            <label for="property-type">🏠 Tipo de Propiedad:</label>
+                            <label for="property-type">🏠 Tipo de Propiedad: <span id="obligatorio">*</span></label>
                             <select id="property-type" required>
                                 <option value="casa">Casa</option>
                                 <option value="apartamento">Apartamento</option>
@@ -467,29 +491,30 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="bedrooms">🛏️ Cantidad de Habitaciones:</label>
+                            <label for="bedrooms">🛏️ Cantidad de Habitaciones: <span id="obligatorio">*</span></label>
                             <input type="number" id="bedrooms" min="0" placeholder="0" required>
                         </div>
                         <div class="form-group">
-                            <label for="bathrooms">🛁 Cantidad de Baños:</label>
+                            <label for="bathrooms">🛁 Cantidad de Baños: <span id="obligatorio">*</span></label>
                             <input type="number" id="bathrooms" min="0" placeholder="0" required>
                         </div>
                         <div class="form-group">
-                            <label for="parking-spaces">🚘 Cantidad de Parqueos:</label>
+                            <label for="parking-spaces">🚘 Cantidad de Parqueos: <span id="obligatorio">*</span></label>
                             <input type="number" id="parking-spaces" min="0" placeholder="0" required>
                         </div>
 
 
                         <div class="form-group">
-                            <label for="property-address">📍🏠 Dirección de la Propiedad:</label>
+                            <label for="property-address">📍🏠 Dirección de la Propiedad: <span
+                                    id="obligatorio">*</span></label>
                             <input type="text" id="property-address" required>
                         </div>
                         <div class="form-group">
-                            <label for="rent-amount">Monto de la Renta (💲):</label>
+                            <label for="rent-amount">Monto de la Renta (💲): <span id="obligatorio">*</span></label>
                             <input type="number" id="rent-amount" required>
                         </div>
                         <div class="form-group">
-                            <label for="property-status">✅ Estado:</label>
+                            <label for="property-status">✅ Estado: <span id="obligatorio">*</span></label>
                             <select id="property-status" required onchange="toggleTenantFields('add')">
 
                                 <option value="available">Disponible</option>
@@ -498,8 +523,9 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="property-notes">🗒️ Notas sobre la propiedad:</label>
-                            <textarea id="property-notes" rows="3"></textarea>
+                            <label for="property-notes">📝🏠 Notas sobre la propiedad:</label>
+                            <textarea id="property-notes" rows="3"
+                                placeholder="Ejemplo: detalles relevantes sobre la propiedad."></textarea>
                         </div>
                     </div>
 
@@ -507,11 +533,11 @@
                     <div id="tenant-section-add" class="form-section">
                         <div class="section-title">👥 Inquilino:</div>
                         <div class="form-group">
-                            <label for="tenant-name">Nombre del Inquilino:</label>
+                            <label for="tenant-name">Nombre del Inquilino: <span id="obligatorio">*</span></label>
                             <input type="text" id="tenant-name" placeholder="Nombre y Apellido">
                         </div>
                         <div class="form-group">
-                            <label for="tenant-phone">📞 Teléfono del Inquilino:</label>
+                            <label for="tenant-phone">📞 Teléfono del Inquilino: <span id="obligatorio">*</span></label>
                             <input type="tel" id="tenant-phone">
                         </div>
                         <!-- Para el inquilino -->
@@ -527,26 +553,29 @@
                             <input type="text" id="tenant-id" placeholder="000-0000000-0 / 000000000">
                         </div>
                         <div class="form-group">
-                            <label for="contract-date">📑 Fecha de Inicio de Contrato:</label>
+                            <label for="contract-date">📑 Fecha de Inicio de Contrato: <span
+                                    id="obligatorio">*</span></label>
                             <input type="date" id="contract-date">
                         </div>
                         <div class="form-group">
-                            <label for="payment-day">📅 Día de Cobro (1-31):</label>
-                            <input type="number" id="payment-day" min="1" max="31">
-                        </div>
-                        <div class="form-group">
-                            <label for="contract-duration">⏳ Duración del Contrato (Meses):</label>
+                            <label for="contract-duration">⏳ Duración del Contrato (Meses): <span
+                                    id="obligatorio">*</span></label>
                             <input type="number" id="contract-duration" min="1">
                         </div>
                         <div class="form-group">
-                            <label for="tenant-notes">🗒️Notas sobre el inquilino:</label>
-                            <textarea id="tenant-notes" rows="2"></textarea>
+                            <label for="payment-day">📅 Día de Cobro (1-30): <span id="obligatorio">*</span></label>
+                            <input type="number" id="payment-day" min="1" max="30">
+                        </div>
+                        <div class="form-group">
+                            <label for="tenant-notes">📝👥 Notas sobre el inquilino:</label>
+                            <textarea id="tenant-notes" rows="2"
+                                placeholder="Ejemplo: detalles relevantes sobre el inquilino."></textarea>
                         </div>
 
                         <!-- Sección Garante -->
                         <div class="section-title">🪪 Garante:</div>
                         <div class="form-group">
-                            <label for="guarantor-name">Nombre del Garante:</label>
+                            <label for="guarantor-name">Nombre del Garante: <span id="obligatorio">*</span></label>
                             <input type="text" id="guarantor-name" placeholder="Nombre y Apellido">
                         </div>
                         <div class="form-group">
@@ -570,8 +599,9 @@
                             <input type="text" id="guarantor-id" placeholder="000-0000000-0 / 000000000">
                         </div>
                         <div class="form-group">
-                            <label for="guarantor-notes">🗒️ Notas sobre el garante:</label>
-                            <textarea id="guarantor-notes" rows="2"></textarea>
+                            <label for="guarantor-notes">📝🪪 Notas sobre el garante:</label>
+                            <textarea id="guarantor-notes" rows="2"
+                                placeholder="Ejemplo: detalles relevantes sobre el garante."></textarea>
                         </div>
                     </div>
 
@@ -592,9 +622,11 @@
                     <input type="file" id="contract-image" accept="image/*" style="display: none;">
             </div>
 
-            <div class="Modal-Footer">
+            <div class="Modal-Footer"
+                style="display: inline-flex;flex-direction: column;gap: 5px;color: #838383;font-size: small;height: 70px;">
                 <!-- <button type="button" class="btn btn-secondary"
                     onclick="closeModal('add-property-modal')">❌ Cancelar</button> -->
+                <p>Los campos que tiene (<span id="obligatorio">*</span>) son obligatorios</p>
                 <button type="submit" class="btn añadir">✅ Agregar Propiedad</button>
 
                 </form>
@@ -635,7 +667,7 @@
 
                 <div id="pagCompletoBtn">
                     <button class="btn btn-secondary" onclick="closeModal('payment-success-modal')">Cerrar</button>
-                                        <button class="btn"
+                    <button class="btn"
                         onclick="downloadInvoice(document.getElementById('payment-success-id').value)">📄
                         Descargar Factura</button>
                     <input type="hidden" id="payment-success-id">
@@ -1026,40 +1058,54 @@
 
 
 
-       // Inicializar inputs de teléfono con soporte para Holanda
-    function initializePhoneInputs() {
-        const phoneInputs = document.querySelectorAll('input[type="tel"]');
-        
-        // Lista de países preferidos (incluyendo Holanda)
-        const preferredCountries = ['do', 'us', 'nl', 'es'];
-        
-        phoneInputs.forEach(input => {
-            const iti = window.intlTelInput(input, {
-                initialCountry: "do", // República Dominicana por defecto
-                preferredCountries: preferredCountries,
-                separateDialCode: true,
-                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
-            });
+        // Inicializar inputs de teléfono con soporte para Holanda
+        function initializePhoneInputs() {
+            const phoneInputs = document.querySelectorAll('input[type="tel"]');
 
-            // Formatear mientras se escribe (solo para números locales)
-            input.addEventListener('input', function() {
-                const selectedCountry = iti.getSelectedCountryData();
-                if (selectedCountry.iso2 === 'do') {
-                    // Formato especial para República Dominicana
+            // Lista de países preferidos (incluyendo Holanda)
+            const preferredCountries = ['do', 'us', 'nl', 'es'];
+
+            // Mapeo de nombres de países en español
+            const countryNames = {
+                'nl': 'Holanda (Netherlands)'
+            };
+
+            phoneInputs.forEach(input => {
+                const iti = window.intlTelInput(input, {
+                    initialCountry: "do", // República Dominicana por defecto
+                    preferredCountries: preferredCountries,
+                    separateDialCode: true,
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+                    localizedCountries: countryNames // Usar nombres localizados
+                });
+
+                // Formatear mientras se escribe
+                input.addEventListener('input', function () {
+                    const selectedCountry = iti.getSelectedCountryData();
                     const value = this.value.replace(/\D/g, '');
-                    if (value.length > 3 && value.length <= 6) {
-                        this.value = `${value.slice(0, 3)}-${value.slice(3)}`;
-                    } else if (value.length > 6) {
-                        this.value = `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(6, 10)}`;
-                    }
-                }
-                // Para otros países (incluyendo Holanda) no aplicamos formato especial
-            });
 
-            // Guardar referencia al plugin para usarlo después
-            input.iti = iti;
-        });
-    }
+                    if (selectedCountry.iso2 === 'do') {
+                        // Formato especial para República Dominicana: 809-555-1234
+                        if (value.length > 3 && value.length <= 6) {
+                            this.value = `${value.slice(0, 3)}-${value.slice(3)}`;
+                        } else if (value.length > 6) {
+                            this.value = `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(6, 10)}`;
+                        }
+                    } else if (selectedCountry.iso2 === 'us') {
+                        // Formato para Estados Unidos: 555-123-4567
+                        if (value.length > 3 && value.length <= 6) {
+                            this.value = `${value.slice(0, 3)}-${value.slice(3)}`;
+                        } else if (value.length > 6) {
+                            this.value = `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(6, 10)}`;
+                        }
+                    }
+                    // Para otros países no aplicamos formato especial
+                });
+
+                // Guardar referencia al plugin para usarlo después
+                input.iti = iti;
+            });
+        }
 
 
 
@@ -1076,6 +1122,8 @@
             openModal('add-property-modal');
         }
 
+
+
         // Toggle tenant fields based on property status
         function toggleTenantFields(formType = 'edit') {
             const status = formType === 'add'
@@ -1088,20 +1136,40 @@
 
             if (status === 'rented') {
                 tenantSection.style.display = 'block';
-                // Hacer requeridos los campos excepto las notas
-                const requiredFields = tenantSection.querySelectorAll('input:not([type="file"]), select');
-                requiredFields.forEach(field => {
-                    field.required = true;
+
+                // Solo hacer requeridos los campos esenciales
+                const essentialFields = [
+                    'tenant-name', 'tenant-phone',
+                    'contract-date', 'payment-day', 'contract-duration'
+                ];
+
+                essentialFields.forEach(fieldId => {
+                    const field = document.getElementById(formType === 'add' ? fieldId : `edit-${fieldId}`);
+                    if (field) field.required = true;
+                });
+
+                // Campos del garante NO son obligatorios
+                const guarantorFields = [
+                    'guarantor-name', 'guarantor-phone', 'guarantor-address', 'tenant-id',
+                    'guarantor-id-type', 'guarantor-id', 'guarantor-notes'
+                ];
+
+                guarantorFields.forEach(fieldId => {
+                    const field = document.getElementById(formType === 'add' ? fieldId : `edit-${fieldId}`);
+                    if (field) field.required = false;
                 });
             } else {
                 tenantSection.style.display = 'none';
-                // Quitar requerido si no es rentado
-                const requiredFields = tenantSection.querySelectorAll('input, select, textarea');
-                requiredFields.forEach(field => {
+                // Quitar requerido de todos los campos si no es rentado
+                const allFields = tenantSection.querySelectorAll('input, select, textarea');
+                allFields.forEach(field => {
                     field.required = false;
                 });
             }
         }
+
+
+
 
         // Filtrar propiedades por estado
         function filterProperties(status) {
@@ -1330,6 +1398,7 @@
                 rentAmount: parseFloat(document.getElementById('rent-amount').value),
                 status: document.getElementById('property-status').value,
                 notes: document.getElementById('property-notes').value,
+                ownerNotes: document.getElementById('owner-notes').value, // <-- Agregar esta línea
                 imageContrato: imageBase64,
                 createdAt: new Date()
             };
@@ -1657,6 +1726,7 @@
                 document.getElementById('edit-owner-phone').iti.setNumber(property.ownerPhone);
             }
             document.getElementById('edit-owner-address').value = property.ownerAddress || '';
+            document.getElementById('edit-owner-notes').value = property.ownerNotes || '';
 
             // Datos de la propiedad
             document.getElementById('edit-property-type').value = property.propertyType || 'casa';
@@ -1745,6 +1815,7 @@
                 rentAmount: parseFloat(document.getElementById('edit-rent-amount').value),
                 status: document.getElementById('edit-property-status').value,
                 notes: document.getElementById('edit-property-notes').value,
+                ownerNotes: document.getElementById('edit-owner-notes').value, // <-- Agregar esta línea
                 imageContrato: imageBase64
             };
 
@@ -2365,10 +2436,10 @@
 
             content.innerHTML = html;
 
-                    // Cargar el porcentaje predeterminado de Firebase
-       loadDefaultCommission();
+            // Cargar el porcentaje predeterminado de Firebase
+            loadDefaultCommission();
 
-           document.getElementById('payment-amount').addEventListener('input', updateCommission);
+            document.getElementById('payment-amount').addEventListener('input', updateCommission);
 
 
             // Add form listener if payment form exists
@@ -2412,181 +2483,181 @@
 
 
         // Nueva función para cargar la comisión predeterminada
-async function loadDefaultCommission() {
-    try {
-        const configDoc = await db.collection('config').doc('configuracion').get();
-        const defaultPercentage = configDoc.exists && configDoc.data().porcientoComision ? 
-                                parseFloat(configDoc.data().porcientoComision) : 10;
-        
-        // Actualizar el texto que muestra el porcentaje
-        document.getElementById('default-percentage-text').textContent = `${defaultPercentage}%`;
-        
-        // Configurar el evento para cuando cambie a custom
-        document.getElementById('payment-commission').addEventListener('change', function() {
-            if (this.value === 'custom') {
-                document.getElementById('custom-commission-container').style.display = 'block';
-                document.getElementById('custom-commission-value').addEventListener('input', updateCommission);
-            } else {
-                document.getElementById('custom-commission-container').style.display = 'none';
+        async function loadDefaultCommission() {
+            try {
+                const configDoc = await db.collection('config').doc('configuracion').get();
+                const defaultPercentage = configDoc.exists && configDoc.data().porcientoComision ?
+                    parseFloat(configDoc.data().porcientoComision) : 10;
+
+                // Actualizar el texto que muestra el porcentaje
+                document.getElementById('default-percentage-text').textContent = `${defaultPercentage}%`;
+
+                // Configurar el evento para cuando cambie a custom
+                document.getElementById('payment-commission').addEventListener('change', function () {
+                    if (this.value === 'custom') {
+                        document.getElementById('custom-commission-container').style.display = 'block';
+                        document.getElementById('custom-commission-value').addEventListener('input', updateCommission);
+                    } else {
+                        document.getElementById('custom-commission-container').style.display = 'none';
+                    }
+                    updateCommission();
+                });
+
+                // Actualizar comisión inicial
+                updateCommission();
+            } catch (error) {
+                console.error('Error obteniendo porcentaje de comisión:', error);
+                document.getElementById('default-percentage-text').textContent = '10% (predet.)';
+                updateCommission();
             }
-            updateCommission();
-        });
-        
-        // Actualizar comisión inicial
-        updateCommission();
-    } catch (error) {
-        console.error('Error obteniendo porcentaje de comisión:', error);
-        document.getElementById('default-percentage-text').textContent = '10% (predet.)';
-        updateCommission();
-    }
-}
+        }
 
 
 
         // Actualiza la función updatePaymentAmount:
-function updatePaymentAmount(rentAmount) {
-    const paymentType = document.getElementById('payment-type').value;
-    const amountInput = document.getElementById('payment-amount');
-    const daysContainer = document.getElementById('partial-days-container');
+        function updatePaymentAmount(rentAmount) {
+            const paymentType = document.getElementById('payment-type').value;
+            const amountInput = document.getElementById('payment-amount');
+            const daysContainer = document.getElementById('partial-days-container');
 
-    if (paymentType === 'complete') {
-        daysContainer.style.display = 'none';
-        amountInput.value = rentAmount;
-        amountInput.readOnly = true;
-    } else if (paymentType === 'partial') {
-        daysContainer.style.display = 'block';
-        const daysInput = document.getElementById('partial-days');
-        const dailyRate = rentAmount / 30;
-        amountInput.value = (dailyRate * daysInput.value).toFixed(2);
-        amountInput.readOnly = true;
+            if (paymentType === 'complete') {
+                daysContainer.style.display = 'none';
+                amountInput.value = rentAmount;
+                amountInput.readOnly = true;
+            } else if (paymentType === 'partial') {
+                daysContainer.style.display = 'block';
+                const daysInput = document.getElementById('partial-days');
+                const dailyRate = rentAmount / 30;
+                amountInput.value = (dailyRate * daysInput.value).toFixed(2);
+                amountInput.readOnly = true;
 
-        daysInput.addEventListener('input', () => {
-            amountInput.value = (dailyRate * daysInput.value).toFixed(2);
-            updateCommission(); // Actualizar comisión cuando cambian los días
-        });
-    } else if (paymentType === 'late') {
-        daysContainer.style.display = 'none';
-        const lateFee = rentAmount * 0.05;
-        amountInput.value = (rentAmount + lateFee).toFixed(2);
-        amountInput.readOnly = true;
-    } else if (paymentType === 'custom') {
-        daysContainer.style.display = 'none';
-        amountInput.value = '';
-        amountInput.readOnly = false;
-        amountInput.focus();
-    }
-    
-    // Actualizar comisión cuando cambia el tipo de pago
-    updateCommission();
-}
+                daysInput.addEventListener('input', () => {
+                    amountInput.value = (dailyRate * daysInput.value).toFixed(2);
+                    updateCommission(); // Actualizar comisión cuando cambian los días
+                });
+            } else if (paymentType === 'late') {
+                daysContainer.style.display = 'none';
+                const lateFee = rentAmount * 0.05;
+                amountInput.value = (rentAmount + lateFee).toFixed(2);
+                amountInput.readOnly = true;
+            } else if (paymentType === 'custom') {
+                daysContainer.style.display = 'none';
+                amountInput.value = '';
+                amountInput.readOnly = false;
+                amountInput.focus();
+            }
 
-// Nueva función para actualizar la comisión
-function updateCommission() {
-    const paymentAmount = parseFloat(document.getElementById('payment-amount').value) || 0;
-    const commissionType = document.getElementById('payment-commission').value;
-    
-    if (commissionType === 'default') {
-        // Obtener el porcentaje predeterminado y calcular
-        const defaultPercentage = parseFloat(document.getElementById('default-percentage-text').textContent) || 10;
-        document.getElementById('commission-amount').value = (paymentAmount * (defaultPercentage / 100)).toFixed(2);
-    } else {
-        // Usar el valor personalizado
-        const customValue = parseFloat(document.getElementById('custom-commission-value').value) || 0;
-        document.getElementById('commission-amount').value = (paymentAmount * (customValue / 100)).toFixed(2);
-    }
-}
-
-
-
-     // Función para actualizar el campo de comisión
-async function updateCommissionField(selectedOption, rentAmount) {
-    const customContainer = document.getElementById('custom-commission-container');
-    const commissionAmountInput = document.getElementById('commission-amount');
-    
-    if (selectedOption === 'custom') {
-        customContainer.style.display = 'block';
-        document.getElementById('custom-commission-value').addEventListener('input', function() {
-            const customValue = parseFloat(this.value) || 0;
-            commissionAmountInput.value = (rentAmount * (customValue / 100)).toFixed(2);
-        });
-    } else {
-        customContainer.style.display = 'none';
-        // Obtener el porcentaje predeterminado de Firebase
-        try {
-            const configDoc = await db.collection('config').doc('configuracion').get();
-            const defaultPercentage = configDoc.exists && configDoc.data().porcientoComision ? 
-                                    parseFloat(configDoc.data().porcientoComision) : 10;
-            
-            commissionAmountInput.value = (rentAmount * (defaultPercentage / 100)).toFixed(2);
-        } catch (error) {
-            console.error('Error obteniendo porcentaje de comisión:', error);
-            commissionAmountInput.value = (rentAmount * 0.10).toFixed(2); // 10% por defecto
+            // Actualizar comisión cuando cambia el tipo de pago
+            updateCommission();
         }
-    }
-}
 
-// Modificación en processPayment
-async function processPayment(e) {
-    e.preventDefault();
+        // Nueva función para actualizar la comisión
+        function updateCommission() {
+            const paymentAmount = parseFloat(document.getElementById('payment-amount').value) || 0;
+            const commissionType = document.getElementById('payment-commission').value;
 
-    const propertyId = document.getElementById('payment-property-id').value;
-    const dateStr = document.getElementById('payment-due-date').value;
-
-    if (!propertyId || !dateStr) return;
-
-    const property = properties.find(p => p.id === propertyId);
-    const date = new Date(dateStr);
-    const paymentMethod = document.getElementById('payment-method').value;
-    const notes = document.getElementById('payment-notes').value;
-    const overdueDays = calculateOverdueDays(property, date);
-    const paymentType = document.getElementById('payment-type').value;
-    let amount = parseFloat(document.getElementById('payment-amount').value);
-    
-    // Obtener comisión
-    let commissionPercentage;
-    const commissionAmount = parseFloat(document.getElementById('commission-amount').value);
-    
-    if (document.getElementById('payment-commission').value === 'custom') {
-        commissionPercentage = parseFloat(document.getElementById('custom-commission-value').value);
-    } else {
-        try {
-            const configDoc = await db.collection('config').doc('configuracion').get();
-            commissionPercentage = configDoc.exists && configDoc.data().porcientoComision ? 
-                                parseFloat(configDoc.data().porcientoComision) : 10;
-        } catch (error) {
-            console.error('Error obteniendo porcentaje de comisión:', error);
-            commissionPercentage = 10; // 10% por defecto
+            if (commissionType === 'default') {
+                // Obtener el porcentaje predeterminado y calcular
+                const defaultPercentage = parseFloat(document.getElementById('default-percentage-text').textContent) || 10;
+                document.getElementById('commission-amount').value = (paymentAmount * (defaultPercentage / 100)).toFixed(2);
+            } else {
+                // Usar el valor personalizado
+                const customValue = parseFloat(document.getElementById('custom-commission-value').value) || 0;
+                document.getElementById('commission-amount').value = (paymentAmount * (customValue / 100)).toFixed(2);
+            }
         }
-    }
 
-    let paymentNotes = notes;
-    if (paymentType === 'partial') {
-        const partialDays = document.getElementById('partial-days').value;
-        paymentNotes = `Pago parcial por ${partialDays} días. ${notes}`;
-    } else if (paymentType === 'late') {
-        paymentNotes = `Pago con mora del 5%. ${notes}`;
-    } else if (paymentType === 'custom') {
-        paymentNotes = `Pago personalizado. ${notes}`;
-    }
 
-    const payment = {
-        propertyId: property.id,
-        tenantName: property.tenantName,
-        address: property.address,
-        amount: amount,
-        rentAmount: property.rentAmount,
-        paymentMethod: paymentMethod,
-        paymentDate: new Date(),
-        dueDate: date,
-        overdueDays: Math.max(0, overdueDays),
-        month: date.getMonth(),
-        year: date.getFullYear(),
-        notes: paymentNotes,
-        paymentType: paymentType,
-        mesPagado: new Date(date.getFullYear(), date.getMonth() - 1, 1).toLocaleDateString('es-ES', { month: 'long' }).replace(/^\w/, c => c.toUpperCase()),
-        commission: commissionAmount,
-        commissionPercentage: commissionPercentage
-    };
+
+        // Función para actualizar el campo de comisión
+        async function updateCommissionField(selectedOption, rentAmount) {
+            const customContainer = document.getElementById('custom-commission-container');
+            const commissionAmountInput = document.getElementById('commission-amount');
+
+            if (selectedOption === 'custom') {
+                customContainer.style.display = 'block';
+                document.getElementById('custom-commission-value').addEventListener('input', function () {
+                    const customValue = parseFloat(this.value) || 0;
+                    commissionAmountInput.value = (rentAmount * (customValue / 100)).toFixed(2);
+                });
+            } else {
+                customContainer.style.display = 'none';
+                // Obtener el porcentaje predeterminado de Firebase
+                try {
+                    const configDoc = await db.collection('config').doc('configuracion').get();
+                    const defaultPercentage = configDoc.exists && configDoc.data().porcientoComision ?
+                        parseFloat(configDoc.data().porcientoComision) : 10;
+
+                    commissionAmountInput.value = (rentAmount * (defaultPercentage / 100)).toFixed(2);
+                } catch (error) {
+                    console.error('Error obteniendo porcentaje de comisión:', error);
+                    commissionAmountInput.value = (rentAmount * 0.10).toFixed(2); // 10% por defecto
+                }
+            }
+        }
+
+        // Modificación en processPayment
+        async function processPayment(e) {
+            e.preventDefault();
+
+            const propertyId = document.getElementById('payment-property-id').value;
+            const dateStr = document.getElementById('payment-due-date').value;
+
+            if (!propertyId || !dateStr) return;
+
+            const property = properties.find(p => p.id === propertyId);
+            const date = new Date(dateStr);
+            const paymentMethod = document.getElementById('payment-method').value;
+            const notes = document.getElementById('payment-notes').value;
+            const overdueDays = calculateOverdueDays(property, date);
+            const paymentType = document.getElementById('payment-type').value;
+            let amount = parseFloat(document.getElementById('payment-amount').value);
+
+            // Obtener comisión
+            let commissionPercentage;
+            const commissionAmount = parseFloat(document.getElementById('commission-amount').value);
+
+            if (document.getElementById('payment-commission').value === 'custom') {
+                commissionPercentage = parseFloat(document.getElementById('custom-commission-value').value);
+            } else {
+                try {
+                    const configDoc = await db.collection('config').doc('configuracion').get();
+                    commissionPercentage = configDoc.exists && configDoc.data().porcientoComision ?
+                        parseFloat(configDoc.data().porcientoComision) : 10;
+                } catch (error) {
+                    console.error('Error obteniendo porcentaje de comisión:', error);
+                    commissionPercentage = 10; // 10% por defecto
+                }
+            }
+
+            let paymentNotes = notes;
+            if (paymentType === 'partial') {
+                const partialDays = document.getElementById('partial-days').value;
+                paymentNotes = `Pago parcial por ${partialDays} días. ${notes}`;
+            } else if (paymentType === 'late') {
+                paymentNotes = `Pago con mora del 5%. ${notes}`;
+            } else if (paymentType === 'custom') {
+                paymentNotes = `Pago personalizado. ${notes}`;
+            }
+
+            const payment = {
+                propertyId: property.id,
+                tenantName: property.tenantName,
+                address: property.address,
+                amount: amount,
+                rentAmount: property.rentAmount,
+                paymentMethod: paymentMethod,
+                paymentDate: new Date(),
+                dueDate: date,
+                overdueDays: Math.max(0, overdueDays),
+                month: date.getMonth(),
+                year: date.getFullYear(),
+                notes: paymentNotes,
+                paymentType: paymentType,
+                mesPagado: new Date(date.getFullYear(), date.getMonth() - 1, 1).toLocaleDateString('es-ES', { month: 'long' }).replace(/^\w/, c => c.toUpperCase()),
+                commission: commissionAmount,
+                commissionPercentage: commissionPercentage
+            };
 
 
             try {
@@ -2816,43 +2887,43 @@ async function processPayment(e) {
             updateAccountingView();
         }
 
-     async function updateAccountingView() {
-    const month = currentAccountingDate.getMonth();
-    const year = currentAccountingDate.getFullYear();
+        async function updateAccountingView() {
+            const month = currentAccountingDate.getMonth();
+            const year = currentAccountingDate.getFullYear();
 
-    const monthYear = currentAccountingDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
-    document.getElementById('accounting-month-title').textContent =
-        monthYear.charAt(0).toUpperCase() + monthYear.slice(1);
+            const monthYear = currentAccountingDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+            document.getElementById('accounting-month-title').textContent =
+                monthYear.charAt(0).toUpperCase() + monthYear.slice(1);
 
-    // Calculate totals
-    const monthPayments = payments.filter(p =>
-        p.paymentDate &&
-        p.paymentDate.getMonth() === month &&
-        p.paymentDate.getFullYear() === year
-    );
+            // Calculate totals
+            const monthPayments = payments.filter(p =>
+                p.paymentDate &&
+                p.paymentDate.getMonth() === month &&
+                p.paymentDate.getFullYear() === year
+            );
 
-    const totalCollected = monthPayments.reduce((sum, p) => sum + p.amount, 0);
-    const totalCommission = monthPayments.reduce((sum, p) => sum + (p.commission || 0), 0);
+            const totalCollected = monthPayments.reduce((sum, p) => sum + p.amount, 0);
+            const totalCommission = monthPayments.reduce((sum, p) => sum + (p.commission || 0), 0);
 
-    const monthExpenses = expenses.filter(e =>
-        e.date &&
-        e.date.getMonth() === month &&
-        e.date.getFullYear() === year
-    );
+            const monthExpenses = expenses.filter(e =>
+                e.date &&
+                e.date.getMonth() === month &&
+                e.date.getFullYear() === year
+            );
 
-    const monthIncomes = incomes.filter(i =>
-        i.date &&
-        i.date.getMonth() === month &&
-        i.date.getFullYear() === year
-    );
+            const monthIncomes = incomes.filter(i =>
+                i.date &&
+                i.date.getMonth() === month &&
+                i.date.getFullYear() === year
+            );
 
-    const totalExpenses = monthExpenses.reduce((sum, e) => sum + e.amount, 0);
-    const totalIncomes = monthIncomes.reduce((sum, i) => sum + i.amount, 0);
-    const netProfit = totalCommission + totalIncomes - totalExpenses;
+            const totalExpenses = monthExpenses.reduce((sum, e) => sum + e.amount, 0);
+            const totalIncomes = monthIncomes.reduce((sum, i) => sum + i.amount, 0);
+            const netProfit = totalCommission + totalIncomes - totalExpenses;
 
-    // Update summary cards
-    const summaryContainer = document.getElementById('accounting-summary');
-    summaryContainer.innerHTML = `
+            // Update summary cards
+            const summaryContainer = document.getElementById('accounting-summary');
+            summaryContainer.innerHTML = `
         <div class="summary-card">
             <h3>Total Cobrado</h3>
             <div class="amount">${totalCollected.toLocaleString()}</div>
@@ -2877,9 +2948,9 @@ async function processPayment(e) {
         </div>
     `;
 
-    // Update transactions list
-    displayTransactions(monthExpenses, monthIncomes);
-}
+            // Update transactions list
+            displayTransactions(monthExpenses, monthIncomes);
+        }
 
         function displayTransactions(expenses, incomes) {
             const container = document.getElementById('expenses-list');
@@ -3756,60 +3827,9 @@ async function processPayment(e) {
 
         // Asignar evento al botón de configuración
         document.getElementById('setting-button').addEventListener('click', openConfigModal);
-
-
-
-
-
-
-
-        // Asegurar que el dropdown de países aparezca por encima de todo en móviles
-function adjustCountryListPosition() {
-    const countryList = document.querySelector('.iti__country-list');
-    if (countryList) {
-        if (window.innerWidth <= 560) {
-            countryList.style.zIndex = '999999';
-            countryList.style.position = 'fixed';
-            countryList.style.top = '50%';
-            countryList.style.left = '50%';
-            countryList.style.transform = 'translate(-50%, -50%)';
-            countryList.style.maxHeight = '70vh';
-            countryList.style.overflowY = 'auto';
-        } else {
-            // Restaurar estilos por defecto para pantallas grandes
-            countryList.style.zIndex = '';
-            countryList.style.position = '';
-            countryList.style.top = '';
-            countryList.style.left = '';
-            countryList.style.transform = '';
-            countryList.style.maxHeight = '';
-            countryList.style.overflowY = '';
-        }
-    }
-}
-
-// Ejecutar al cargar y al cambiar tamaño de pantalla
-window.addEventListener('load', adjustCountryListPosition);
-window.addEventListener('resize', adjustCountryListPosition);
-
-// También podemos observar cambios en el DOM por si el plugin carga dinámicamente
-const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-        if (mutation.addedNodes.length) {
-            adjustCountryListPosition();
-        }
-    });
-});
-
-observer.observe(document.body, {
-    childList: true,
-    subtree: true
-});
-
-
     </script>
 </body>
 
 </html>
 
-<!-- 1 -->
+<!-- 2 -->

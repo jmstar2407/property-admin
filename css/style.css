@@ -896,6 +896,14 @@
      color: white;
  }
 
+.form-group textarea {
+    background: #1e2331;
+    color: #ffffff;
+    box-shadow: inset 0px 0px 0px 2px rgb(151 156 161);
+    border-radius: 14px;
+    min-height: 44px;
+}
+
  .iti__selected-flag {
      color: white !important;
      background: #00000047 !important;
@@ -906,8 +914,8 @@
  .form-group select:focus,
  .form-group textarea:focus {
      outline: none;
-     border-color: #667eea;
-     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+     border-color: #667eea00;
+box-shadow: 0 0 0 2px rgb(23 107 203);
  }
 
  .btn {
@@ -1010,6 +1018,10 @@
  .close:hover {
      background: #eb0707;
      color: #290909;
+ }
+
+ #obligatorio{
+    color: red;
  }
 
  #property-detail-content {
