@@ -277,14 +277,13 @@
      padding: 10px;
  }
 
-#pagCompletoBtn {
-    width: 100%;
-    display: inline-flex
-;
-    justify-content: flex-start;
-    gap: 10px;
-    padding: 14px 0px;
-}
+ #pagCompletoBtn {
+     width: 100%;
+     display: inline-flex;
+     justify-content: flex-start;
+     gap: 10px;
+     padding: 14px 0px;
+ }
 
  #add-current-image-container {
      display: inline-flex;
@@ -976,6 +975,7 @@
      flex-direction: column;
      height: 90%;
      transition: all 0.3s ease-out;
+     background: #66339900;
  }
 
  .modal.show .modal-content {
@@ -1872,7 +1872,7 @@
 
 
  @media (max-width: 500px) {
-    .iti__country-list {
-        white-space: nowrap !important;
-    }
-}
+     .iti__country-list {
+         white-space: nowrap !important;
+     }
+ }
