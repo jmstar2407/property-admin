@@ -1561,13 +1561,7 @@
 
  @media (max-width: 550px) {
 
-    .iti__country-list {
-        white-space: normal;
-        height: 100%;
-        position: fixed;
-        width: 100%;
-        top: 10px;
-    }
+
      #loginForm {
          background-color: #17181c00;
          padding: 29px 32px;
@@ -1877,51 +1871,8 @@
 
 
 
-
-
-
-
-
-
-
-
-/* Asegurar que el dropdown sea visible */
-.iti__country-list {
-    z-index: 9999 !important;
-}
-
-/* Estilo para el input */
-.intl-tel-input {
-    width: 100%;
-    margin-bottom: 15px;
-}
-
- .contract-images-container {
-    margin-top: 15px;
-}
-
-.contract-image-wrapper {
-    margin-bottom: 15px;
-    border: 1px solid #383f4f;
-    padding: 10px;
-    border-radius: 8px;
-}
-
-.contract-image-wrapper img {
-    max-width: 100%;
-    max-height: 200px;
-    display: block;
-    margin-bottom: 10px;
-    cursor: pointer;
-}
-
-.image-actions {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-}
-
-.image-actions .btn {
-    padding: 5px 10px;
-    font-size: 12px;
+ @media (max-width: 500px) {
+    .iti__country-list {
+        white-space: nowrap !important;
+    }
 }
