@@ -914,6 +914,7 @@
                 // Los loaders ya se muestran en onAuthStateChanged
 
                 // Inicializar componentes
+                initializePhoneInputs();
                 setupContractImagePreview(); // <-- Añade esta línea
 
                 // Cargar datos en paralelo
@@ -1063,22 +1064,19 @@
 
 
         // Mostrar modal para agregar propiedad
-        function showAddPropertyModal() {
-            document.getElementById('property-form').reset();
-            document.getElementById('contract-date').value = new Date().toISOString().split('T')[0];
+function showAddPropertyModal() {
+    document.getElementById('property-form').reset();
+    document.getElementById('contract-date').value = new Date().toISOString().split('T')[0];
 
-            // Reinicializar los inputs de teléfono
-            document.getElementById('owner-phone').iti.setNumber('');
-            document.getElementById('tenant-phone').iti.setNumber('');
-            document.getElementById('guarantor-phone').iti.setNumber('');
+    openModal('add-property-modal');
 
-            openModal('add-property-modal');
-            
-                // Inicializa después de que el modal está visible
     setTimeout(() => {
-        initializePhoneInputs();
-    }, 300);
-        }
+        initPhoneInputIfNeeded(document.getElementById('owner-phone'));
+        initPhoneInputIfNeeded(document.getElementById('tenant-phone'));
+        initPhoneInputIfNeeded(document.getElementById('guarantor-phone'));
+    }, 200); // esperar a que el modal esté visible
+}
+
 
         // Toggle tenant fields based on property status
         function toggleTenantFields(formType = 'edit') {
@@ -1709,11 +1707,13 @@
             // Asegurarse de que los campos de inquilino se muestren correctamente
             toggleTenantFields();
 
-                openModal('property-edit-modal');
+            openModal('property-edit-modal');
 
-    setTimeout(() => {
-        initializePhoneInputs();
-    }, 300);
+setTimeout(() => {
+    initPhoneInputIfNeeded(document.getElementById('edit-owner-phone'));
+    initPhoneInputIfNeeded(document.getElementById('edit-tenant-phone'));
+    initPhoneInputIfNeeded(document.getElementById('edit-guarantor-phone'));
+}, 200);
         }
 
         // Update property
@@ -3764,6 +3764,26 @@ async function processPayment(e) {
 
         // Asignar evento al botón de configuración
         document.getElementById('setting-button').addEventListener('click', openConfigModal);
+
+
+
+
+
+
+        function initPhoneInputIfNeeded(input) {
+    if (!input.classList.contains('iti-initialized')) {
+        window.intlTelInput(input, {
+            initialCountry: "do",
+            preferredCountries: ['do', 'us', 'nl', 'es'],
+            separateDialCode: true,
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+        });
+        input.classList.add('iti-initialized');
+    }
+}
+
+
+
     </script>
 </body>
 
