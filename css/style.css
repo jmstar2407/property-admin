@@ -975,7 +975,6 @@
      flex-direction: column;
      height: 90%;
      transition: all 0.3s ease-out;
-     background: #66339900;
  }
 
  .modal.show .modal-content {
