@@ -1426,13 +1426,14 @@ box-shadow: 0 0 0 2px rgb(23 107 203);
      padding: 0 5px;
  }
 
- .iti__country-list {
-     width: 300px;
-     background-color: #1e1f24 !important;
-    border: 1px solid #CCC;
+.iti__country-list {
+    width: 300px;
+    background-color: #1e1f24 !important;
+    border: none !important;
     color: white;
-        border-radius: 14px;
- }
+    border-radius: 10px;
+    box-shadow: 0 0 0 2px rgb(23 107 203), 0px 0px 14px 0px rgb(0 0 0 / 48%) !important;
+}
 
 
  .contract-image-container {
