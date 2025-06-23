@@ -901,7 +901,7 @@
     color: #ffffff;
     box-shadow: inset 0px 0px 0px 2px rgb(151 156 161);
     border-radius: 14px;
-    min-height: 44px;
+    min-height: 100px;
 }
 
  .iti__selected-flag {
@@ -1739,6 +1739,11 @@ box-shadow: 0 0 0 2px rgb(23 107 203);
      .EDC {
          font-size: 12px;
      }
+
+      .iti__country-list {
+     width: 200px;
+     margin: 50px 0px;
+ }
 
  }
 
