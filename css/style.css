@@ -1869,22 +1869,6 @@
 
 
 
-
-
-@media (max-width: 560px) {
-    .iti__country-list {
-        white-space: nowrap !important;
-        z-index: 99999 !important;
-        background: red !important;
-    }
-}
-
-.iti__country-list {
-    z-index: 999999 !important;
-}
-
-
 .iti {
-
     z-index: 999999 !important;
 }
